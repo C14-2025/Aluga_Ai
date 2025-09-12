@@ -1,5 +1,5 @@
 import pytest
-from ChamadaApi import chamada_api_status, chamada_api
+from API.ChamadaApi import chamada_api_status, chamada_api
 
 def test_chamada_api_status():
     status = chamada_api_status()
