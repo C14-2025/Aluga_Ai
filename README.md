@@ -1,9 +1,9 @@
-<<<<<<< Updated upstream
+
 # Aluga_Ai - Consulta de API de estabelecimentos
 
 =======
 # Aluga_Ai
->>>>>>> Stashed changes
+
 
 Projeto de geração, persistência e teste de dados simulados de imóveis para um cenário tipo marketplace (aluguel temporário / longa duração).
 
