@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from supabase import create_client, Client
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,6 +81,10 @@ DATABASES = {
     }
 }
 
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://mllulbtmniekwbjuwdje.supabase.co")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sbHVsYnRtbmlla3dianV3ZGplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTUxMzAsImV4cCI6MjA3MzI3MTEzMH0.VZt-uJAe426e9dsNULNPio6ud5lOzxUlK3vNaLxjYuo")
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
