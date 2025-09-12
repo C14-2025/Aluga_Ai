@@ -10,24 +10,26 @@ Projeto de geração, persistência e teste de dados simulados de imóveis para 
 <<<<<<< Updated upstream
 ## Estrutura dos Arquivos
 ```bash
-aluga_ai_web/
+ALUGA_AI/
 │
-├── aluga_ai_web/ # Configuração principal do Django
-│ ├── settings.py
-│ ├── urls.py
-│ └── wsgi.py
+├── .pytest_cache/
 │
-├── reservas/ # App responsável pelas reservas
-│ ├── views.py
-│ ├── models.py
-│ └── urls.py
+├── aluga_ai_web/                 # Pasta principal do projeto
+│   │
+│   ├── aluga_ai_web/             # Diretório Django principal (settings, urls, wsgi, etc.)
+│   │
+│   ├── BancoDeDados/             # Módulo para integração com o banco de dados (ex: Supabase)
+│   │
+│   ├── Dados/                    # Scripts, geradores de dados e testes unitários relacionados
+│   │   └── test_api.py           # Arquivo de testes (pytest)
+│   │
+│   └── reservas/                 # Aplicação Django para gerenciamento de reservas
 │
-├── API/ # Integrações externas
-│ ├── ChamadaApi.py
-│ ├── TesteApi.py
-│ └── init.py
-│
-├── manage.py
+├── .gitignore                    # Arquivos/pastas ignorados pelo Git
+├── manage.py                     # Comando principal para rodar o Django
+├── pytest.ini                    # Configurações do pytest-django
+├── README.md                     # Documentação do projeto
+└── requirements.txt              # Dependências do Python
 ```
 - `API/ChamadaApi.py`: Funções para realizar a chamada à API e retornar o status HTTP.
 - `API/TesteApi.py`: Teste automatizado usando pytest.
