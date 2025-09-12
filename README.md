@@ -1,4 +1,5 @@
-# Aluga_Ai - Consulta de API de Escolas
+# Aluga_Ai - Consulta de API de estabelecimentos
+
 
 Este projeto realiza chamadas à API [Realtor API Data](https://rapidapi.com/) para obter detalhes de escolas utilizando Python. Ele também inclui testes automatizados com pytest para garantir que a requisição está funcionando corretamente.
 
