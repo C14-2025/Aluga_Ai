@@ -3,6 +3,9 @@ import json
 import pytest
 import sys
 import pathlib
+from Dados.ConstrucaoDeDados import gerar_imovel
+from BancoDeDados.Integracao import obter_dados_tabela
+from django.test import Client
 
 try:
     import ConstrucaoDeDados as cd
@@ -84,3 +87,33 @@ def test_disponibilidade_periodos_validos():
     for periodo in imovel["disponibilidade"]:
         assert "inicio" in periodo and "fim" in periodo
         assert periodo["inicio"] <= periodo["fim"]
+
+
+def test_gerar_imovel_retorna_dict():
+    imovel = gerar_imovel()
+    assert isinstance(imovel, dict)
+    assert "tipo" in imovel
+    assert "preco_aluguel" in imovel
+
+
+def test_obter_dados_tabela_retorna_lista(monkeypatch):
+    def fake_resp(tabela, colunas="*", batch=10):
+        return [{"id": 1, "tipo": "Apartamento"}]
+    monkeypatch.setattr("BancoDeDados.Integracao.obter_dados_tabela", fake_resp)
+
+    dados = obter_dados_tabela("ImoveisDisponiveis")
+    assert isinstance(dados, list)
+    assert "tipo" in dados[0]
+
+
+@pytest.mark.django_db
+def test_view_listar_imoveis(client: Client, monkeypatch):
+    def fake_resp(tabela, colunas="*", batch=10):
+        return [{"id": 1, "tipo": "Casa", "cidade": "São Paulo"}]
+    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
+
+    response = client.get("/imoveis/")
+    assert response.status_code == 200
+    dados = json.loads(response.content)
+    assert isinstance(dados, list)
+    assert dados[0]["tipo"] == "Casa"
