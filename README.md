@@ -17,7 +17,8 @@ ALUGA_AI/
 │   │
 │   ├── aluga_ai_web/             # Diretório Django principal (settings, urls, wsgi, etc.)
 │   │
-│   ├── BancoDeDados/             # Módulo para integração com o banco de dados (ex: Supabase)
+│   ├── BancoDeDados/ 
+│   │   └── test_bd.py              # Arquivo de testes (pytest)
 │   │
 │   ├── Dados/                    # Scripts, geradores de dados e testes unitários relacionados
 │   │   └── test_api.py           # Arquivo de testes (pytest)
