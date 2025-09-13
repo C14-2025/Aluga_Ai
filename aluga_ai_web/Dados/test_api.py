@@ -117,3 +117,26 @@ def test_view_listar_imoveis(client: Client, monkeypatch):
     dados = json.loads(response.content)
     assert isinstance(dados, list)
     assert dados[0]["tipo"] == "Casa"
+
+def test_preco_m2_por_bairro():
+    valor = cd.preco_m2_por_bairro("São Paulo", "Centro")
+    assert valor == 45
+
+    valor_random = cd.preco_m2_por_bairro("CidadeInexistente", "BairroFake")
+    assert 20 <= valor_random <= 60
+
+
+def test_gerar_disponibilidade_formatos():
+    disponibilidade = cd.gerar_disponibilidade()
+    assert isinstance(disponibilidade, list)
+    for periodo in disponibilidade:
+        assert "inicio" in periodo and "fim" in periodo
+        assert len(periodo["inicio"]) == 10
+        assert len(periodo["fim"]) == 10
+        assert periodo["inicio"] <= periodo["fim"]
+
+
+def test_gerar_lista_imoveis_zero():
+    lista = cd.gerar_lista_imoveis(0)
+    assert isinstance(lista, list)
+    assert len(lista) == 0
