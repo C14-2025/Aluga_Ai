@@ -140,3 +140,17 @@ def test_gerar_lista_imoveis_zero():
     lista = cd.gerar_lista_imoveis(0)
     assert isinstance(lista, list)
     assert len(lista) == 0
+
+
+@pytest.mark.django_db
+def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
+    # Mockando a função para retornar lista vazia
+    def fake_resp(tabela, colunas="*", batch=10):
+        return []
+    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
+
+    response = client.get("/imoveis/")
+    assert response.status_code == 200
+    dados = json.loads(response.content)
+    assert isinstance(dados, list)
+    assert dados == []  # deve retornar lista vazia quando não há imóveis
