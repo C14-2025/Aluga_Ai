@@ -136,5 +136,27 @@ def test_inserir_via_postgres_sem_DATABASE_URL(capsys, monkeypatch):
     out = capsys.readouterr().out
     assert "DATABASE_URL não definida; pulando inserção direta." in out
 
+def test_imprimir_exemplos_lista_vazia(capsys):
+    mod.imprimir_exemplos_lista([], n=3)
+    out = capsys.readouterr().out
+    assert "--- 0 exemplos do arquivo ---" in out
+
+def test_testar_tabela_com_mock(monkeypatch, capsys):
+    class FakeSupabase:
+        def table(self, _):
+            return self
+        def select(self, *_):
+            return self
+        def limit(self, *_):
+            return self
+        def execute(self):
+            class Resp: data = [{"id": 42}]
+            return Resp()
+    monkeypatch.setattr(mod, "supabase", FakeSupabase())
+    mod.testar_tabela("MinhaTabela")
+    out = capsys.readouterr().out
+    assert "Tabela acessível. Exemplo:" in out
+    assert "42" in out
+
 
 
