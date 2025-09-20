@@ -136,5 +136,10 @@ def test_inserir_via_postgres_sem_DATABASE_URL(capsys, monkeypatch):
     out = capsys.readouterr().out
     assert "DATABASE_URL não definida; pulando inserção direta." in out
 
+def test_imprimir_exemplos_lista_vazia(capsys):
+    mod.imprimir_exemplos_lista([], n=3)
+    out = capsys.readouterr().out
+    assert "--- 0 exemplos do arquivo ---" in out
+
 
 
