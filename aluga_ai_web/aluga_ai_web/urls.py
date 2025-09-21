@@ -16,9 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+<<<<<<< Updated upstream
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("imoveis/", views.listar_imoveis, name="listar_imoveis"),
+=======
+from reservas.views import consulta_escola
+from usuarios.views import RegisterView
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("consulta/", consulta_escola, name="consulta_escola"),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+>>>>>>> Stashed changes
 ]
