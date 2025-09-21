@@ -64,6 +64,10 @@ def testar_tabela(tabela: str):
             print("Tabela acessível (vazia).")
     except Exception as e:
         print("Erro ao acessar tabela:", repr(e))
+    pass  # Para garantir que a função não faça nada em produção
+
+# Ensure pytest does not collect this production function as a test
+testar_tabela.__test__ = False
 
 # (Opcional) Inserção direta via Postgres usando connection string
 def inserir_via_postgres(caminho_arquivo: str, tabela: str):
