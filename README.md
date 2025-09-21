@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-
 # Aluga_Ai - Consulta de API de estabelecimentos
 
 =======
@@ -185,6 +183,5 @@ Uso acadêmico / estudo. Ajustar conforme necessidade.
 - O projeto utiliza uma chave de API do RapidAPI. **Não exponha sua chave em ambientes públicos.**
 - O endpoint utilizado consulta detalhes de uma escola específica (`id=0717323601`).
 - Os testes automatizados garantem que a resposta da API está correta.
->>>>>>> Stashed changes
 
 ---
