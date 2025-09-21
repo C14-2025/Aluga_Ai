@@ -154,3 +154,33 @@ def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
     dados = json.loads(response.content)
     assert isinstance(dados, list)
     assert dados == []  # deve retornar lista vazia quando não há imóveis
+
+#verifica formato e range de check-in e check-out
+def test_checkin_checkout_format():
+    imovel = cd.gerar_imovel()
+    checkin = imovel["checkin"]
+    checkout = imovel["checkout"]
+    # Deve estar no formato HH:00
+    assert checkin.endswith(":00")
+    assert checkout.endswith(":00")
+    # Check-in entre 13h e 16h, checkout entre 10h e 12h
+    assert 13 <= int(checkin.split(":")[0]) <= 16
+    assert 10 <= int(checkout.split(":")[0]) <= 12
+
+#verifica formato do cep
+def test_endereco_cep_format():
+    imovel = cd.gerar_imovel()
+    cep = imovel["endereco"]["cep"]
+    # Formato deve ser 5 dígitos + hífen + 3 dígitos
+    assert len(cep) == 9
+    parte1, parte2 = cep.split("-")
+    assert parte1.isdigit() and len(parte1) == 5
+    assert parte2.isdigit() and len(parte2) == 3
+
+#verifica se max_hospedes está coerente com o número de quartos
+def test_max_hospedes_relacao_quartos():
+    imovel = cd.gerar_imovel()
+    quartos = imovel["quartos"]
+    max_hospedes = imovel["max_hospedes"]
+    # Regra de geração: max_hospedes entre n_quartos e 2*n_quartos+2
+    assert quartos <= max_hospedes <= (quartos * 2 + 2)
