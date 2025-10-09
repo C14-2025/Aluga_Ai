@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'usuarios',
-    'recomendacoes',
+    'recomendacoes', # Quando fui rodar os testes, tive de apagar essa linha. Ass: Iury
     'ml',
 ]
 
