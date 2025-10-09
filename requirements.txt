@@ -4,7 +4,3 @@ pytest
 requests
 python-dotenv
 pytest-django
-djangorestframework
-djangorestframework-simplejwt
-django-filter
-django-cors-headers

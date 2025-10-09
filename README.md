@@ -1,49 +1,59 @@
-# Aluga_Ai - Sistema de Reservas de Imóveis
+# Aluga_Ai - Consulta de API de estabelecimentos
 
-Sistema completo de marketplace para aluguel de imóveis temporários, desenvolvido com Django REST Framework. Inclui funcionalidades de busca, reserva, avaliação e gerenciamento de imóveis.
+=======
+# Aluga_Ai
 
-## 🚀 Funcionalidades
 
-- **Sistema de Imóveis**: Cadastro e gerenciamento de imóveis com filtros avançados
-- **Sistema de Reservas**: Criação, confirmação e cancelamento de reservas
-- **Sistema de Avaliações**: Avaliação de imóveis e hóspedes
-- **Autenticação JWT**: Sistema seguro de autenticação
-- **API REST Completa**: Endpoints para todas as operações
-- **Filtros e Busca**: Busca por localização, preço, comodidades e disponibilidade
-- **Validações de Negócio**: Regras para reservas, cancelamentos e avaliações
+Projeto de geração, persistência e teste de dados simulados de imóveis para um cenário tipo marketplace (aluguel temporário / longa duração).
+=======
+# Aluga_Ai - Consulta de API de Estabelecimentos
 
-## 📁 Estrutura do Projeto
+Este projeto realiza chamadas à [Realtor API Data](https://rapidapi.com/) para obter detalhes de escolas utilizando Python e Django. Inclui testes automatizados com pytest para garantir o funcionamento das requisições.
+>>>>>>> Stashed changes
+
+## Estrutura dos Arquivos
 
 ```bash
 ALUGA_AI/
-├── aluga_ai_web/                 # Projeto Django principal
-│   ├── aluga_ai_web/             # Configurações Django
-│   │   ├── settings.py           # Configurações do projeto
-│   │   ├── urls.py               # URLs principais
-│   │   └── wsgi.py               # WSGI configuration
-│   ├── usuarios/                  # App de usuários
-│   │   ├── models.py             # Modelos de usuário
-│   │   ├── views.py              # Views de autenticação
-│   │   └── serializers.py        # Serializers de usuário
-│   ├── reservas/                 # App de reservas (PRINCIPAL)
-│   │   ├── models.py             # Modelos: Imovel, Reserva, Avaliacao
-│   │   ├── views.py              # ViewSets para API REST
-│   │   ├── serializers.py        # Serializers para validação
-│   │   ├── urls.py               # URLs das reservas
-│   │   └── tests.py              # Testes automatizados
-│   ├── BancoDeDados/             # Integração com Supabase
-│   │   ├── Integracao.py         # CRUD operations
-│   │   └── test_bd.py            # Testes de integração
-│   ├── Dados/                    # Geração de dados
-│   │   ├── ConstrucaoDeDados.py  # Gerador de dados simulados
-│   │   ├── imoveis_gerados.json  # Dados gerados
-│   │   └── test_api.py           # Testes de geração
-│   ├── manage.py                 # Comando Django
-│   ├── populate_data.py          # Script para popular banco
-│   └── API_DOCUMENTATION.md     # Documentação da API
-├── requirements.txt              # Dependências Python
-├── pytest.ini                   # Configurações pytest
-└── README.md                     # Este arquivo
+│
+<<<<<<< Updated upstream
+├── .pytest_cache/
+│
+├── aluga_ai_web/                 # Pasta principal do projeto
+│   │
+│   ├── aluga_ai_web/             # Diretório Django principal (settings, urls, wsgi, etc.)
+│   │
+│   ├── BancoDeDados/ 
+│   │   └── test_bd.py              # Arquivo de testes (pytest)
+│   │
+│   ├── Dados/                    # Scripts, geradores de dados e testes unitários relacionados
+│   │   └── test_api.py           # Arquivo de testes (pytest)
+│   │
+│   └── reservas/                 # Aplicação Django para gerenciamento de reservas
+│
+├── .gitignore                    # Arquivos/pastas ignorados pelo Git
+├── manage.py                     # Comando principal para rodar o Django
+├── pytest.ini                    # Configurações do pytest-django
+├── README.md                     # Documentação do projeto
+└── requirements.txt              # Dependências do Python
+=======
+├── aluga_ai_web/           # Configuração principal do Django
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── reservas/               # App responsável pelas reservas
+│   ├── views.py
+│   ├── models.py
+│   └── urls.py
+│
+├── API/                    # Integrações externas
+│   ├── ChamadaApi.py       # Funções para chamada à API
+│   ├── TesteApi.py         # Testes automatizados (pytest)
+│   └── __init__.py
+│
+├── manage.py
+>>>>>>> Stashed changes
 ```
 
 <<<<<<< Updated upstream
