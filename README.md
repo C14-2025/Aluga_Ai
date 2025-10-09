@@ -16,7 +16,6 @@ Este projeto realiza chamadas à [Realtor API Data](https://rapidapi.com/) para 
 ```bash
 ALUGA_AI/
 │
-<<<<<<< Updated upstream
 ├── .pytest_cache/
 │
 ├── aluga_ai_web/                 # Pasta principal do projeto
@@ -36,27 +35,8 @@ ALUGA_AI/
 ├── pytest.ini                    # Configurações do pytest-django
 ├── README.md                     # Documentação do projeto
 └── requirements.txt              # Dependências do Python
-=======
-├── aluga_ai_web/           # Configuração principal do Django
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── reservas/               # App responsável pelas reservas
-│   ├── views.py
-│   ├── models.py
-│   └── urls.py
-│
-├── API/                    # Integrações externas
-│   ├── ChamadaApi.py       # Funções para chamada à API
-│   ├── TesteApi.py         # Testes automatizados (pytest)
-│   └── __init__.py
-│
-├── manage.py
->>>>>>> Stashed changes
 ```
 
-<<<<<<< Updated upstream
 Campos incluídos: localização (lat/long), regras, avaliações, tags, distâncias, status, política de cancelamento, mobiliado, custos (condomínio, IPTU), disponibilidade em períodos.
 
 ### 2. Integração com Supabase
@@ -68,11 +48,6 @@ Principais funções:
 - `atualizar_imovel(id, campos)`
 - `deletar_imovel(id)`
 - `deletar_todos_imoveis(confirmar=True)`
-=======
-## Configuração
-
-1. **Instale as dependências**
->>>>>>> Stashed changes
 
    Certifique-se de ter o Python instalado. Para rodar o servidor e os testes, instale o pytest e o Django:
 
@@ -80,18 +55,11 @@ Principais funções:
    pip install pytest django requests
    ```
 
-<<<<<<< Updated upstream
 ## Instalação
 
 ```bash
 pip install pytest supabase psycopg2-binary
 ```
-=======
-2. **Configure sua chave da API**
-
-   - Obtenha uma chave de API no [RapidAPI](https://rapidapi.com/).
-   - Adicione sua chave em `API/ChamadaApi.py` conforme instruções no próprio arquivo.
->>>>>>> Stashed changes
 
 3. **Realize a chamada à API**
 
@@ -125,10 +93,10 @@ python BancoDeDados/TesteCRUD.py
 
 ## Testes
 
-Executar todos:
+Executar todos os testes com relatório:
 
 ```bash
-pytest -v
+pytest -v --template=html1/index.html --report=report.html 
 ```
 
 Executar somente geração:

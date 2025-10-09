@@ -4,3 +4,5 @@ pytest
 requests
 python-dotenv
 pytest-django
+djangorestframework
+pytest-reporter-html1
