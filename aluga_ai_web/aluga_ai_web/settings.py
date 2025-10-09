@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'usuarios',
+    'recomendacoes',
+    'ml',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+# Opcional: definir caminho explícito do JSON (senão será detectado automaticamente)
+# AI_DADOS_JSON_PATH = r"C:\Users\vish8\OneDrive\Desktop\p8\C214\Lab\Aluga_Ai\aluga_ai_web\Dados\imoveis_gerados.json"
