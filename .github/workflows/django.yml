@@ -38,5 +38,5 @@ jobs:
       - name: Rodar Testes Django
         run: 
           cd aluga_ai_web
-          pytest BancoDeDados/test_bd.py
-          pytest Dados/test_api.py
+
+          pytest BancoDeDados/test_bd.py Dados/test_api.py
