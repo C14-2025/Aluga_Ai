@@ -5,11 +5,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("propriedades.urls")),         # home -> listagem
+    path("", include("propriedades.urls")),   # home -> listagem de propriedades
     path("usuarios/", include("usuarios.urls")),
     path("reservas/", include("reservas.urls")),
     path("avaliacoes/", include("avaliacoes.urls")),
-    path("recomendacoes/", include("recomendacoes.urls")),
 ]
 
 if settings.DEBUG:

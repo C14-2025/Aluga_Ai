@@ -1,16 +1,14 @@
-import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = get_random_secret_key() #chave secreta para desenvolvimento, produção usar uma chave fixa segura
+SECRET_KEY = get_random_secret_key()  # para dev; para produção use variável ambiente
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Apps
 INSTALLED_APPS = [
     # Django
     "django.contrib.admin",
@@ -20,12 +18,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Your apps
+    # Apps do projeto
     "usuarios.apps.UsuariosConfig",
     "propriedades.apps.PropriedadesConfig",
     "reservas.apps.ReservasConfig",
     "avaliacoes.apps.AvaliacoesConfig",
-    "recomendacoes.apps.RecomendacoesConfig",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +56,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "aluga_ai_web.wsgi.application"
 ASGI_APPLICATION = "aluga_ai_web.asgi.application"
 
-# DB - SQLite para desenvolvimento
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -68,10 +64,10 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 LANGUAGE_CODE = "pt-br"
