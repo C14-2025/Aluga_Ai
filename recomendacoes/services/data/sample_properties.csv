@@ -1,0 +1,11 @@
+id,title,city,neighborhood,area,bedrooms,bathrooms,parking,property_type,price
+1,Apto Centro BH,Belo Horizonte,Centro,55,2,1,0,apartment,2400
+2,Studio Savassi,Belo Horizonte,Savassi,35,1,1,0,studio,2900
+3,Casa Pampulha,Belo Horizonte,Pampulha,120,3,2,2,house,4800
+4,Apto Copacabana,Rio de Janeiro,Copacabana,60,2,2,1,apartment,3800
+5,Kitnet SP,São Paulo,Centro,28,0,1,0,kitnet,2700
+6,Apto Vila Mariana,São Paulo,Vila Mariana,52,1,1,1,apartment,3500
+7,Studio Consolação,São Paulo,Consolação,32,1,1,0,studio,3000
+8,Casa Zona Sul,Porto Alegre,Zona Sul,110,3,2,2,house,4200
+9,Apto Batel,Curitiba,Batel,65,2,2,1,apartment,3200
+10,Kitnet Centro RJ,Rio de Janeiro,Centro,25,0,1,0,kitnet,2300

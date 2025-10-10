@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<h1>Propriedades</h1>
+<form method="get"><input name="q" placeholder="buscar" /></form>
+<ul>
+  {% for p in propriedades %}
+  <li>
+    <a href="{% url 'propriedades:detalhe' p.pk %}">{{ p.titulo }}</a> - R$ {{
+    p.preco_por_noite }}
+  </li>
+  {% empty %}
+  <li>Sem propriedades</li>
+  {% endfor %}
+</ul>
+{% endblock %}

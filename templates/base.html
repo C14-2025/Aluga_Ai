@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Aluga AI - Dev</title>
+  </head>
+  <body>
+    <header>
+      <a href="/">Home</a> |
+      <a href="{% url 'usuarios:cadastro' %}">Cadastro</a> |
+      <a href="{% url 'usuarios:lista' %}">Lista de Usuários</a>
+    </header>
+    <hr />
+    {% if messages %}
+    <ul>
+      {% for m in messages %}
+      <li>{{ m }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% block content %}{% endblock %}
+  </body>
+</html>
