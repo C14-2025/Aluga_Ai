@@ -5,4 +5,5 @@ requests
 python-dotenv
 pytest-django
 djangorestframework
+djangorestframework-simplejwt
 pytest-reporter-html1
