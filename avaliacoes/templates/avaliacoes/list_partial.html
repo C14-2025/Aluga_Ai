@@ -1,0 +1,14 @@
+{% load humanize %} {% with avaliacoes=propriedade.avaliacoes.all %} {% if
+avaliacoes %}
+<ul>
+  {% for a in avaliacoes %}
+  <li>
+    {{ a.autor.first_name }} — {{ a.nota }} estrelas — {{
+    a.criado_em|naturaltime }}
+    <p>{{ a.comentario }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Sem avaliações ainda.</p>
+{% endif %} {% endwith %}

@@ -1,0 +1,30 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+venv/
+.env
+
+# Database
+db.sqlite3
+
+# Media and static build files (dev)
+media/
+staticfiles/
+
+# Django migrations caches
+*/migrations/__pycache__/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Misc
+templates/.prettierrc
