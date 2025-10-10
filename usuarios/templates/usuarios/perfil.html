@@ -1,0 +1,6 @@
+{% extends "base.html" %} {% block content %}
+<h1>Perfil: {{ usuario.get_full_name }}</h1>
+<p>Email: {{ usuario.email }}</p>
+<p>Telefone: {{ usuario.profile.phone_number }}</p>
+<p>Cidade/Estado: {{ usuario.profile.city }} / {{ usuario.profile.state }}</p>
+{% endblock %}

@@ -5,11 +5,13 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    phone_number = models.CharField(max_length=30, blank=True)
-    is_host = models.BooleanField(default=False)
+    phone_number = models.CharField("Telefone", max_length=30, blank=True)
+    is_host = models.BooleanField("É anfitrião", default=False)
+    city = models.CharField("Cidade", max_length=100, blank=True)
+    state = models.CharField("Estado", max_length=100, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} Profile"
+        return f"{self.user.get_full_name() or self.user.username} Profile"
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

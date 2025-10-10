@@ -1,10 +1,10 @@
 {% extends "base.html" %} {% block content %}
-<h1>Usuários cadastrados</h1>
+<h1>Usuários</h1>
 <table border="1" cellpadding="4">
   <tr>
     <th>ID</th>
     <th>Nome</th>
-    <th>Username</th>
+    <th>Usuário</th>
     <th>Email</th>
   </tr>
   {% for u in users %}
@@ -16,8 +16,4 @@
   </tr>
   {% endfor %}
 </table>
-<p>
-  Você também pode abrir <code>db.sqlite3</code> com o DB Browser para examinar
-  as tabelas (auth_user, etc.).
-</p>
 {% endblock %}
