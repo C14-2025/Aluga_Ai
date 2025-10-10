@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/users/', UserListView.as_view(), name='user_list'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/recommendations/', include('recomendacoes.urls')),
+    #path('api/recommendations/', include('recomendacoes.urls')), Tive que comentar essa linha para evitar conflito com o pipelina, nao temos esse arquivo, Ass: LH
     path('api/ai/', include('ml.urls')),
 ]
 
