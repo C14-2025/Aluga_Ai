@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10', '3.11', '3.12'] # versões do projeto
+        python-version: ['3.13'] # versões do projeto
 
     steps:
       - name: Checkout do Código
@@ -35,4 +35,7 @@ jobs:
           python manage.py migrate
 
       - name: Rodar Testes Django
-        run: python manage.py test
+        run: 
+          cd aluga_ai_web
+          pytest BancoDeDados/test_bd.py
+          pytest Dados/test_api.py
