@@ -8,4 +8,4 @@ class ImagemInline(admin.TabularInline):
 @admin.register(Propriedade)
 class PropriedadeAdmin(admin.ModelAdmin):
     inlines = [ImagemInline]
-    list_display = ("titulo", "owner", "preco_por_noite", "ativo")
+    list_display = ("titulo", "owner", "preco_por_noite", "ativo", "city", "state")

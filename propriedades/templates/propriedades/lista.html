@@ -1,14 +1,20 @@
-{% extends "base.html" %} {% block content %}
-<h1>Propriedades</h1>
-<form method="get"><input name="q" placeholder="buscar" /></form>
-<ul>
-  {% for p in propriedades %}
-  <li>
-    <a href="{% url 'propriedades:detalhe' p.pk %}">{{ p.titulo }}</a> - R$ {{
-    p.preco_por_noite }}
-  </li>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<h1>Propriedades disponíveis</h1>
+
+{% if propriedades %}
+<div>
+  {% for prop in propriedades %}
+  <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px">
+    <h3>{{ prop.titulo }}</h3>
+    <p>{{ prop.descricao }}</p>
+    <p><strong>Cidade:</strong> {{ prop.city }} / {{ prop.state }}</p>
+    <p><strong>Preço por noite:</strong> R$ {{ prop.preco_por_noite }}</p>
+    <a href="{% url 'propriedades:detalhe' prop.pk %}">Ver detalhes</a>
+  </div>
   {% empty %}
-  <li>Sem propriedades</li>
+  <p>Nenhuma propriedade disponível no momento.</p>
   {% endfor %}
-</ul>
-{% endblock %}
+</div>
+{% else %}
+<p>Não há propriedades cadastradas.</p>
+{% endif %} {% endblock %}
