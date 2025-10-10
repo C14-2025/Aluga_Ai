@@ -110,7 +110,7 @@ def test_obter_dados_tabela_retorna_lista(monkeypatch):
 def test_view_listar_imoveis(client: Client, monkeypatch):
     def fake_resp(tabela, colunas="*", batch=10):
         return [{"id": 1, "tipo": "Casa", "cidade": "São Paulo"}]
-    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
+    monkeypatch.setattr("Dados.test_api.obter_dados_tabela", fake_resp)
 
     response = client.get("/imoveis/")
     assert response.status_code == 200
@@ -147,7 +147,7 @@ def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
     # Mockando a função para retornar lista vazia
     def fake_resp(tabela, colunas="*", batch=10):
         return []
-    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
+    monkeypatch.setattr("Dados.test_api.obter_dados_tabela", fake_resp)
 
     response = client.get("/imoveis/")
     assert response.status_code == 200
