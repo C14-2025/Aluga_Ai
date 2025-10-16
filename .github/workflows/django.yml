@@ -35,8 +35,14 @@ jobs:
           cd aluga_ai_web
           python manage.py migrate
 
-      - name: Rodar Testes Django
+      - name: Rodar Testes BD
         run: 
           cd aluga_ai_web
 
-          pytest BancoDeDados/test_bd.py Dados/test_api.py
+          pytest BancoDeDados/test_bd.py
+          
+      - name: Rodar Testes Dados
+        run: 
+          cd aluga_ai_web
+
+          pytest Dados/test_api.py
