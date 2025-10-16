@@ -143,8 +143,8 @@ def test_gerar_lista_imoveis_zero():
     assert len(lista) == 0
 
 
-@pytest.mark.django_db
-'''def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
+'''@pytest.mark.django_db
+def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
     # Mockando a função para retornar lista vazia
     def fake_resp(tabela, colunas="*", batch=10):
         return []
