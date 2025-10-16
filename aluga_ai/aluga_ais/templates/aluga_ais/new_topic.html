@@ -1,0 +1,14 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+    <h3> Adicione um novo tópico: </h3>
+    <form action = "{% url 'new_topic' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button name = "submit"> Adicionar </button>
+
+    </form>
+
+{% endblock content %}
