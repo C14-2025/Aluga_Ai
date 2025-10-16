@@ -1,8 +1,0 @@
-supabase
-psycopg2-binary
-pytest
-requests
-python-dotenv
-pytest-django
-djangorestframework
-pytest-reporter-html1
