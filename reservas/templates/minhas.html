@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block content %}
+<h1>Minhas Reservas</h1>
+<ul>
+  {% for r in reservas %}
+  <li>
+    {{ r.propriedade.titulo }}: {{ r.inicio }} → {{ r.fim }} ({{ r.status }})
+  </li>
+  {% empty %}
+  <li>Você não tem reservas.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

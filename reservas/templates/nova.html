@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block content %}
+<h1>Nova reserva — {{ propriedade.titulo }}</h1>
+<form method="post">
+  {% csrf_token %}
+  <p>
+    <label>Início: <input type="date" name="inicio" required /></label>
+  </p>
+  <p>
+    <label>Fim: <input type="date" name="fim" required /></label>
+  </p>
+  <button type="submit">Reservar</button>
+</form>
+{% endblock %}

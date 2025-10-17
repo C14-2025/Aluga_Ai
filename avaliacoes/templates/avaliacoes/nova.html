@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content %}
+<h1>Avaliar — {{ propriedade.titulo }}</h1>
+<form method="post">
+  {% csrf_token %}
+  <p>
+    <label
+      >Nota (1-5): <input name="nota" type="number" min="1" max="5" required
+    /></label>
+  </p>
+  <p>
+    <label>Comentário: <textarea name="comentario"></textarea></label>
+  </p>
+  <button type="submit">Enviar avaliação</button>
+</form>
+{% endblock %}
