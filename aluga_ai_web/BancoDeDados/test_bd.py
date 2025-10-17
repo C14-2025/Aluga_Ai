@@ -1,6 +1,6 @@
 import types
 import pytest
-from BancoDeDados import Integracao as mod
+from . import Integracao as mod
 
 
 @pytest.fixture
