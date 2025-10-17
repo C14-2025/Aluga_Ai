@@ -4,7 +4,7 @@ import pytest
 import sys
 import pathlib
 from .ConstrucaoDeDados import gerar_imovel
-from django.test import Client
+from django.test import Client 
 
 try:
     import ConstrucaoDeDados as cd
