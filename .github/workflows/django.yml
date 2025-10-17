@@ -109,7 +109,7 @@ jobs:
       - name: Rodar Testes ETL
         working-directory: aluga_ai_web/Dados
         run: |
-          pytest test_etl.py --template=html1/index.html --report=report_ETL.html
+          pytest test_etl.py --template=html1/index.html --report=report_etl.html
 
       - name: Executar ETL
         working-directory: aluga_ai_web/Dados
@@ -121,7 +121,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report_api
-          path: ./aluga_ai_web/report_ETL.html
+          path: ./aluga_ai_web/Dados/report_etl.html
 
   run-django-server:
     runs-on: ubuntu-latest
