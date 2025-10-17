@@ -45,3 +45,13 @@ jobs:
           cd aluga_ai_web
 
           pytest Dados/test_api.py
+      - name : Teste ETL
+        run : 
+          cd aluga_ai_web\Dados
+          pytest test_etl.py
+      - name : ETL
+        run : 
+          cd aluga_ai_web\Dados
+          python etl.py
+
+      
