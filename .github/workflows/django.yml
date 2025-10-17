@@ -119,7 +119,7 @@ jobs:
   run-django-server:
     name: Rodar Servidor Django
     runs-on: ubuntu-latest
-
+    needs: [testes_bd, testes_api, etl]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
