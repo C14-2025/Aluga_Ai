@@ -1,0 +1,48 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "reorganiza_estruta" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Test
+    
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.13'] # versões do projeto
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Rodar Migrações
+        run: |
+          cd aluga_ai_web
+          python manage.py migrate
+
+      - name: Rodar Testes BD
+        run: 
+          cd aluga_ai_web
+
+          pytest BancoDeDados/test_bd.py
+          
+      - name: Rodar Testes Dados
+        run: 
+          cd aluga_ai_web
+
+          pytest Dados/test_api.py
