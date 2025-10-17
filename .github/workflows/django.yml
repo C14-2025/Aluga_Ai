@@ -32,7 +32,6 @@ jobs:
           
       - name: Rodar Migrações
         run: |
-          cd aluga_ai_web
           python manage.py migrate
 
       - name: Rodar Testes BD
