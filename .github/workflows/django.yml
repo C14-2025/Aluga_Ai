@@ -120,7 +120,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: report_api
+          name: report_etl
           path: ./aluga_ai_web/Dados/report_etl.html
 
   run-django-server:
