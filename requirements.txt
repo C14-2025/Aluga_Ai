@@ -7,3 +7,5 @@ pytest-django
 djangorestframework
 pytest-reporter-html1
 Pillow
+pandas
+numpy
