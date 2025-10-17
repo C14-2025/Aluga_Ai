@@ -78,7 +78,7 @@ jobs:
         run: 
           cd aluga_ai_web
 
-          pytest Dados/test_api.py --template=html1/index.html --report=report_api.html
+          pytest Dados/test_etl.py --template=html1/index.html --report=report_api.html
 
       - name: Upload dos resultados dos testes
         if: success()
