@@ -10,10 +10,12 @@ jobs:
   testes_bd:
     name: Testes Unitários de Banco de dados
     
+  test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.13'] # versões do projeto
+        python-version: ['3.13']
 
     steps:
       - name: Checkout do Código
@@ -29,7 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
       - name: Rodar Migrações
         run: |
           python manage.py migrate
@@ -88,3 +90,43 @@ jobs:
           name: report_api
           path: ./report_api.html
 
+        working-directory: aluga_ai_web
+        run: |
+          pytest BancoDeDados/test_bd.py
+          
+      - name: Rodar Testes Dados
+        working-directory: aluga_ai_web
+        run: |
+          pytest Dados/test_api.py
+
+  etl:
+    name: ETL
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.13']
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Rodar Testes ETL
+        working-directory: aluga_ai_web/Dados
+        run: |
+          pytest test_etl.py
+
+      - name: Executar ETL
+        working-directory: aluga_ai_web/Dados
+        run: |
+          python etl.py
