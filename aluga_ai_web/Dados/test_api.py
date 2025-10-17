@@ -3,7 +3,7 @@ import json
 import pytest
 import sys
 import pathlib
-from Dados.ConstrucaoDeDados import gerar_imovel
+from .ConstrucaoDeDados import gerar_imovel
 from BancoDeDados.Integracao import obter_dados_tabela
 from django.test import Client
 
