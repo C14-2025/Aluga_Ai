@@ -145,3 +145,18 @@ jobs:
       - name: Run Django tests
         run: |
           python manage.py test
+
+  notification:
+    runs-on: ubuntu-latest
+    needs: [testes_bd, testes_api, etl, run-django-server]
+    if: always()
+
+    steps:
+      - name: Instalando mailutils
+        run: |
+          sudo apt-get install -y mailutils
+  
+      - name: Enviando o email
+        if: secrets.NOTIFY_EMAIL != ''
+        run: |
+          echo "Pipeline Executado!" | mail -s "Status da Pipeline" ${{ secrets.NOTIFY_EMAIL }}
