@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report_bd
-          path: ./report_bd.html
+          path: ./aluga_ai_web/report_api.html
 
           
   testes_api:
@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report_api
-          path: ./report_api.html
+          path: ./aluga_ai_web/report_api.html
 
 
   etl:
