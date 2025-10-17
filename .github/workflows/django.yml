@@ -118,7 +118,7 @@ jobs:
 
   run-django-server:
     runs-on: ubuntu-latest
-
+    needs: [testes_bd, testes_api, etl]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
