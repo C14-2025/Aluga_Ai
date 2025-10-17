@@ -6,12 +6,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
-jobs:
+jobs:  
   testes_bd:
     name: Testes Unitários de Banco de dados
-    
-  test:
-    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -90,14 +87,6 @@ jobs:
           name: report_api
           path: ./report_api.html
 
-        working-directory: aluga_ai_web
-        run: |
-          pytest BancoDeDados/test_bd.py
-          
-      - name: Rodar Testes Dados
-        working-directory: aluga_ai_web
-        run: |
-          pytest Dados/test_api.py
 
   etl:
     name: ETL
