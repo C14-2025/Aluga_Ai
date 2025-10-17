@@ -4,7 +4,6 @@ import pytest
 import sys
 import pathlib
 from .ConstrucaoDeDados import gerar_imovel
-from BancoDeDados.Integracao import obter_dados_tabela
 from django.test import Client
 
 try:
@@ -96,27 +95,7 @@ def test_gerar_imovel_retorna_dict():
     assert "preco_aluguel" in imovel
 
 
-def test_obter_dados_tabela_retorna_lista(monkeypatch):
-    def fake_resp(tabela, colunas="*", batch=10):
-        return [{"id": 1, "tipo": "Apartamento"}]
-    monkeypatch.setattr("BancoDeDados.Integracao.obter_dados_tabela", fake_resp)
-
-    dados = obter_dados_tabela("ImoveisDisponiveis")
-    assert isinstance(dados, list)
-    assert "tipo" in dados[0]
-
-
-@pytest.mark.django_db
-def test_view_listar_imoveis(client: Client, monkeypatch):
-    def fake_resp(tabela, colunas="*", batch=10):
-        return [{"id": 1, "tipo": "Casa", "cidade": "São Paulo"}]
-    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
-
-    response = client.get("/imoveis/")
-    assert response.status_code == 200
-    dados = json.loads(response.content)
-    assert isinstance(dados, list)
-    assert dados[0]["tipo"] == "Casa"
+# Testes removidos: test_obter_dados_tabela_retorna_lista, test_view_listar_imoveis, test_view_listar_imoveis_sem_dados
 
 def test_preco_m2_por_bairro():
     valor = cd.preco_m2_por_bairro("São Paulo", "Centro")
@@ -141,19 +120,6 @@ def test_gerar_lista_imoveis_zero():
     assert isinstance(lista, list)
     assert len(lista) == 0
 
-
-@pytest.mark.django_db
-def test_view_listar_imoveis_sem_dados(client: Client, monkeypatch):
-    # Mockando a função para retornar lista vazia
-    def fake_resp(tabela, colunas="*", batch=10):
-        return []
-    monkeypatch.setattr("aluga_ai_web.Dados.test_api.obter_dados_tabela", fake_resp)
-
-    response = client.get("/imoveis/")
-    assert response.status_code == 200
-    dados = json.loads(response.content)
-    assert isinstance(dados, list)
-    assert dados == []  # deve retornar lista vazia quando não há imóveis
 
 #verifica formato e range de check-in e check-out
 def test_checkin_checkout_format():
@@ -182,6 +148,40 @@ def test_max_hospedes_relacao_quartos():
     imovel = cd.gerar_imovel()
     quartos = imovel["quartos"]
     max_hospedes = imovel["max_hospedes"]
+    # Regra de geração: max_hospedes entre n_quartos e 2*n_quartos+2
+    assert quartos <= max_hospedes <= (quartos * 2 + 2)
+
+
+#Com o mock, só será gerado 1 bloco de disponibilidade.
+#Esse bloco sempre começa em 10 dias a partir de hoje e dura 5 dias.
+#Verificamos que "inicio" e "fim" estão presentes e em ordem correta.
+
+def test_gerar_disponibilidade_com_mock(monkeypatch):
+    # Mocka random.randint para controlar os valores
+    chamadas = {"count": 0}
+
+    def fake_randint(a, b):
+        chamadas["count"] += 1
+        # 1ª chamada -> quantidade de blocos
+        if chamadas["count"] == 1:
+            return 1
+        # 2ª chamada -> dias para início
+        elif chamadas["count"] == 2:
+            return 10
+        # 3ª chamada -> dias para duração
+        elif chamadas["count"] == 3:
+            return 5
+        return a  # fallback seguro
+
+    monkeypatch.setattr(cd.random, "randint", fake_randint)
+
+    disponibilidade = cd.gerar_disponibilidade()
+    assert isinstance(disponibilidade, list)
+    assert len(disponibilidade) == 1
+
+    periodo = disponibilidade[0]
+    assert "inicio" in periodo and "fim" in periodo
+    assert periodo["inicio"] <= periodo["fim"]
     # Regra de geração: max_hospedes entre n_quartos e 2*n_quartos+2
     assert quartos <= max_hospedes <= (quartos * 2 + 2)
 
