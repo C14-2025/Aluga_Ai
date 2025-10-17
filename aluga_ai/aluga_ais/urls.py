@@ -1,5 +1,5 @@
 """
-URL configuration for learning_log project.
+URL configuration for aluga_ai project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -18,6 +18,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.index, name = 'index'),
-    path('cadastro',views.topics, name = 'cadastro'),
+    path('', views.index, name='index'),
 ]

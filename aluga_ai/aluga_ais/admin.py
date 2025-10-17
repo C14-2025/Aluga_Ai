@@ -1,5 +1,5 @@
 from django.contrib import admin
-from learning_logs.models import Topic,Entry
+from aluga_ais.models import Usuario
 
+# Register your models here.
 admin.site.register(Usuario)
-admin.site.register(Imovel)
