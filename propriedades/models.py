@@ -11,7 +11,7 @@ class Propriedade(models.Model):
     preco_por_noite = models.DecimalField(max_digits=8, decimal_places=2)
     criado_em = models.DateTimeField(auto_now_add=True)
     ativo = models.BooleanField(default=True)
-
+    
     def __str__(self):
         return f"{self.titulo} - {self.owner.username}"
 
