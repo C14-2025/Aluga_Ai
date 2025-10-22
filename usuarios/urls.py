@@ -8,7 +8,6 @@ urlpatterns = [
     path("cadastro/", views.cadastro_view, name="cadastro"),
     path("perfil/<int:pk>/", views.perfil_view, name="perfil"),
 
-    # autenticação
-    path("login/", auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
+    path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
 ]

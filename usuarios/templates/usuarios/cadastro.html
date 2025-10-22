@@ -1,16 +1,8 @@
 {% extends "base.html" %} {% block content %}
 <h1>Cadastro</h1>
+
 <form method="post">
   {% csrf_token %} {{ form.as_p }}
-  <p>
-    <label>Telefone: <input type="text" name="phone_number" /></label>
-  </p>
-  <p>
-    <label>Cidade: <input type="text" name="city" /></label>
-  </p>
-  <p>
-    <label>Estado: <input type="text" name="state" /></label>
-  </p>
   <button type="submit">Cadastrar</button>
 </form>
 {% endblock %}
