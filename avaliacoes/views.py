@@ -12,8 +12,8 @@ def nova_avaliacao(request, prop_id):
         comentario = request.POST.get("comentario", "")
         if nota < 1 or nota > 5:
             messages.error(request, "Nota inválida.")
-            return redirect("propriedades:detalhe", pk=prop.id)
+            return redirect("propriedades:detalhe", pk=prop.pk)
         Avaliacao.objects.create(autor=request.user, propriedade=prop, nota=nota, comentario=comentario)
         messages.success(request, "Avaliação publicada.")
-        return redirect("propriedades:detalhe", pk=prop.id)
+        return redirect("propriedades:detalhe", pk=prop.pk)
     return render(request, "avaliacoes/nova.html", {"propriedade": prop})
