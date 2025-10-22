@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Solicitações recebidas</h1>
+{% if reservas %}
+<div class="cards">
+  {% for r in reservas %}
+  <div class="card">
+    <h3>{{ r.propriedade.titulo }}</h3>
+    <p>De: {{ r.guest.get_full_name|default:r.guest.username }} | {{ r.inicio }} → {{ r.fim }}</p>
+    <p>
+      Status:
+      <strong>{{ r.get_status_display }}</strong>
+    </p>
+    <div class="actions">
+      {% if r.status == 'PENDING' %}
+      <a class="btn btn-confirm" href="{% url 'reservas:acao' r.id 'confirmar' %}">Confirmar</a>
+      <a class="btn btn-cancel" href="{% url 'reservas:acao' r.id 'recusar' %}">Recusar</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p>Nenhuma solicitação.</p>
+{% endif %} {% endblock %}

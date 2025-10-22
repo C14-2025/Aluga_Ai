@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Minhas reservas</h1>
+{% if reservas %}
+<div class="cards">
+  {% for r in reservas %}
+  <div class="card">
+    <h3>{{ r.propriedade.titulo }}</h3>
+    <p>Período: {{ r.inicio }} → {{ r.fim }}</p>
+    <p>
+      Status:
+      <strong>{{ r.get_status_display }}</strong>
+    </p>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p>Você não tem reservas.</p>
+{% endif %} {% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+<div class="property-detail">
+  <h1>{{ propriedade.titulo }}</h1>
+  <p class="muted">
+    Por {{ propriedade.owner.get_full_name|default:propriedade.owner.username }} — R$ {{ propriedade.preco_por_noite }}
+    / noite
+  </p>
+  {% if not propriedade.ativo %}
+  <p class="badge">Indisponível</p>
+  {% endif %}
+  <p>{{ propriedade.descricao }}</p>
+  {% if propriedade.imagens.all %}
+  <div class="gallery">
+    {% for img in propriedade.imagens.all %}
+    <img src="{{ img.imagem.url }}" alt="{{ img.legenda }}" style="max-width: 200px; margin-right: 8px" />
+    {% endfor %}
+  </div>
+  {% endif %} {% if user.is_authenticated %} {% if propriedade.owner != user and propriedade.ativo %}
+  <a class="btn btn-primary" href="{% url 'reservas:nova' propriedade.id %}">Solicitar reserva</a>
+  {% endif %} {% if propriedade.owner == user %}
+  <form method="post" action="{% url 'propriedades:excluir' propriedade.id %}" style="display: inline">
+    {% csrf_token %}
+    <button class="btn btn-cancel" type="submit">Excluir imóvel</button>
+  </form>
+  {% endif %} {% else %}
+  <p>
+    <a href="{% url 'usuarios:login' %}">Faça login</a>
+    para reservar.
+  </p>
+  {% endif %}
+</div>
+{% endblock %}
