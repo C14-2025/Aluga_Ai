@@ -1,0 +1,85 @@
+/* Custom visual improvements */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f7fb;
+  color: #333;
+}
+.container {
+  max-width: 980px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+.site-header {
+  background: linear-gradient(90deg, #4b6cb7, #182848);
+  color: #fff;
+  padding: 12px 0;
+}
+.nav a {
+  color: #fff;
+  margin-right: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.greeting {
+  margin-left: 12px;
+  color: #ffd700;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(23, 32, 77, 0.08);
+  flex: 1 1 300px;
+}
+.card h3 {
+  margin-top: 0;
+}
+.actions {
+  margin-top: 12px;
+}
+.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+}
+.btn-confirm {
+  background: #28a745;
+}
+.btn-cancel {
+  background: #dc3545;
+}
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.flash {
+  padding: 8px 12px;
+  margin: 12px 0;
+  border-radius: 6px;
+}
+.success {
+  background: #e6f4ea;
+  border: 1px solid #bde5c8;
+}
+.error {
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+}
+.info {
+  background: #eef6ff;
+  border: 1px solid #cfe3ff;
+}
+.warning {
+  background: #fff4e5;
+  border: 1px solid #ffe0b2;
+}

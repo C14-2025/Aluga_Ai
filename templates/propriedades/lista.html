@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<div class="page-header">
+  <h1>Imóveis disponíveis</h1>
+  {% if user.is_authenticated %}
+  <a class="btn btn-primary" href="{% url 'propriedades:nova' %}">Quero anunciar</a>
+  {% else %}
+  <a class="btn btn-primary" href="{% url 'usuarios:login' %}?next={% url 'propriedades:nova' %}">Quero anunciar</a>
+  {% endif %}
+</div>
+<form method="get" class="search">
+  <input type="text" name="q" placeholder="Buscar por título..." value="{{ request.GET.q }}" />
+  <button class="btn btn-primary" type="submit">Buscar</button>
+</form>
+<div class="cards">
+  {% for p in propriedades %}
+  <div class="card">
+    <h3><a href="{% url 'propriedades:detalhe' p.pk %}">{{ p.titulo }}</a></h3>
+    <p>{{ p.descricao|truncatechars:120 }}</p>
+    <p class="muted">Preço por noite: R$ {{ p.preco_por_noite }}</p>
+  </div>
+  {% empty %}
+  <p>Nenhuma propriedade disponível.</p>
+  {% endfor %}
+</div>
+{% endblock %}
