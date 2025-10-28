@@ -1,16 +1,21 @@
+
 import os
 import json
 import pytest
 import sys
 import pathlib
-from .ConstrucaoDeDados import gerar_imovel
-from django.test import Client 
 
+# Importação robusta do ConstrucaoDeDados
 try:
     import ConstrucaoDeDados as cd
-except ModuleNotFoundError:
-    sys.path.append(str(pathlib.Path(__file__).parent))
+except ImportError:
+    # Tenta importar do diretório pai (Dados)
+    base_dir = pathlib.Path(__file__).resolve().parent.parent
+    if str(base_dir) not in sys.path:
+        sys.path.insert(0, str(base_dir))
     import ConstrucaoDeDados as cd
+
+from ConstrucaoDeDados import gerar_imovel
 
 CAMPOS_OBRIGATORIOS = {
     "tipo", "endereco", "quartos", "banheiros", "vagas_garagem", "area_m2",
@@ -182,7 +187,10 @@ def test_gerar_disponibilidade_com_mock(monkeypatch):
     periodo = disponibilidade[0]
     assert "inicio" in periodo and "fim" in periodo
     assert periodo["inicio"] <= periodo["fim"]
-    # Regra de geração: max_hospedes entre n_quartos e 2*n_quartos+2
+    # Busca um imóvel para validar a regra de max_hospedes/quartos
+    imovel = cd.gerar_imovel()
+    quartos = imovel["quartos"]
+    max_hospedes = imovel["max_hospedes"]
     assert quartos <= max_hospedes <= (quartos * 2 + 2)
 
 
