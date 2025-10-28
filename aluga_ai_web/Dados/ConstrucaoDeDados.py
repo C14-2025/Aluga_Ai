@@ -1,6 +1,63 @@
+# Novas listas para hóspedes e políticas
+nomes_hospedes = [
+    "Lucas", "Mariana", "Pedro", "Juliana", "Rafael", "Camila", "Bruno", "Larissa", "Felipe", "Amanda",
+    "Gabriel", "Patrícia", "Thiago", "Beatriz", "Vinícius", "Renata", "Eduardo", "Aline", "Rodrigo", "Letícia"
+]
+politicas_reembolso = [
+    "Total até 7 dias antes", "50% até 3 dias antes", "Não reembolsável"
+]
+
+def gerar_reservas(disponibilidade, preco_base):
+    reservas = []
+    for periodo in disponibilidade:
+        # 30% de chance de ter uma reserva para o período
+        if random.random() < 0.3:
+            inicio = periodo["inicio"]
+            fim = periodo["fim"]
+            dias = (datetime.strptime(fim, "%Y-%m-%d") - datetime.strptime(inicio, "%Y-%m-%d")).days
+            valor = periodo["preco_aluguel"] * dias
+            taxa_limpeza = random.randint(50, 200)
+            taxa_servico = int(valor * random.uniform(0.05, 0.15))
+            hospede = random.choice(nomes_hospedes)
+            status = random.choice(["confirmada", "cancelada", "finalizada"])
+            politica_reembolso = random.choice(politicas_reembolso)
+            reservas.append({
+                "inicio": inicio,
+                "fim": fim,
+                "dias": dias,
+                "valor": valor,
+                "taxa_limpeza": taxa_limpeza,
+                "taxa_servico": taxa_servico,
+                "valor_total": valor + taxa_limpeza + taxa_servico,
+                "hospede": hospede,
+                "status": status,
+                "politica_reembolso": politica_reembolso
+            })
+    return reservas
+
+def gerar_avaliacoes_reservas(reservas):
+    avaliacoes = []
+    for r in reservas:
+        if r["status"] == "finalizada" and random.random() < 0.8:
+            nota = round(random.uniform(3.5, 5.0), 1)
+            comentario = random.choice([
+                "Ótima estadia, recomendo!",
+                "Anfitrião muito atencioso.",
+                "Localização excelente, voltaria com certeza.",
+                "Apartamento limpo e confortável.",
+                "Tive alguns problemas, mas foram resolvidos rapidamente."
+            ])
+            data = r["fim"]
+            avaliacoes.append({
+                "nota": nota,
+                "comentario": comentario,
+                "data": data,
+                "hospede": r["hospede"]
+            })
+    return avaliacoes
 import random
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 # Tabela de preços médios por m² para bairros em cidades
 precos_m2 = {
@@ -164,6 +221,24 @@ def gerar_disponibilidade():
         blocos.append({"inicio": inicio.strftime("%Y-%m-%d"), "fim": fim.strftime("%Y-%m-%d")})
     return blocos
 
+# Datas especiais (alta demanda)
+DATAS_ESPECIAIS = [
+    # Réveillon
+    (date(datetime.now().year, 12, 28), date(datetime.now().year + 1, 1, 2)),
+    # Carnaval (exemplo: fevereiro)
+    (date(datetime.now().year, 2, 20), date(datetime.now().year, 2, 26)),
+    # Férias escolares (julho)
+    (date(datetime.now().year, 7, 1), date(datetime.now().year, 7, 31)),
+    # Natal
+    (date(datetime.now().year, 12, 20), date(datetime.now().year, 12, 27)),
+]
+
+def is_data_especial(data):
+    for inicio, fim in DATAS_ESPECIAIS:
+        if inicio <= data <= fim:
+            return True
+    return False
+
 def gerar_imovel():
     tipo = random.choice(tipos)
     endereco = gerar_endereco()
@@ -174,6 +249,30 @@ def gerar_imovel():
     area = random.randint(30, 300) if tipo == "Apartamento" else random.randint(50, 500)
     preco_m2 = preco_m2_por_bairro(cidade, endereco["bairro"])
     preco = int(area * preco_m2 * random.uniform(0.9, 1.2))
+    disponibilidade = []
+    hoje = datetime.now()
+    for _ in range(random.randint(5, 12)):
+        inicio = hoje + timedelta(days=random.randint(7, 180))
+        fim = inicio + timedelta(days=random.randint(2, 21))
+        datas_periodo = [inicio.date() + timedelta(days=i) for i in range((fim.date() - inicio.date()).days)]
+        tem_data_especial = any(is_data_especial(d) for d in datas_periodo)
+        # Variação de preço diária
+        precos_diarios = []
+        for d in datas_periodo:
+            preco_dia = preco
+            if is_data_especial(d):
+                preco_dia = int(preco * random.uniform(1.2, 1.5))
+            precos_diarios.append({"data": d.strftime("%Y-%m-%d"), "preco": preco_dia})
+        preco_periodo = max([p["preco"] for p in precos_diarios]) if tem_data_especial else preco
+        disponibilidade.append({
+            "inicio": inicio.strftime("%Y-%m-%d"),
+            "fim": fim.strftime("%Y-%m-%d"),
+            "preco_aluguel": preco_periodo,
+            "alta_demanda": tem_data_especial,
+            "precos_diarios": precos_diarios
+        })
+    reservas = gerar_reservas(disponibilidade, preco)
+    avaliacoes = gerar_avaliacoes_reservas(reservas)
     anfitriao = random.choice(anfitrioes)
     camas = random.randint(1, quartos + 2)
     tipo_cama = random.choice(tipos_cama)
@@ -188,7 +287,6 @@ def gerar_imovel():
     tempo_anuncio = random.randint(1, 48)
     status = random.choice(["ativo", "inativo"])
     tags = random.sample(tags_possiveis, random.randint(1, 4))
-    disponibilidade = gerar_disponibilidade()
     lat, lon = gerar_lat_lon(cidade)
     return {
         "tipo": tipo,
@@ -201,7 +299,7 @@ def gerar_imovel():
         "descricao": random.choice(descricoes),
         "comodidades": gerar_comodidades(),
         "fotos": gerar_fotos(),
-        "avaliacoes": gerar_avaliacoes(),
+        "avaliacoes": avaliacoes,
         "nota_media": round(random.uniform(3.5, 5.0), 2),
         "regras_casa": gerar_regras(),
         "camas": camas,
@@ -224,14 +322,15 @@ def gerar_imovel():
         "latitude": lat,
         "longitude": lon,
         "tags": tags,
-        "disponibilidade": disponibilidade
+        "disponibilidade": disponibilidade,
+        "reservas": reservas
     }
 
-def gerar_lista_imoveis(qtd=20):
+def gerar_lista_imoveis(qtd=200):
     return [gerar_imovel() for _ in range(qtd)]
 
 if __name__ == "__main__":
-    dados = gerar_lista_imoveis(10)
-    with open("imoveis_gerados.json", "w", encoding="utf-8") as f:
+    dados = gerar_lista_imoveis(2000)  
+    with open("raw/imoveis_gerados.json", "w", encoding="utf-8") as f:
         json.dump(dados, f, ensure_ascii=False, indent=2)
     print(json.dumps(dados[0], ensure_ascii=False, indent=2))

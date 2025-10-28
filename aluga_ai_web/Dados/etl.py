@@ -41,61 +41,94 @@ class ETLPipeline:
         return df
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Transforma e enriquece os dados."""
+        """Transforma, enriquece e preprocessa os dados para modelagem."""
         logger.info("Iniciando transformações...")
-        
+
+        # Explodir disponibilidade: cada linha será um período disponível do imóvel
+        df = df.explode("disponibilidade").reset_index(drop=True)
+        # Disponibilidade pode ser None se não houver períodos
+        df = df[df["disponibilidade"].notnull()]
+        disp_df = pd.json_normalize(df["disponibilidade"])
+        disp_df.columns = ["disp_" + col for col in disp_df.columns]
+        df = pd.concat([df.drop("disponibilidade", axis=1), disp_df], axis=1)
+
         # Expandir coluna endereco
         endereco_df = pd.json_normalize(df["endereco"])
         endereco_df.columns = ["endereco_" + col for col in endereco_df.columns]
         df = pd.concat([df.drop("endereco", axis=1), endereco_df], axis=1)
-        
+
         # Expandir coluna anfitriao
         anfitriao_df = pd.json_normalize(df["anfitriao"])
         anfitriao_df.columns = ["anfitriao_" + col for col in anfitriao_df.columns]
         df = pd.concat([df.drop("anfitriao", axis=1), anfitriao_df], axis=1)
-        
+
         # Features derivadas de listas
         df["num_comodidades"] = df["comodidades"].apply(lambda x: len(x) if isinstance(x, list) else 0)
         df["num_fotos"] = df["fotos"].apply(lambda x: len(x) if isinstance(x, list) else 0)
         df["num_avaliacoes"] = df["avaliacoes"].apply(lambda x: len(x) if isinstance(x, list) else 0)
         df["num_regras"] = df["regras_casa"].apply(lambda x: len(x) if isinstance(x, list) else 0)
         df["num_tags"] = df["tags"].apply(lambda x: len(x) if isinstance(x, list) else 0)
-        
+
         # Feature de localização estratégica
         df["loc_estrategica"] = (
             (df["distancia_metro_km"] < 1.0) | (df["distancia_onibus_km"] < 0.5)
         ).astype(int)
-        
+
         # Quality score baseado em múltiplos fatores
         df["quality_score"] = (
             df["nota_media"] * 0.4 +
-            (df["num_avaliacoes"] / df["num_avaliacoes"].max()) * 2 +
+            (df["num_avaliacoes"] / (df["num_avaliacoes"].max() if df["num_avaliacoes"].max() > 0 else 1)) * 2 +
             (df["num_fotos"] / 10) * 0.5 +
             df["anfitriao_superhost"].astype(int) * 1.0
         )
-        
+
         # Remover colunas complexas que não serão usadas no modelo
         cols_to_drop = ["comodidades", "fotos", "avaliacoes", "regras_casa", 
-                        "tags", "disponibilidade", "descricao", "endereco_complemento",
+                        "tags", "descricao", "endereco_complemento",
                         "endereco_cep", "endereco_rua", "endereco_numero",
                         "anfitriao_nome", "anfitriao_foto", "checkin", "checkout"]
         df = df.drop(columns=[col for col in cols_to_drop if col in df.columns])
-        
+
+        # Preço dinâmico e alta demanda
+        df["preco_aluguel"] = df["disp_preco_aluguel"]
+        df["alta_demanda"] = df["disp_alta_demanda"].astype(int)
+        df["periodo_inicio"] = df["disp_inicio"]
+        df["periodo_fim"] = df["disp_fim"]
+        df = df.drop(columns=[col for col in df.columns if col.startswith("disp_")])
+
         # Tratar valores ausentes
         df = df.fillna(0)
-        
+
         # Filtrar outliers extremos (opcional)
         q99 = df["preco_aluguel"].quantile(0.99)
         q01 = df["preco_aluguel"].quantile(0.01)
         df = df[(df["preco_aluguel"] >= q01) & (df["preco_aluguel"] <= q99)]
-        
-        logger.info(f"Transformações concluídas. Registros finais: {len(df)}")
+
+        # Pré-processamento para modelos
+        # One-hot para tipo, politica_cancelamento, tipo_cama, status, endereco_cidade, endereco_bairro
+        cat_cols = ["tipo", "politica_cancelamento", "tipo_cama", "status", "endereco_cidade", "endereco_bairro"]
+        df = pd.get_dummies(df, columns=cat_cols, drop_first=True)
+
+        # Normalização de colunas numéricas
+        from sklearn.preprocessing import MinMaxScaler
+        num_cols = [
+            "quartos", "banheiros", "vagas_garagem", "area_m2", "nota_media", "camas",
+            "ano_construcao", "andar", "condominio", "iptu", "distancia_metro_km", "distancia_onibus_km",
+            "max_hospedes", "tempo_anuncio_meses", "latitude", "longitude", "num_comodidades",
+            "num_fotos", "num_avaliacoes", "num_regras", "num_tags", "quality_score"
+        ]
+        scaler = MinMaxScaler()
+        for col in num_cols:
+            if col in df.columns:
+                df[col] = scaler.fit_transform(df[[col]])
+
+        logger.info(f"Transformações e preprocessamento concluídos. Registros finais: {len(df)}")
         return df
 
     def load(self, df: pd.DataFrame) -> Path:
         """Salva dados processados."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_file = self.processed_dir / f"imoveis_processed_{timestamp}.csv"
+        output_file = self.processed_dir / f"processed/imoveis_processed_{timestamp}.csv"
         
         df.to_csv(output_file, index=False, encoding="utf-8")
         logger.info(f"Dados salvos em: {output_file}")
