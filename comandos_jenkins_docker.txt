@@ -1,0 +1,61 @@
+docker build -t jenkins-custom -f Dockerfile.jenkins .
+docker run --name jenkinsc14 -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins-custom
+docker exec jenkinsc14 cat /var/jenkins_home/secrets/initialAdminPassword
+# Comandos para rodar o Jenkins em Docker
+
+# 1. Remover container antigo (se existir)
+docker rm -f jenkinsc14
+
+# 2. Build da imagem customizada do Jenkins
+docker build -t jenkins-custom -f Dockerfile.jenkins .
+
+# 3. Rodar o container do Jenkins com nome personalizado, volume persistente e acesso ao Docker do host
+docker run --name jenkinsc14 -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins-custom
+
+# 4. Ver a senha inicial do Jenkins para o primeiro login
+docker exec jenkinsc14 cat /var/jenkins_home/secrets/initialAdminPassword
+
+# Acesse o Jenkins em http://localhost:8080
+
+# =============================
+# Pipeline Python/Django (alugaai-app)
+# =============================
+
+# 5. Build da imagem da aplicação (Python/Django)
+docker build -t alugaai-app -f Dockerfile.app .
+
+# 6. Certifique-se de que a imagem alugaai-app está disponível para o Jenkins usar no pipeline
+#    O Jenkinsfile já está configurado para usar:
+#    agent {
+#      docker {
+#        image 'alugaai-app'
+#        args '-p 8000:8000'
+#      }
+#    }
+
+# 7. Dicas importantes:
+# - O pipeline será executado em ambiente Linux (imagem Docker baseada em python:3.13-slim).
+# - Não é necessário definir "ubuntu-latest" como no GitHub Actions.
+# - O Jenkins precisa do plugin Docker Pipeline instalado para rodar jobs em containers.
+# - Se der erro de permissão no Docker dentro do Jenkins, rode o container Jenkins como root (adicione --user root ao docker run).
+# - Para jobs Python funcionarem, a imagem alugaai-app deve conter todas as dependências do seu projeto (requirements.txt, pytest, etc).
+# - Para enviar email, configure o plugin Email Extension no Jenkins e as variáveis de ambiente de SMTP.
+
+# 8. Exemplo de build e execução do pipeline:
+# - Build da imagem da aplicação:
+#     docker build -t alugaai-app -f Dockerfile.app .
+# - Build da imagem do Jenkins:
+#     docker build -t jenkins-custom -f Dockerfile.jenkins .
+# - Rodar Jenkins:
+#     docker run --name jenkinsc14 -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --user root jenkins-custom
+# - Acesse o Jenkins em http://localhost:8080 e rode o pipeline normalmente.
+
+# 9. Troubleshooting:
+# - Se o pipeline falhar com "python: not found", verifique se a imagem alugaai-app foi buildada corretamente.
+# - Se der erro de permissão no Docker, rode Jenkins como root.
+# - Se precisar rodar comandos adicionais, edite o Jenkinsfile conforme necessário.
+
+# 10. Documentação útil:
+# - https://www.jenkins.io/doc/book/pipeline/docker/
+# - https://docs.docker.com/engine/reference/commandline/run/
+# - https://docs.pytest.org/

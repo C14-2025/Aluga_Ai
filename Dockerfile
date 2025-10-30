@@ -1,21 +1,9 @@
-# Dockerfile para Django + Python 3.9
-FROM python:3.9-slim
+# Dockerfile para rodar o servidor Jenkins puro
+FROM jenkins/jenkins:lts
 
-# Define diretório de trabalho
-WORKDIR /app
+# Instala mailutils (opcional, só se for usar notificação por email)
+USER root
+RUN apt-get update && apt-get install -y mailutils && apt-get clean
 
-# Copia os arquivos de requirements
-COPY requirements.txt ./
-
-# Instala dependências
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
-
-# Copia todo o código do projeto
-COPY . .
-
-# Expõe a porta padrão do Django
-EXPOSE 8000
-
-# Comando padrão para rodar o servidor (pode ser alterado no Jenkins)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+USER jenkins
+# Jenkins será iniciado automaticamente ao rodar o container
