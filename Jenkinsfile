@@ -1,12 +1,9 @@
 pipeline {
     agent {
         docker {
-            // Use a Python base image so `python` and `pip` are available in the agent container.
-            // If you maintain a custom image `alugaai-app`, consider building it to include Python and project dependencies
-            // and switch back to it once available.
-            image 'python:3.11-slim'
+            image 'alugaai-app'
             args '-p 8000:8000 -w /app'
-        }
+        }p
     }
     environment {
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
@@ -33,12 +30,9 @@ pipeline {
             steps {
                 sh 'pwd'
                 sh 'ls -l'
-                // try the workspace absolute path as a fallback if /app doesn't contain the repo
-                sh 'ls -l "$WORKSPACE/requirements.txt" || ls -l requirements.txt || echo "requirements.txt não encontrado"'
+                sh 'ls -l requirements.txt || echo "requirements.txt não encontrado"'
                 sh 'python --version'
                 sh 'python -m pip install --upgrade pip'
-                // install from the workspace path to avoid depending on the earlier copy step
-                sh 'pip install -r "$WORKSPACE/requirements.txt"'
                 sh 'python manage.py migrate'
                 dir('aluga_ai_web') {
                     sh 'pytest BancoDeDados/test_bd.py --template=html1/index.html --report=report_bd.html'
