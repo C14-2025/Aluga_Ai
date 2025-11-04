@@ -1,7 +1,10 @@
 pipeline {
     agent {
         docker {
-            image 'alugaai-app'
+            // Use a Python base image so `python` and `pip` are available in the agent container.
+            // If you maintain a custom image `alugaai-app`, consider building it to include Python and project dependencies
+            // and switch back to it once available.
+            image 'python:3.11-slim'
             args '-p 8000:8000 -w /app'
         }
     }
@@ -15,6 +18,10 @@ pipeline {
             steps {
                 // ensure the repository is checked out into the Jenkins workspace
                 checkout scm
+                // copy workspace contents into /app so runtime container has the project files
+                // this makes the job resilient to the Docker agent's working-dir behavior
+                sh 'echo "Copying workspace to /app (if present)..."'
+                sh 'cp -a "$WORKSPACE/." /app/ || true'
                 // debug: show what files are present in the workspace inside the container
                 sh 'pwd'
                 sh 'ls -la'
@@ -26,10 +33,12 @@ pipeline {
             steps {
                 sh 'pwd'
                 sh 'ls -l'
-                sh 'ls -l requirements.txt || echo "requirements.txt não encontrado"'
+                // try the workspace absolute path as a fallback if /app doesn't contain the repo
+                sh 'ls -l "$WORKSPACE/requirements.txt" || ls -l requirements.txt || echo "requirements.txt não encontrado"'
                 sh 'python --version'
                 sh 'python -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt'
+                // install from the workspace path to avoid depending on the earlier copy step
+                sh 'pip install -r "$WORKSPACE/requirements.txt"'
                 sh 'python manage.py migrate'
                 dir('aluga_ai_web') {
                     sh 'pytest BancoDeDados/test_bd.py --template=html1/index.html --report=report_bd.html'
