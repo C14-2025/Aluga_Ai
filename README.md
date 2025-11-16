@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
    <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="status" />
    <img src="https://img.shields.io/badge/python-3.13-blue" alt="python" />
    <img src="https://img.shields.io/badge/django-%20-green" alt="django" />
@@ -20,27 +20,21 @@ Inclui também integração com API externa (exemplo inicial) e estrutura expans
 
 ```bash
 ALUGA_AI/
-│
-├── aluga_ai_web/                  # Diretório raiz interno do projeto Django
-│   ├── aluga_ai_web/              # Configurações Django (settings, urls, wsgi, asgi)
-│   ├── BancoDeDados/              # Integração CRUD + testes BD (`test_bd.py`)
-│   ├── Dados/                     # ETL, geração de dados, testes (`test_etl.py`)
-│   ├── ml/                        # Treino e modelos (ex: `train_model.py`, `models/model.pkl`)
-│   ├── reservas/ / usuarios/ ...  # Apps Django (ex: reservas, usuários, propriedades)
-│   └── jobs/                      # Scripts auxiliares (ex: `validate_recommendation_system.py`)
-├── Jenkinsfile                    # Pipeline Jenkins declarativa parametrizada
-├── GUIA_PIPELINE.md               # Guia rápido de uso da pipeline e execução
-├── docker-compose.yml             # Orquestração local (Jenkins + app)
-├── Dockerfile                     # Container da aplicação Django
-├── requirements.txt               # Dependências Python
-├── manage.py                      # Entrypoint Django
-└── validation_results.json        # Saída da validação do sistema de recomendação
-│
-├── .gitignore                    # Arquivos/pastas ignorados pelo Git
-├── manage.py                     # Comando principal para rodar o Django
-├── pytest.ini                    # Configurações do pytest-django
-├── README.md                     # Documentação do projeto
-└── requirements.txt              # Dependências do Python
+
+ aluga_ai_web/                  # Diretório raiz interno do projeto Django
+    aluga_ai_web/              # Configurações Django (settings, urls, wsgi, asgi)
+    BancoDeDados/              # Integração CRUD + testes BD (`test_bd.py`)
+    Dados/                     # ETL, geração de dados, testes (`test_etl.py`)
+    ml/                        # Treino e modelos (ex: `train_model.py`, `models/model.pkl`)
+    reservas/ / usuarios/ ...  # Apps Django (ex: reservas, usuários, propriedades)
+    jobs/                      # Scripts auxiliares (ex: `validate_recommendation_system.py`)
+ Jenkinsfile                    # Pipeline Jenkins declarativa parametrizada
+ Como_usar.md                   # Guia rápido para rodar app e pipeline
+ docker-compose.yml             # Orquestração local (Jenkins + app)
+ Dockerfile                     # Container da aplicação Django
+ requirements.txt               # Dependências Python
+ manage.py                      # Entrypoint Django
+ validation_results.json        # Saída da validação do sistema de recomendação
 ```
 
 ### Modelagem de Dados (resumo)
@@ -67,7 +61,7 @@ pip install -r requirements.txt
 python manage.py migrate --noinput
 python manage.py runserver 0.0.0.0:8000
 ```
-Acesse: http://localhost:8000
+Acesse: <http://localhost:8000>
 
 ## 4. Testes
 Rodar todos:
@@ -97,43 +91,6 @@ python jobs/validate_recommendation_system.py
 ```
 Resultados consolidados em `validation_results.json`.
 
-## Testes
-
-Executar todos os testes com relatório:
-
-```bash
-pytest -v --template=html1/index.html --report=report.html 
-```
-
-Executar somente geração:
-
-```bash
-pytest .\aluga_ai_web\Dados\test_api.py
-```
-
-Executar somente integração:
-
-```bash
-pytest .\aluga_ai_web\BancoDeDados\test_bd.py
-```
-
-## Observações
-
-## Possíveis Extensões
-
-- Filtro por cidade/bairro em `listar_imoveis`
-- Indexação por geolocalização
-- Endpoint FastAPI/Flask expondo CRUD
-- Normalização parcial (separar anfitriões e avaliações)
-
-## Problemas Comuns
-
-| Sintoma | Causa | Solução |
-|--------|-------|---------|
-| 401 Invalid API key | Chave errada ou truncada | Copiar novamente de Settings > API |
-| Campos ausentes em teste | Alteração em `gerar_imovel` | Atualizar lista de campos no teste |
-| Falha de import pytest | Caminho relativo | Rodar na raiz do projeto `pytest` |
-
 ## 7. Containerização
 Dockerfile simplificado:
 ```dockerfile
@@ -146,12 +103,17 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ```
 Build & run:
 ```powershell
-
-- O projeto utiliza uma chave de API do RapidAPI. **Não exponha sua chave em ambientes públicos.**
+docker build -t aluga-ai:dev .
+docker run -it --rm -p 8000:8000 aluga-ai:dev
 ```
 Parar:
 ```powershell
-- O endpoint utilizado consulta detalhes de uma escola específica (`id=0717323601`).
+docker stop $(docker ps -q --filter ancestor=aluga-ai:dev)
+```
+Ou via Docker Compose:
+```powershell
+docker-compose up -d app
+docker-compose down
 ```
 
 ## 8. CI/CD (Jenkins)
@@ -174,7 +136,7 @@ Fluxo condicional:
 5. Deploy se Build + Push + `DEPLOY_APP` + branch `main`.
 
 Relatórios: HTML (pytest), artefatos (`pylint_report.txt`, `flake8_report.txt`, `server.log`).
-Guia detalhado: ver `GUIA_PIPELINE.md`.
+Guia de uso completo (Jenkins, webhook, Docker Hub): ver `Como_usar.md`.
 
 ### Cenários
 | Objetivo | Configuração |
@@ -185,7 +147,7 @@ Guia detalhado: ver `GUIA_PIPELINE.md`.
 | Deploy produção | (branch main) todos true |
 
 ### Criação Multibranch
-1. New Item → Multibranch Pipeline
+1. New Item  Multibranch Pipeline
 2. Git URL do repositório
 3. Scan Repository
 4. Executar branch `Actions_to_Jenkins`
@@ -230,11 +192,4 @@ Em caso de dúvidas: abrir Issue ou contatar responsáveis da turma.
 
 ---
 _Este README foi atualizado para refletir a migração de GitHub Actions para Jenkins e a adoção de uma pipeline parametrizada com suporte a Docker e deploy._
-- Os testes automatizados garantem que a resposta da API está correta.
-
-#   C I / C D   a u t o m a t i z a d o   c o m   J e n k i n s  
- 
- # #   W e b h o o k   T e s t   1 6 : 2 6 : 5 2  
- 
- # #   D o c k e r   b u i l d   t e s t   -   1 6 : 3 6 : 1 1  
- 
+Os testes automatizados garantem que a resposta da API está correta.
