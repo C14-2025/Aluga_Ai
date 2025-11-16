@@ -1,34 +1,40 @@
-# Aluga_Ai - Consulta de API de estabelecimentos
+<p align="center">
+   <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" alt="status" />
+   <img src="https://img.shields.io/badge/python-3.13-blue" alt="python" />
+   <img src="https://img.shields.io/badge/django-%20-green" alt="django" />
+</p>
 
-=======
 # Aluga_Ai
 
+Plataforma acadêmica que simula um marketplace de aluguel de imóveis (temporário e longa duração) com:
+- Geração e enriquecimento de dados de propriedades (scripts ETL)
+- Persistência / CRUD (Supabase simplificado)
+- Sistema de recomendação validado por script de análise
+- Testes automatizados (pytest / Django test runner)
+- Pipeline CI/CD parametrizada em Jenkins
+- Containerização (Docker)
 
-Projeto de geração, persistência e teste de dados simulados de imóveis para um cenário tipo marketplace (aluguel temporário / longa duração).
-=======
-# Aluga_Ai - Consulta de API de Estabelecimentos
+Inclui também integração com API externa (exemplo inicial) e estrutura expansível para novas features.
 
-Este projeto realiza chamadas à [Realtor API Data](https://rapidapi.com/) para obter detalhes de escolas utilizando Python e Django. Inclui testes automatizados com pytest para garantir o funcionamento das requisições.
->>>>>>> Stashed changes
-
-## Estrutura dos Arquivos
+## 1. Estrutura do Projeto
 
 ```bash
 ALUGA_AI/
 │
-├── .pytest_cache/
-│
-├── aluga_ai_web/                 # Pasta principal do projeto
-│   │
-│   ├── aluga_ai_web/             # Diretório Django principal (settings, urls, wsgi, etc.)
-│   │
-│   ├── BancoDeDados/ 
-│   │   └── test_bd.py              # Arquivo de testes (pytest)
-│   │
-│   ├── Dados/                    # Scripts, geradores de dados e testes unitários relacionados
-│   │   └── test_api.py           # Arquivo de testes (pytest)
-│   │
-│   └── reservas/                 # Aplicação Django para gerenciamento de reservas
+├── aluga_ai_web/                  # Diretório raiz interno do projeto Django
+│   ├── aluga_ai_web/              # Configurações Django (settings, urls, wsgi, asgi)
+│   ├── BancoDeDados/              # Integração CRUD + testes BD (`test_bd.py`)
+│   ├── Dados/                     # ETL, geração de dados, testes (`test_etl.py`)
+│   ├── ml/                        # Treino e modelos (ex: `train_model.py`, `models/model.pkl`)
+│   ├── reservas/ / usuarios/ ...  # Apps Django (ex: reservas, usuários, propriedades)
+│   └── jobs/                      # Scripts auxiliares (ex: `validate_recommendation_system.py`)
+├── Jenkinsfile                    # Pipeline Jenkins declarativa parametrizada
+├── GUIA_PIPELINE.md               # Guia rápido de uso da pipeline e execução
+├── docker-compose.yml             # Orquestração local (Jenkins + app)
+├── Dockerfile                     # Container da aplicação Django
+├── requirements.txt               # Dependências Python
+├── manage.py                      # Entrypoint Django
+└── validation_results.json        # Saída da validação do sistema de recomendação
 │
 ├── .gitignore                    # Arquivos/pastas ignorados pelo Git
 ├── manage.py                     # Comando principal para rodar o Django
@@ -37,59 +43,59 @@ ALUGA_AI/
 └── requirements.txt              # Dependências do Python
 ```
 
-Campos incluídos: localização (lat/long), regras, avaliações, tags, distâncias, status, política de cancelamento, mobiliado, custos (condomínio, IPTU), disponibilidade em períodos.
+### Modelagem de Dados (resumo)
+Campos gerados incluem: localização (lat/long), regras, avaliações, tags, distâncias, status, política de cancelamento, mobiliado, custos (condomínio/IPTU), disponibilidade por período, atributos para recomendação.
 
-### 2. Integração com Supabase
-Arquivo: `BancoDeDados/Integracao.py` (versão simplificada CRUD)  
-Principais funções:
-- `criar_imoveis(dados)`
-- `listar_imoveis(limit, offset, ...)`
-- `obter_imovel_por_id(id)`
-- `atualizar_imovel(id, campos)`
-- `deletar_imovel(id)`
-- `deletar_todos_imoveis(confirmar=True)`
-
-   Certifique-se de ter o Python instalado. Para rodar o servidor e os testes, instale o pytest e o Django:
-
-   ```bash
-   pip install pytest django requests
-   ```
-
-## Instalação
-
-```bash
-pip install pytest supabase psycopg2-binary
-```
-
-3. **Realize a chamada à API**
-
-   Você pode importar e usar a função `chamada_api()` para obter os dados da escola em formato JSON (string).
-
-4. **Rode o servidor Django**
-
-<<<<<<< Updated upstream
-## Execução da Geração
-
-```bash
-python API/ConstrucaoDeDados.py
-```
-
-Resultado: cria/atualiza `API/imoveis_gerados.json`
-
-## Uso do CRUD (Supabase)
-
-No arquivo `BancoDeDados/Integracao.py`, adapte ou mantenha as constantes:
-
+## 2. Integração & Persistência
+Arquivo principal: `BancoDeDados/Integracao.py`
+Funções básicas CRUD:
 ```python
-SUPABASE_URL = "https://SEU_PROJETO.supabase.co"
-SUPABASE_KEY = "CHAVE_ANON_PUBLIC"
+criar_imoveis(dados)
+listar_imoveis(limit, offset, filtros)
+obter_imovel_por_id(id)
+atualizar_imovel(id, campos)
+deletar_imovel(id)
+deletar_todos_imoveis(confirmar=True)
 ```
 
-Depois:
-
-```bash
-python BancoDeDados/TesteCRUD.py
+## 3. Execução Local Rápida
+Pré-requisitos: Python 3.13
+```powershell
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate --noinput
+python manage.py runserver 0.0.0.0:8000
 ```
+Acesse: http://localhost:8000
+
+## 4. Testes
+Rodar todos:
+```powershell
+pytest -v
+```
+Testes específicos:
+```powershell
+pytest aluga_ai_web/BancoDeDados/test_bd.py
+pytest aluga_ai_web/Dados/test_etl.py
+python manage.py test
+```
+
+## 5. ETL & Geração de Dados
+Script principal: `aluga_ai_web/Dados/etl.py` (pipeline de transformação). Executar:
+```powershell
+venv\Scripts\activate
+python aluga_ai_web/Dados/etl.py
+```
+Geração de dados simulados: `ConstrucaoDeDados.py`
+
+## 6. Sistema de Recomendação
+Validação rápida:
+```powershell
+venv\Scripts\activate
+python jobs/validate_recommendation_system.py
+```
+Resultados consolidados em `validation_results.json`.
 
 ## Testes
 
@@ -128,28 +134,103 @@ pytest .\aluga_ai_web\BancoDeDados\test_bd.py
 | Campos ausentes em teste | Alteração em `gerar_imovel` | Atualizar lista de campos no teste |
 | Falha de import pytest | Caminho relativo | Rodar na raiz do projeto `pytest` |
 
-## Licença
-
-Uso acadêmico / estudo. Ajustar conforme necessidade.
-=======
-   ```bash
-   cd aluga_ai_web
-   python manage.py runserver
-   ```
-   Acesse `http://127.0.0.1:8000/consulta/` para visualizar os dados da API.
-
-5. **Execute os testes**
-
-   Para rodar o teste automatizado e verificar se a API está respondendo corretamente:
-
-   ```bash
-   pytest aluga_ai_web/API/TesteApi.py
-   ```
-
-## Observações
+## 7. Containerização
+Dockerfile simplificado:
+```dockerfile
+FROM python:3.13-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+```
+Build & run:
+```powershell
 
 - O projeto utiliza uma chave de API do RapidAPI. **Não exponha sua chave em ambientes públicos.**
+```
+Parar:
+```powershell
 - O endpoint utilizado consulta detalhes de uma escola específica (`id=0717323601`).
-- Os testes automatizados garantem que a resposta da API está correta.
+```
+
+## 8. CI/CD (Jenkins)
+Pipeline declarativa em `Jenkinsfile` com parâmetros:
+| Param | Default | Descrição |
+|-------|---------|-----------|
+| RUN_TESTS | true | Executa estágios de teste/qualidade/validação. |
+| BUILD_DOCKER_IMAGE | false | Constrói imagem Docker. |
+| PUSH_TO_REGISTRY | false | Faz push da imagem para Docker Hub. |
+| DEPLOY_APP | false | Deploy (somente branch `main`). |
+| DOCKERHUB_REPO | `seu-usuario/aluga-ai` | Repositório Docker destino. |
+| CREDENTIALS_ID | `dockerhub-credentials` | ID de credencial Jenkins para login. |
+| NOTIFY_EMAIL | (vazio) | E-mail para notificações de sucesso/falha. |
+
+Fluxo condicional:
+1. Checkout / Prepare sempre.
+2. Testes + Qualidade se `RUN_TESTS`.
+3. Build se `BUILD_DOCKER_IMAGE`.
+4. Push se Build + `PUSH_TO_REGISTRY`.
+5. Deploy se Build + Push + `DEPLOY_APP` + branch `main`.
+
+Relatórios: HTML (pytest), artefatos (`pylint_report.txt`, `flake8_report.txt`, `server.log`).
+Guia detalhado: ver `GUIA_PIPELINE.md`.
+
+### Cenários
+| Objetivo | Configuração |
+|----------|--------------|
+| Somente testes | RUN_TESTS=true; demais false |
+| Build local | RUN_TESTS=true; BUILD_DOCKER_IMAGE=true |
+| Publicar imagem | RUN_TESTS=true; BUILD_DOCKER_IMAGE=true; PUSH_TO_REGISTRY=true |
+| Deploy produção | (branch main) todos true |
+
+### Criação Multibranch
+1. New Item → Multibranch Pipeline
+2. Git URL do repositório
+3. Scan Repository
+4. Executar branch `Actions_to_Jenkins`
+
+## 9. Branches
+- `main`: linha principal / produção
+- `Actions_to_Jenkins`: migração CI/CD
+- Futuras feature branches: integração automática via multibranch
+
+## 10. Qualidade de Código
+Ferramentas: `pylint`, `flake8` (não bloqueiam build: `--exit-zero`).
+Possível expansão: adicionar cobertura (`coverage.py`) e métricas.
+
+## 11. Troubleshooting Rápido
+| Sintoma | Causa | Solução |
+|--------|-------|---------|
+| Erro venv no Jenkins | Ambiente limpo sem Python global | Jenkinsfile já cria venv; garantir imagem base padrão. |
+| Plugin HTML não publica | Plugin ausente | Instalar "HTML Publisher" no Jenkins. |
+| Push Docker falha | Credenciais inválidas | Recriar credencial `dockerhub-credentials`. |
+| Deploy ignorado | Branch diferente de main | Fazer merge para `main`. |
+| Teste ETL falha | Mudança em schema | Atualizar testes e scripts de geração. |
+
+## 12. Próximas Extensões
+- Cobertura de testes (coverage + badge)
+- Geração de imagem multi-stage (menor tamanho)
+- Webhooks para builds automáticos em cada push
+- Testes de integração + carga
+- Observabilidade (logging estruturado / métricas)
+
+## 13. Contribuição
+1. Criar branch feature
+2. Implementar + testes
+3. Commit + push
+4. Abrir PR para `main`
+5. Esperar validação da pipeline e revisão
+
+## 14. Licença / Uso
+Uso acadêmico e estudo. Ajuste conforme necessidade institucional.
+
+## 15. Contato / Suporte
+Em caso de dúvidas: abrir Issue ou contatar responsáveis da turma.
 
 ---
+_Este README foi atualizado para refletir a migração de GitHub Actions para Jenkins e a adoção de uma pipeline parametrizada com suporte a Docker e deploy._
+- Os testes automatizados garantem que a resposta da API está correta.
+
+#   C I / C D   a u t o m a t i z a d o   c o m   J e n k i n s  
+ 
