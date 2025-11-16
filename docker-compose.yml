@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Serviço Jenkins para CI/CD
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: jenkins-aluga-ai
+    user: root  # Temporário para ter acesso ao docker socket
+    ports:
+      - "8080:8080"      # Interface Web do Jenkins
+      - "50000:50000"    # Porta para agentes Jenkins
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - .:/workspace     # Monta o código do projeto
+      - /var/run/docker.sock:/var/run/docker.sock # Permite usar docker CLI dentro do Jenkins
+    # environment:
+    #   - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    networks:
+      - aluga-ai-network
+    restart: unless-stopped
+
+  # Serviço da Aplicação Django (para testes locais)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aluga-ai-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings
+      - PYTHONPATH=/app
+    networks:
+      - aluga-ai-network
+    restart: unless-stopped
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  jenkins_home:
+    driver: local
+  static_volume:
+    driver: local
+  media_volume:
+    driver: local
+
+networks:
+  aluga-ai-network:
+    driver: bridge

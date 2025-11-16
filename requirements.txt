@@ -9,3 +9,6 @@ pytest-reporter-html1
 Pillow
 pandas
 numpy
+django
+flake8
+pylint
