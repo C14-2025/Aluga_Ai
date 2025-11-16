@@ -1,0 +1,37 @@
+# Define nossa imagem base
+FROM jenkins/jenkins:lts
+
+# Define nosso usuario dentro do container
+USER root
+
+# Atualiza os pacotes do sistema e instala ferramentas necessárias
+RUN apt-get update && \
+    apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    wget \
+    curl \
+    git \
+    sqlite3 \
+    libpq-dev \
+    gcc \
+    docker.io \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Cria link simbólico para python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Copia lista de plugins e instala
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
+
+# Define permissões corretas
+RUN chown -R jenkins:jenkins /var/jenkins_home
+
+# Volta para o usuário jenkins
+USER jenkins
+
+# Expõe as portas do Jenkins
+EXPOSE 8080 50000
