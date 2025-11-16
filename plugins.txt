@@ -1,0 +1,12 @@
+# Lista de plugins essenciais para pipeline Aluga_Ai
+# Formato: pluginID:versao (versão pode ser omitida para última)
+workflow-aggregator
+matrix-auth
+credentials
+htmlpublisher
+email-ext
+junit
+warnings-ng
+git
+ssh-slaves
+docker-plugin

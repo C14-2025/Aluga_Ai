@@ -27,6 +27,9 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
+# Adiciona usuário jenkins ao grupo docker
+RUN groupadd -f docker && usermod -aG docker jenkins
+
 # Define permissões corretas
 RUN chown -R jenkins:jenkins /var/jenkins_home
 

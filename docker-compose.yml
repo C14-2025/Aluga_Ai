@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.jenkins
     container_name: jenkins-aluga-ai
+    user: root  # Temporário para ter acesso ao docker socket
     ports:
       - "8080:8080"      # Interface Web do Jenkins
       - "50000:50000"    # Porta para agentes Jenkins

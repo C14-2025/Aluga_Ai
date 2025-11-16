@@ -10,3 +10,5 @@ Pillow
 pandas
 numpy
 django
+flake8
+pylint

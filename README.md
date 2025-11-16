@@ -236,3 +236,5 @@ _Este README foi atualizado para refletir a migração de GitHub Actions para Je
  
  # #   W e b h o o k   T e s t   1 6 : 2 6 : 5 2  
  
+ # #   D o c k e r   b u i l d   t e s t   -   1 6 : 3 6 : 1 1  
+ 

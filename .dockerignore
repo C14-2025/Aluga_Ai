@@ -1,0 +1,65 @@
+# Arquivo .dockerignore para otimizar o build
+# Ignora arquivos desnecessários na imagem Docker
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media
+/static
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+*.html
+report*.html
+validation_results.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentação
+README.md
+*.md
+
+# CI/CD
+Jenkinsfile
+.jenkins/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Outros
+*.bak
+*.tmp
+*.temp
+comandos_jenkins_docker.txt
