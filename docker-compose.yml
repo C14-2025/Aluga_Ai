@@ -16,12 +16,11 @@ services:
       - .:/workspace     # Monta o código do projeto
       - /var/run/docker.sock:/var/run/docker.sock # Permite usar docker CLI dentro do Jenkins
     # environment:
-    #   - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
     networks:
       - aluga-ai-network
     restart: unless-stopped
 
-  # Serviço da Aplicação Django (para testes locais)
+  # Serviço da Aplicação Django 
   app:
     build:
       context: .
