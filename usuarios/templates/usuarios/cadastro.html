@@ -1,8 +1,29 @@
 {% extends "base.html" %} {% block content %}
-<h1>Cadastro</h1>
-
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Cadastrar</button>
-</form>
+<div class="form-card">
+  <h1>Cadastro</h1>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      {{ form.username.label_tag }} {{ form.username }}
+    </div>
+    <div class="form-row">
+      {{ form.first_name.label_tag }} {{ form.first_name }}
+    </div>
+    <div class="form-row">{{ form.email.label_tag }} {{ form.email }}</div>
+    <div class="form-row">
+      {{ form.phone_number.label_tag }} {{ form.phone_number }}
+    </div>
+    <div class="form-row">{{ form.city.label_tag }} {{ form.city }}</div>
+    <div class="form-row">{{ form.state.label_tag }} {{ form.state }}</div>
+    <div class="form-row">
+      {{ form.password1.label_tag }} {{ form.password1 }}
+    </div>
+    <div class="form-row">
+      {{ form.password2.label_tag }} {{ form.password2 }}
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Cadastrar</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
