@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Mensagens</h1>
+<div class="conversations">
+  {% for info in conversations_info %}
+  <div class="conversation">
+    <a href="{% url 'mensagens:detail' info.conversation.pk %}"
+      >Conversa {{ info.conversation.pk }}</a
+    >
+    {% if info.unread and info.unread > 0 %}
+    <span class="badge">{{ info.unread }}</span>
+    {% endif %}
+  </div>
+  {% empty %}
+  <p>Você não tem conversas ainda.</p>
+  {% endfor %}
+</div>
+{% endblock %}
