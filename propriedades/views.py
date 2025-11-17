@@ -14,9 +14,11 @@ def lista_propriedades(request):
         props = props.filter(titulo__icontains=q)
     return render(request, "propriedades/lista.html", {"propriedades": props})
 
+from .models import AMENITIES_CHOICES
+
 def detalhe_propriedade(request, pk):
     prop = get_object_or_404(Propriedade, pk=pk)
-    return render(request, "propriedades/detalhe.html", {"propriedade": prop})
+    return render(request, "propriedades/detalhe.html", {"propriedade": prop, "amenities_choices": AMENITIES_CHOICES})
 
 @login_required
 def criar_propriedade(request):
