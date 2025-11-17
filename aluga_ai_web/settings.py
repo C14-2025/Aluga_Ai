@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "propriedades.apps.PropriedadesConfig",
     "reservas.apps.ReservasConfig",
     "avaliacoes.apps.AvaliacoesConfig",
+    "mensagens.apps.MensagensConfig",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "mensagens.context_processors.unread_count",
             ],
         },
     }
