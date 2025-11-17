@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block content %}
+<div class="form-card">
+  <h1>Cadastrar Imóvel</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">{{ form.titulo.label_tag }} {{ form.titulo }}</div>
+    <div class="form-row">
+      {{ form.descricao.label_tag }} {{ form.descricao }}
+    </div>
+    <div class="form-row">
+      {{ form.endereco.label_tag }} {{ form.endereco }}
+    </div>
+    <div class="form-row">{{ form.city.label_tag }} {{ form.city }}</div>
+    <div class="form-row">{{ form.state.label_tag }} {{ form.state }}</div>
+    <div class="form-row">
+      {{ form.preco_por_noite.label_tag }} {{ form.preco_por_noite }}
+    </div>
+    <div class="form-row">
+      {{ form.comodidades.label_tag }}
+      <div class="checkbox-group">
+        {% for cb in form.comodidades %}
+        <label class="checkbox-label">{{ cb.tag }} {{ cb.choice_label }}</label>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-row">
+      <label for="id_imagens">Imagens</label>
+      <input
+        type="file"
+        name="imagens"
+        id="id_imagens"
+        multiple
+        accept="image/*"
+      />
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Salvar imóvel</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
