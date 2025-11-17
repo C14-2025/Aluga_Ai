@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from propriedades.models import Propriedade
 from .models import Reserva
 from django.urls import reverse
-
+from datetime import date
+from unittest.mock import patch
 
 class ReservaFlowTests(TestCase):
 	def setUp(self):
@@ -19,11 +20,58 @@ class ReservaFlowTests(TestCase):
 		self.assertFalse(Reserva.objects.filter(propriedade=self.prop).exists())
 
 	def test_guest_cannot_reserve_inactive_property(self):
-		# make prop inactive
 		self.prop.ativo = False
 		self.prop.save()
 		self.client.login(username="guest2", password="pass")
 		url = reverse("reservas:nova", args=[self.prop.pk])
 		resp = self.client.post(url, {"inicio": "2025-12-01", "fim": "2025-12-05"}, follow=True)
 		self.assertFalse(Reserva.objects.filter(propriedade=self.prop).exists())
+            
+class ReservaConfirmTests(TestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(username="owner", password="pass")
+        self.guest = User.objects.create_user(username="guest", password="pass")
+        self.prop = Propriedade.objects.create(owner=self.owner, titulo="Casa Teste", preco_por_noite="100.00")
 
+    def test_overlaps_only_when_confirmed(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+
+        self.assertEqual(reserva.status, Reserva.STATUS_PENDING)
+        self.assertFalse(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
+
+        reserva.status = Reserva.STATUS_CONFIRMED
+        reserva.save()
+
+        self.assertTrue(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
+
+        self.assertFalse(reserva.overlaps(date(2025, 11, 20), date(2025, 11, 25)))
+        self.assertFalse(reserva.overlaps(date(2025, 12, 6), date(2025, 12, 10)))
+
+    def test_confirm_sets_status_and_deactivates_property(self):
+        inicio = date(2025, 11, 10)
+        fim = date(2025, 11, 15)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+
+        self.assertTrue(self.prop.ativo)
+
+        reserva.confirm()
+
+        reserva.refresh_from_db()
+        self.prop.refresh_from_db()
+
+        self.assertEqual(reserva.status, Reserva.STATUS_CONFIRMED)
+        self.assertFalse(self.prop.ativo)
+
+    def test_confirm_handles_property_save_exception_with_mock(self):
+        inicio = date(2026, 1, 1)
+        fim = date(2026, 1, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+
+        with patch.object(Propriedade, "save", side_effect=Exception("simulated save error")) as mocked_save:
+            reserva.confirm()
+
+        reserva.refresh_from_db()
+        self.assertEqual(reserva.status, Reserva.STATUS_CONFIRMED)
