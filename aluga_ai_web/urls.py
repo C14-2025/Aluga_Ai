@@ -9,6 +9,7 @@ urlpatterns = [
     path("usuarios/", include("usuarios.urls")),
     path("reservas/", include("reservas.urls")),
     path("avaliacoes/", include("avaliacoes.urls")),
+    path("mensagens/", include("mensagens.urls")),
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
