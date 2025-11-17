@@ -1,6 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+# Comodidades padrão
+AMENITIES_CHOICES = [
+    ("wifi", "Wi-Fi"),
+    ("piscina", "Piscina"),
+    ("tv", "TV"),
+    ("lavadora", "Máquina de lavar"),
+    ("ar", "Ar-condicionado"),
+    ("cozinha", "Cozinha equipada"),
+    ("estacionamento", "Estacionamento"),
+    ("pet", "Aceita pets"),
+    ("churrasqueira", "Churrasqueira"),
+]
+
 class Propriedade(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="propriedades")
     titulo = models.CharField(max_length=200)
@@ -11,7 +25,8 @@ class Propriedade(models.Model):
     preco_por_noite = models.DecimalField(max_digits=8, decimal_places=2)
     criado_em = models.DateTimeField(auto_now_add=True)
     ativo = models.BooleanField(default=True)
-    
+    comodidades = models.JSONField(default=list, blank=True)
+
     def __str__(self):
         return f"{self.titulo} - {self.owner.username}"
 
