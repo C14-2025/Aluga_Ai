@@ -123,6 +123,34 @@ pipeline {
                 }
             }
         }
+
+        stage('Testes Unitários - Propriedades e Reservas') {
+            when { expression { return params.RUN_TESTS } }
+            steps {
+                echo 'Executando testes de Propriedades e Reservas...'
+                sh '''
+                    . venv/bin/activate
+                    mkdir -p reports
+                    pytest propriedades/tests.py reservas/tests.py \
+                        --junitxml=reports/junit_prop_res.xml \
+                        --template=html1/index.html --report=reports/report_prop_res.html || true
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'reports/report_prop_res.html', allowEmptyArchive: true
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'reports',
+                        reportFiles: 'report_prop_res.html',
+                        reportName: 'Report Propriedades e Reservas'
+                    ])
+                    junit 'reports/junit_prop_res.xml'
+                }
+            }
+        }
         
         stage('Testes ETL') {
             when { expression { return params.RUN_TESTS } }
