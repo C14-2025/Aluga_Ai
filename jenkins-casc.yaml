@@ -1,0 +1,32 @@
+jenkins:
+  systemMessage: |
+    Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
+    Este Jenkins é reproduzível em qualquer máquina.
+  numExecutors: 2
+  mode: NORMAL
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: ${JENKINS_ADMIN_ID:-admin}
+          password: ${JENKINS_ADMIN_PASSWORD:-admin123}
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+unclassified:
+  location:
+    url: http://localhost:8080/
+  shell:
+    shell: "/bin/bash"
+# Se quiser criar jobs automaticamente, habilite Job DSL aqui, por exemplo:
+# jobs:
+#   - script: |
+#       pipelineJob('Aluga_Ai_Build') {
+#         definition {
+#           cps {
+#             script(readFileFromWorkspace('Jenkinsfile'))
+#             sandbox(true)
+#           }
+#         }
+#       }
+# Observação: para usar readFileFromWorkspace, configure um workspace acessível ou troque para cpsScm apontando para o repositório Git.

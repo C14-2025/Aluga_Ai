@@ -15,7 +15,9 @@ services:
       - jenkins_home:/var/jenkins_home
       - .:/workspace     # Monta o código do projeto
       - /var/run/docker.sock:/var/run/docker.sock # Permite usar docker CLI dentro do Jenkins
-    # environment:
+    environment:
+      - JENKINS_ADMIN_ID=admin
+      - JENKINS_ADMIN_PASSWORD=admin123
     networks:
       - aluga-ai-network
     restart: unless-stopped
