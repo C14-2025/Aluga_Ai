@@ -1,7 +1,7 @@
 jenkins:
   systemMessage: |
     Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
-    Este Jenkins é reproduzível em qualquer máquina.
+    Reproduzível entre máquinas. Multibranch configurado via Job DSL.
   numExecutors: 2
   mode: NORMAL
   securityRealm:
@@ -18,47 +18,60 @@ unclassified:
     url: http://localhost:8080/
   shell:
     shell: "/bin/bash"
+credentials:
+  system:
+    domainCredentials:
+      - domain:
+          name: ""
+          description: "Global domain"
+          specifications: []
+        credentials:
+          - usernamePassword:
+              scope: SYSTEM
+              id: "dockerhub-credentials"
+              username: "${DOCKERHUB_USER}"
+              password: "${DOCKERHUB_PASSWORD}"
+              description: "Credenciais DockerHub (injetadas por env)"
+          - usernamePassword:
+              scope: SYSTEM
+              id: "${GIT_CREDENTIALS_ID}"
+              username: "${GIT_USER}"
+              password: "${GIT_PASSWORD}"
+              description: "Credenciais Git (se privado). Deixe vazio se público."
 jobs:
   - script: |
-      // Cria um Pipeline que usa o código montado em /workspace (sem checkout git)
-      pipelineJob('Aluga_Ai_Pipeline') {
-        description('Pipeline do projeto Aluga_Ai rodando sobre o diretório montado /workspace')
-        definition {
-          cps {
-            script('''
-              pipeline {
-                agent any
-                options { timestamps() }
-                stages {
-                  stage('Preparar workspace') {
-                    steps {
-                      echo 'Usando código local montado em /workspace'
-                      dir('/workspace') {
-                        sh 'ls -la'
-                      }
-                    }
-                  }
-                  stage('Instalar dependências') {
-                    steps {
-                      dir('/workspace') {
-                        sh 'python3 -m pip install --upgrade pip'
-                        sh 'pip3 install -r requirements.txt || true'
-                      }
-                    }
-                  }
-                  stage('Testes') {
-                    steps {
-                      dir('/workspace') {
-                        sh 'pytest -q || true'
-                      }
-                    }
-                  }
-                }
+      // Job Multibranch para o repositório remoto
+      // Usa variáveis de ambiente substituídas pelo JCasC: ${GIT_REPO_URL}
+      // Se GIT_CREDENTIALS_ID estiver vazio e repo for público, Jenkins acessa sem credenciais.
+      multibranchPipelineJob('Aluga_Ai_Multibranch') {
+        displayName('Aluga_Ai Multibranch')
+        description('Pipeline Multibranch do projeto Aluga_Ai usando Jenkinsfile do repositório Git.')
+        branchSources {
+          branchSource {
+            source {
+              git {
+                id('aluga-ai-git')
+                remote('${GIT_REPO_URL}')
+                credentialsId('${GIT_CREDENTIALS_ID}')
+                includes('*')
+                excludes('')
               }
-            '''.stripIndent())
-            sandbox(true)
+            }
+            strategy {
+              defaultBranchPropertyStrategy {
+                props {}
+              }
+            }
           }
+        }
+        factory {
+          workflowBranchProjectFactory {
+            scriptPath('Jenkinsfile')
+          }
+        }
+        triggers {
+          periodic(1) // scan a cada ~1 minuto (ajuste conforme necessidade)
         }
       }
       
-      // Para usar Jenkinsfile do repositório Git em vez de /workspace, crie outro job DSL com cpsScm apontando para sua URL.
+      // (Opcional) Pipeline simples local usando /workspace pode ser adicionada novamente se necessário.

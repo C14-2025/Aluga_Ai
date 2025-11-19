@@ -18,6 +18,12 @@ services:
     environment:
       - JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-admin}
       - JENKINS_ADMIN_PASSWORD=${JENKINS_ADMIN_PASSWORD:-admin123}
+      - DOCKERHUB_USER=${DOCKERHUB_USER:-}
+      - DOCKERHUB_PASSWORD=${DOCKERHUB_PASSWORD:-}
+      - GIT_REPO_URL=${GIT_REPO_URL:-https://github.com/C14-2025/Aluga_Ai.git}
+      - GIT_CREDENTIALS_ID=${GIT_CREDENTIALS_ID:-}
+      - GIT_USER=${GIT_USER:-}
+      - GIT_PASSWORD=${GIT_PASSWORD:-}
     networks:
       - aluga-ai-network
     restart: unless-stopped
