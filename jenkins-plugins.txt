@@ -1,14 +1,3 @@
-# Lista de plugins Jenkins para reconstruir ambiente.
-# Formato aceito pelo Plugin Installation Manager: pluginId[:version]
-# (Sem versão => instala última versão estável.)
-# Gerado a partir dos arquivos .jpi em /var/jenkins_home/plugins do container 'jenkins-aluga-ai'.
-# Para regenerar rapidamente (apenas IDs):
-#   docker exec jenkins-aluga-ai bash -c 'for f in /var/jenkins_home/plugins/*.jpi; do basename "$f" .jpi; done' > /workspace/jenkins-plugins.txt
-# Se quiser incluir versões, dentro do container instale 'unzip' (se faltar) e rode:
-#   apk add --no-cache unzip  # (se imagem for baseada em Alpine)
-#   for f in /var/jenkins_home/plugins/*.jpi; do n=$(basename "$f" .jpi); v=$(unzip -p "$f" META-INF/MANIFEST.MF | grep -m1 '^Plugin-Version:' | sed 's/Plugin-Version: //'); echo "$n:$v"; done > /workspace/jenkins-plugins.txt
-# Depois commite este arquivo.
-
 blueocean-github-pipeline
 blueocean-jwt
 blueocean-pipeline-api-impl
