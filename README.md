@@ -16,6 +16,14 @@ Plataforma acadêmica que simula um marketplace de aluguel de imóveis (temporá
 
 Inclui também integração com API externa (exemplo inicial) e estrutura expansível para novas features.
 
+## O que tem no projeto (resumo)
+
+- App Django completo (propriedades, usuários, reservas, recomendações) com templates e static.
+- ETL e geração de dados sintéticos, além de scripts de validação do sistema de recomendação.
+- Testes automatizados com pytest e runner nativo Django.
+- CI/CD com Jenkins via Docker Compose, plugins pré-instalados e configuração por código (JCasC).
+- Compose para subir app e Jenkins em contêineres separados.
+
 ## 1. Estrutura do Projeto
 
 ```bash
@@ -62,6 +70,44 @@ python manage.py migrate --noinput
 python manage.py runserver 0.0.0.0:8000
 ```
 Acesse: <http://localhost:8000>
+
+## 3.1. Execução completa com Docker Compose (recomendado)
+Pré-requisitos: Docker Desktop + Git
+
+1. Clonar o repositório e preparar variáveis de ambiente
+
+```powershell
+git clone <URL_DO_REPO>
+cd Aluga_Ai
+Copy-Item .env.example .env   # Edite se quiser trocar usuário/senha admin do Jenkins
+```
+
+1. Subir Jenkins e a aplicação (primeira vez pode demorar pelos plugins do Jenkins)
+
+```powershell
+docker compose up -d --build jenkins app
+```
+
+1. URLs e credenciais
+
+- App (Django): <http://localhost:8000>
+- Jenkins: <http://localhost:8080>
+- Login Jenkins (padrão vindo do .env):
+   - usuário: admin
+   - senha: admin123
+   - Altere a senha após o primeiro login.
+
+1. O que o Jenkins já provisiona automaticamente
+
+- Plugins a partir de `jenkins-plugins.txt`.
+- Configuração por código (`jenkins-casc.yaml`), incluindo usuário admin.
+- Um job Pipeline chamado `Aluga_Ai_Pipeline` (Job DSL) que roda sobre o diretório montado `/workspace` (código do repo). Basta clicar em “Build Now”.
+
+1. Parar os serviços
+
+```powershell
+docker compose down
+```
 
 ## 4. Testes
 Rodar todos:
@@ -138,6 +184,36 @@ Fluxo condicional:
 Relatórios: HTML (pytest), artefatos (`pylint_report.txt`, `flake8_report.txt`, `server.log`).
 Guia de uso completo (Jenkins, webhook, Docker Hub): ver `Como_usar.md`.
 
+### 8.1. Jenkins via Docker Compose (detalhes)
+- Serviço `jenkins` definido em `docker-compose.yml` com volume nomeado `jenkins_home` que persiste tudo (usuários, jobs, histórico, credenciais).
+- `Dockerfile.jenkins` instala plugins por `jenkins-plugin-cli` e copia `jenkins-casc.yaml` (JCasC) para configuração automática.
+- Credenciais admin do Jenkins vêm do `.env` (não commitar `.env`, use `.env.example`).
+- Se quiser um reset completo do Jenkins (opcional), remova o volume e suba novamente:
+   ```powershell
+   docker compose down
+   docker volume rm aluga_ai_jenkins_home
+   docker compose up -d --build jenkins
+   ```
+   ATENÇÃO: isso apaga jobs/usuários/histórico do Jenkins. Faça backup antes se necessário.
+
+### 8.2. Atualizando a imagem / mudanças recentes
+- Após editar `Dockerfile.jenkins`, `jenkins-plugins.txt` ou `jenkins-casc.yaml`:
+   ```powershell
+   docker compose build jenkins
+   docker compose up -d jenkins
+   ```
+- Em Jenkins JÁ inicializado (volume existente), novos plugins podem precisar ser instalados no volume e Jenkins reiniciado:
+   ```powershell
+   docker exec jenkins-aluga-ai jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt --verbose
+   docker restart jenkins-aluga-ai
+   ```
+
+### 8.3. Disparo automático por Git (opcional)
+- O job `Aluga_Ai_Pipeline` default usa script inline e não dispara em commits.
+- Para builds automáticos por commit, crie um Pipeline “from SCM” ou Multibranch apontando para seu repositório e configure:
+   - Webhook (recomendado) OU
+   - Poll SCM (cron), por exemplo `H/5 * * * *`.
+
 ### Cenários
 | Objetivo | Configuração |
 |----------|--------------|
@@ -169,6 +245,9 @@ Possível expansão: adicionar cobertura (`coverage.py`) e métricas.
 | Push Docker falha | Credenciais inválidas | Recriar credencial `dockerhub-credentials`. |
 | Deploy ignorado | Branch diferente de main | Fazer merge para `main`. |
 | Teste ETL falha | Mudança em schema | Atualizar testes e scripts de geração. |
+| Não consigo logar no Jenkins (pede password inicial) | Novo volume na sua máquina | Use admin/senha do `.env` (JCasC) — não é o `initialAdminPassword`. |
+| Jenkins não mostra o job | Plugins JCasC/Job DSL não instalados ainda | Rode o comando de plugin-cli acima e reinicie Jenkins. |
+| Porta 8080/8000 em uso | Outro serviço usando a porta | Feche o serviço conflitando ou mude portas no compose. |
 
 ## 12. Próximas Extensões
 - Cobertura de testes (coverage + badge)
