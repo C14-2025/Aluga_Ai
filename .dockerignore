@@ -46,6 +46,10 @@ Dockerfile*
 docker-compose*.yml
 .dockerignore
 
+# Dotenv (não envie secrets para o build)
+.env
+.env.*
+
 # Documentação
 README.md
 *.md
