@@ -18,15 +18,47 @@ unclassified:
     url: http://localhost:8080/
   shell:
     shell: "/bin/bash"
-# Se quiser criar jobs automaticamente, habilite Job DSL aqui, por exemplo:
-# jobs:
-#   - script: |
-#       pipelineJob('Aluga_Ai_Build') {
-#         definition {
-#           cps {
-#             script(readFileFromWorkspace('Jenkinsfile'))
-#             sandbox(true)
-#           }
-#         }
-#       }
-# Observação: para usar readFileFromWorkspace, configure um workspace acessível ou troque para cpsScm apontando para o repositório Git.
+jobs:
+  - script: |
+      // Cria um Pipeline que usa o código montado em /workspace (sem checkout git)
+      pipelineJob('Aluga_Ai_Pipeline') {
+        description('Pipeline do projeto Aluga_Ai rodando sobre o diretório montado /workspace')
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent any
+                options { timestamps() }
+                stages {
+                  stage('Preparar workspace') {
+                    steps {
+                      echo 'Usando código local montado em /workspace'
+                      dir('/workspace') {
+                        sh 'ls -la'
+                      }
+                    }
+                  }
+                  stage('Instalar dependências') {
+                    steps {
+                      dir('/workspace') {
+                        sh 'python3 -m pip install --upgrade pip'
+                        sh 'pip3 install -r requirements.txt || true'
+                      }
+                    }
+                  }
+                  stage('Testes') {
+                    steps {
+                      dir('/workspace') {
+                        sh 'pytest -q || true'
+                      }
+                    }
+                  }
+                }
+              }
+            '''.stripIndent())
+            sandbox(true)
+          }
+        }
+      }
+      
+      // Para usar Jenkinsfile do repositório Git em vez de /workspace, crie outro job DSL com cpsScm apontando para sua URL.
