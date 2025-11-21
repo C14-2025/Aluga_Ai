@@ -4,6 +4,7 @@
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
+        string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
     
     // CI/CD automático: nenhum parâmetro de execução manual
@@ -14,7 +15,7 @@
         PYTHONPATH = "${WORKSPACE}"
         WORKDIR = "${env.WORKSPACE}"
         // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
-        DOCKERHUB_REPO = 'seu-usuario/aluga-ai'
+        DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
         CREDENTIALS_ID = 'dockerhub-credentials'
         // Valor proveniente do parâmetro
         NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
@@ -34,8 +35,8 @@
                     // Determina tag da imagem a partir do commit
                     env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
                     env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
-                    env.IMAGE = "${params.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
-                    env.IMAGE_LATEST = "${params.DOCKERHUB_REPO}:latest"
+                    env.IMAGE = "${env.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
+                    env.IMAGE_LATEST = "${env.DOCKERHUB_REPO}:latest"
                     echo "Image será: ${env.IMAGE}"
                 }
             }
@@ -255,64 +256,6 @@
                 }
             }
         }
-        
-        stage('Build Docker Image') {
-            // Build automático somente na branch main
-            when { expression { return env.BRANCH_NAME == 'main' } }
-            steps {
-                echo "Construindo imagem Docker: ${env.IMAGE}"
-                sh """
-                    docker build -t ${env.IMAGE} -t ${env.IMAGE_LATEST} -f Dockerfile .
-                """
-            }
-        }
-        
-        stage('Test Docker Image') {
-            // Testa a imagem (apenas em main após o build automático)
-            when { expression { return env.BRANCH_NAME == 'main' } }
-            steps {
-                echo 'Testando imagem Docker...'
-                sh """
-                    # Cria diretório para artefatos
-                    mkdir -p \${WORKSPACE}/docker_artifacts
-                    
-                    # Testa se a imagem inicia corretamente
-                    docker run --rm -d --name aluga-ai-test-${BUILD_NUMBER} \
-                        -e DEBUG=0 \
-                        ${env.IMAGE} || true
-                    
-                    # Aguarda container iniciar
-                    sleep 10
-                    
-                    # Verifica se está rodando
-                    docker ps | grep aluga-ai-test-${BUILD_NUMBER} || echo "Container não iniciou"
-                    
-                    # Para o container de teste
-                    docker stop aluga-ai-test-${BUILD_NUMBER} || true
-                """
-            }
-        }
-        
-        stage('Push to Registry') {
-            // Push automático somente na branch main
-            when { expression { return env.BRANCH_NAME == 'main' } }
-            steps {
-                echo "Fazendo push da imagem para ${env.DOCKERHUB_REPO}"
-                withCredentials([usernamePassword(
-                    credentialsId: env.CREDENTIALS_ID,
-                    usernameVariable: 'DOCKER_USER', 
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE}
-                        docker push ${IMAGE_LATEST}
-                        docker logout
-                    '''
-                }
-            }
-        }
-        
         stage('Deploy Application') {
             // Deploy automático somente na branch main
             when { expression { return env.BRANCH_NAME == 'main' } }
