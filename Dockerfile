@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Cria diretórios necessários
-RUN mkdir -p /app/static /app/media
+RUN mkdir -p /app/media
 
 # Coleta arquivos estáticos
 RUN python manage.py collectstatic --noinput || true
