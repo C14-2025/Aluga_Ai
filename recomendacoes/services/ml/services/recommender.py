@@ -40,8 +40,37 @@ def _load_candidates_from_db() -> List[Dict]:
 
     qs = Propriedade.objects.filter(ativo=True)
     items: List[Dict] = []
+    def _normalize_type(value: str) -> str:
+        if not value:
+            return 'apartment'
+        v = str(value).strip().lower()
+        mapping = {
+            'apartamento': 'apartment',
+            'apartment': 'apartment',
+            'studio': 'studio',
+            'kitnet': 'kitnet',
+            'casa': 'house',
+            'house': 'house',
+        }
+        return mapping.get(v, v)
+
+    def _to_pt_type(value: str) -> str:
+        if not value:
+            return 'Apartamento'
+        v = str(value).strip().lower()
+        mapping = {
+            'apartment': 'Apartamento',
+            'apartamento': 'Apartamento',
+            'studio': 'Studio',
+            'kitnet': 'Kitnet',
+            'house': 'Casa',
+            'casa': 'Casa',
+        }
+        return mapping.get(v, value)
+
     for p in qs:
         # mapear mínimos; alguns campos podem não existir exatamente — usar defaults
+        ptype_raw = getattr(p, 'tipo', getattr(p, 'property_type', 'apartment'))
         items.append({
             "id": int(getattr(p, 'id')),
             "title": getattr(p, 'titulo', str(p)),
@@ -52,27 +81,45 @@ def _load_candidates_from_db() -> List[Dict]:
             "bedrooms": int(getattr(p, 'quartos', getattr(p, 'bedrooms', 0) or 0)),
             "bathrooms": int(getattr(p, 'banheiros', getattr(p, 'bathrooms', 0) or 0)),
             "parking": int(getattr(p, 'vagas_garagem', getattr(p, 'parking', 0) or 0)),
-            "property_type": getattr(p, 'tipo', getattr(p, 'property_type', 'apartment')),
+            "property_type": _normalize_type(ptype_raw),
+            "tipo": getattr(p, 'tipo', None) or _to_pt_type(ptype_raw),
+            # campos específicos do app
+            "price": float(getattr(p, 'preco_por_noite', 0) or 0),
+            "amenities": list(getattr(p, 'comodidades', []) or []),
         })
     return items
 
 def recommend(model, candidates: Optional[List[Dict]], budget: float, city: Optional[str], limit: int = 10) -> List[Dict]:
-    items = candidates if candidates else _load_sample_candidates()
+    # Fonte de candidatos: prioridade para entrada explícita; depois banco; por fim CSV de amostra
+    items = candidates if candidates else (_load_candidates_from_db() or _load_sample_candidates())
     if city:
         items = [x for x in items if x.get("city", "").lower() == city.lower()]
 
     out = []
-    for x in items:
-        features = {
-            "city": x.get("city"),
-            "neighborhood": x.get("neighborhood"),
-            "area": x.get("area"),
-            "bedrooms": x.get("bedrooms"),
-            "bathrooms": x.get("bathrooms"),
-            "parking": x.get("parking"),
-            "property_type": x.get("property_type"),
+    def en_to_pt_type(v: Optional[str]) -> str:
+        if not v:
+            return 'Apartamento'
+        vv = str(v).strip().lower()
+        mapping = {
+            'apartment': 'Apartamento',
+            'studio': 'Studio',
+            'kitnet': 'Kitnet',
+            'house': 'Casa',
         }
-        price, _method, _details = model.predict(features, return_details=False)
+        return mapping.get(vv, v)
+    for x in items:
+        # Mapear candidatos para as features esperadas pelo modelo (PT-BR)
+        features_model = {
+            "tipo": x.get("tipo") or en_to_pt_type(x.get("property_type")),
+            "cidade": x.get("city"),
+            "area_m2": x.get("area") or 0.0,
+            "quartos": x.get("bedrooms") or 0,
+            "banheiros": x.get("bathrooms") or 0,
+            "vagas_garagem": x.get("parking") or 0,
+            "condominio": 0.0,
+            "iptu": 0.0,
+        }
+        price, _method, _details = model.predict(features_model, return_details=False)
         diff = abs(price - budget)
         closeness = max(0.0, 1.0 - (diff / max(budget, 1.0)))  # 1 quando igual ao orçamento
         affordable_bonus = 0.2 if price <= budget else 0.0

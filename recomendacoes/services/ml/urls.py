@@ -8,4 +8,5 @@ urlpatterns = [
     path('recommend/', views.RecommendationView.as_view(), name='recommend'),
     path('survey_recommend/', views.SurveyRecommendationView.as_view(), name='survey_recommend'),
     path('retrain/', views.RetrainView.as_view(), name='retrain'),
+    path('personal_recommend/', views.PersonalRecommendationView.as_view(), name='personal_recommend'),
 ]

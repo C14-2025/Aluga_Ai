@@ -45,6 +45,7 @@ class RecommendationOutputItemSerializer(serializers.Serializer):
 class SurveyInputSerializer(serializers.Serializer):
     budget = serializers.FloatField(min_value=0)
     city = serializers.CharField(required=False, allow_blank=True)
+    neighborhood = serializers.CharField(required=False, allow_blank=True)
     property_type = serializers.CharField(required=False, allow_blank=True)
     min_area = serializers.FloatField(required=False, min_value=0)
     max_area = serializers.FloatField(required=False, min_value=0)
@@ -52,3 +53,9 @@ class SurveyInputSerializer(serializers.Serializer):
     bathrooms = serializers.IntegerField(required=False, min_value=0)
     parking = serializers.IntegerField(required=False, min_value=0)
     limit = serializers.IntegerField(required=False, min_value=1, max_value=50, default=10)
+    # filtros típicos adicionais (não entram no modelo, só filtram candidatos)
+    min_price = serializers.FloatField(required=False, min_value=0)
+    max_price = serializers.FloatField(required=False, min_value=0)
+    amenities = serializers.ListField(
+        child=serializers.CharField(), required=False, allow_empty=True
+    )

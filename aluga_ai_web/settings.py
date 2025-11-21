@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "mensagens.apps.MensagensConfig",
     # App de recomendações (contém ML, endpoints e comandos)
     "recomendacoes.apps.RecomendacoesConfig",
+    "favoritos",
 ]
 
 MIDDLEWARE = [

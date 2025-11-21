@@ -12,7 +12,75 @@ def lista_propriedades(request):
     props = Propriedade.objects.filter(ativo=True)
     if q:
         props = props.filter(titulo__icontains=q)
-    return render(request, "propriedades/lista.html", {"propriedades": props})
+    # Recomendações no topo da home (SSR) usando o modelo atual
+    # opção de data (sazonalidade)
+    import datetime
+    raw_date = request.GET.get('date')  # formato yyyy-mm-dd
+    season_date = None
+    try:
+        if raw_date:
+            season_date = datetime.datetime.strptime(raw_date, '%Y-%m-%d').date()
+    except Exception:
+        season_date = None
+
+    try:
+        from recomendacoes.services.ml.services.model import PriceModel
+        from recomendacoes.services.ml.services.recommender import recommend as reco_recommend
+        # sazonalidade simples
+        season_factor_map = {1:1.15,2:1.10,3:1.05,4:1.00,5:1.00,6:1.08,7:1.20,8:1.18,9:1.04,10:1.03,11:1.07,12:1.25}
+        def apply_season(price: float) -> float:
+            if not season_date:
+                return price
+            return price * season_factor_map.get(season_date.month, 1.0)
+
+        # orçamento/cidade opcionais via GET; defaults razoáveis
+        try:
+            budget = float(request.GET.get("budget", 500) or 500)
+        except Exception:
+            budget = 500.0
+        city = (request.GET.get("city") or "").strip() or None
+
+        model = PriceModel.instance()
+        recs = reco_recommend(model=model, candidates=None, budget=budget, city=city, limit=6)
+        # mapear para objetos do Django e anexar metadados
+        id_to_prop = {p.id: p for p in Propriedade.objects.filter(id__in=[r["id"] for r in recs])}
+        recomendadas = []
+        for r in recs:
+            p = id_to_prop.get(r["id"])
+            if p is not None:
+                base_pred = float(r.get("predicted_price") or 0.0)
+                recomendadas.append({
+                    "prop": p,
+                    "predicted_price": apply_season(base_pred),
+                    "score": r.get("score"),
+                    "season_applied": bool(season_date),
+                })
+
+        # reordenar lista principal opcionalmente quando rank=recommend
+        if (request.GET.get("rank") or "").lower() in ("1", "true", "recommend", "reco"):
+            score_map = {r["id"]: r.get("score", 0.0) for r in recs}
+            props = sorted(list(props), key=lambda p: score_map.get(p.id, 0.0), reverse=True)
+
+    except Exception:
+        recomendadas = []
+        budget = None
+
+    # Se usuário autenticado, tentar carregar recomendações personalizadas persistidas (substitui bloco genérico se existir)
+    if request.user.is_authenticated:
+        try:
+            from favoritos.models import UserRecommendation
+            user_recs = UserRecommendation.objects.filter(user=request.user, source='personal').order_by('-score')[:6]
+            if user_recs:
+                recomendadas = [{
+                    'prop': rec.propriedade,
+                    'predicted_price': float(rec.predicted_price),
+                    'score': rec.score,
+                    'season_applied': False,
+                } for rec in user_recs]
+        except Exception:
+            pass
+
+    return render(request, "propriedades/lista.html", {"propriedades": props, "recomendadas": recomendadas, "reco_budget": budget, 'season_date': season_date})
 
 from .models import AMENITIES_CHOICES
 
