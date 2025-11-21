@@ -1,0 +1,6392 @@
+[
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Rua Augusta",
+      "numero": 7008,
+      "cep": "52425-903",
+      "complemento": "Cobertura"
+    },
+    "quartos": 3,
+    "banheiros": 4,
+    "vagas_garagem": 0,
+    "area_m2": 210,
+    "preco_aluguel": 9852,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Wi-Fi",
+      "Elevador",
+      "Aceita pets",
+      "Piscina",
+      "Secadora",
+      "Churrasqueira"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-07",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-06-17",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-11",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-01-19",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-05",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-09-07",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-25",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.23,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Animais permitidos"
+    ],
+    "camas": 4,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 1994,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 176,
+    "mobiliado": true,
+    "distancia_metro_km": 3.12,
+    "distancia_onibus_km": 1.88,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 11,
+    "status": "ativo",
+    "latitude": -15.803043,
+    "longitude": -47.898997,
+    "tags": [
+      "Com varanda",
+      "Ótima localização",
+      "Pet friendly",
+      "Próximo ao metrô"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-29",
+        "fim": "2025-11-01"
+      },
+      {
+        "inicio": "2025-09-22",
+        "fim": "2025-10-02"
+      },
+      {
+        "inicio": "2025-10-13",
+        "fim": "2025-10-24"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "São Paulo",
+      "bairro": "Centro",
+      "rua": "Rua das Acácias",
+      "numero": 4240,
+      "cep": "93472-375",
+      "complemento": "Apto 101"
+    },
+    "quartos": 4,
+    "banheiros": 1,
+    "vagas_garagem": 1,
+    "area_m2": 246,
+    "preco_aluguel": 10819,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Cozinha",
+      "Aquecimento",
+      "TV",
+      "Piscina",
+      "Ar-condicionado",
+      "Aceita pets",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-21",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-01-12",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-29",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-05-28",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-01-18",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-04-02",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-30",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-11",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-09-22",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 4.16,
+    "regras_casa": [
+      "Animais permitidos",
+      "Check-in após 14h",
+      "Não permite festas/eventos",
+      "Check-out até 11h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 2007,
+    "andar": 7,
+    "condominio": 1267,
+    "iptu": 380,
+    "mobiliado": true,
+    "distancia_metro_km": 1.34,
+    "distancia_onibus_km": 0.65,
+    "max_hospedes": 8,
+    "tempo_anuncio_meses": 20,
+    "status": "ativo",
+    "latitude": -23.555731,
+    "longitude": -46.63984,
+    "tags": [
+      "Próximo à praia",
+      "Silencioso",
+      "Vista panorâmica"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-19",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-11-10",
+        "fim": "2025-11-22"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-10-29"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-10-30"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Rua Augusta",
+      "numero": 528,
+      "cep": "25885-201",
+      "complemento": ""
+    },
+    "quartos": 2,
+    "banheiros": 4,
+    "vagas_garagem": 1,
+    "area_m2": 240,
+    "preco_aluguel": 8185,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Ar-condicionado",
+      "Estacionamento gratuito",
+      "Academia",
+      "Wi-Fi",
+      "Aceita pets",
+      "Churrasqueira",
+      "Vista para o mar",
+      "Secadora"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 5.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-11",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-08-24",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-06",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-22",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-12-20",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.59,
+    "regras_casa": [
+      "Proibido fumar",
+      "Check-in após 14h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 1971,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 228,
+    "mobiliado": false,
+    "distancia_metro_km": 4.89,
+    "distancia_onibus_km": 1.0,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 12,
+    "status": "inativo",
+    "latitude": -27.600116,
+    "longitude": -48.531061,
+    "tags": [
+      "Com escritório",
+      "Acessível para cadeirantes",
+      "Bairro nobre"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-15"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-13"
+      },
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-10-28"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-11-01"
+      },
+      {
+        "inicio": "2025-09-20",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-16"
+      },
+      {
+        "inicio": "2025-09-15",
+        "fim": "2025-09-23"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Avenida Paulista",
+      "numero": 5272,
+      "cep": "25998-975",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 210,
+    "preco_aluguel": 6711,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Secadora",
+      "Churrasqueira",
+      "Vista para o mar",
+      "Elevador",
+      "Máquina de lavar",
+      "Estacionamento gratuito"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-09-09",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-08-17",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-06-07",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-14",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-04",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-11-24",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.69,
+    "regras_casa": [
+      "Proibido fumar",
+      "Silêncio após as 22h",
+      "Não permite festas/eventos",
+      "Check-out até 11h"
+    ],
+    "camas": 3,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "12:00",
+    "ano_construcao": 1989,
+    "andar": 15,
+    "condominio": 1680,
+    "iptu": 303,
+    "mobiliado": false,
+    "distancia_metro_km": 0.76,
+    "distancia_onibus_km": 0.52,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 48,
+    "status": "inativo",
+    "latitude": -30.02109,
+    "longitude": -51.215995,
+    "tags": [
+      "Ótima localização",
+      "Recém-reformado",
+      "Bairro nobre"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-26",
+        "fim": "2025-09-30"
+      },
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-29"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Fortaleza",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 6854,
+      "cep": "80754-850",
+      "complemento": ""
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 72,
+    "preco_aluguel": 1791,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Academia",
+      "Wi-Fi",
+      "Ar-condicionado",
+      "Varanda",
+      "Aquecimento",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-12",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-14",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-05",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-05-14",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-01-25",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-11-12",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-23",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-16",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-04-12",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-15",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.21,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Proibido fumar",
+      "Check-in após 14h",
+      "Não permite festas/eventos"
+    ],
+    "camas": 2,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "12:00",
+    "ano_construcao": 2017,
+    "andar": 4,
+    "condominio": 215,
+    "iptu": 285,
+    "mobiliado": true,
+    "distancia_metro_km": 3.26,
+    "distancia_onibus_km": 0.08,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 12,
+    "status": "inativo",
+    "latitude": -3.732552,
+    "longitude": -38.530729,
+    "tags": [
+      "Silencioso",
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-09",
+        "fim": "2025-11-22"
+      },
+      {
+        "inicio": "2025-09-16",
+        "fim": "2025-09-23"
+      },
+      {
+        "inicio": "2025-09-27",
+        "fim": "2025-10-09"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-10-08"
+      },
+      {
+        "inicio": "2025-10-26",
+        "fim": "2025-10-28"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Ipanema",
+      "rua": "Rua XV de Novembro",
+      "numero": 4001,
+      "cep": "28433-868",
+      "complemento": "Apto 101"
+    },
+    "quartos": 4,
+    "banheiros": 3,
+    "vagas_garagem": 3,
+    "area_m2": 219,
+    "preco_aluguel": 22514,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Vista para o mar",
+      "Aceita pets",
+      "Secadora",
+      "Piscina"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-26",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-23",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-07",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-17",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 3.87,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Animais permitidos"
+    ],
+    "camas": 5,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "10:00",
+    "ano_construcao": 1992,
+    "andar": 20,
+    "condominio": 1575,
+    "iptu": 172,
+    "mobiliado": false,
+    "distancia_metro_km": 1.05,
+    "distancia_onibus_km": 1.34,
+    "max_hospedes": 7,
+    "tempo_anuncio_meses": 46,
+    "status": "inativo",
+    "latitude": -22.896846,
+    "longitude": -43.159675,
+    "tags": [
+      "Pet friendly",
+      "Com varanda",
+      "Vista panorâmica"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-16"
+      },
+      {
+        "inicio": "2025-10-18",
+        "fim": "2025-10-20"
+      },
+      {
+        "inicio": "2025-09-23",
+        "fim": "2025-10-01"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-07"
+      },
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-03"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-26"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-10-01"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Curitiba",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 1530,
+      "cep": "33842-800",
+      "complemento": "Apto 101"
+    },
+    "quartos": 1,
+    "banheiros": 3,
+    "vagas_garagem": 1,
+    "area_m2": 174,
+    "preco_aluguel": 5206,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Cozinha",
+      "Jacuzzi",
+      "Elevador",
+      "Varanda",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-09-30",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-19",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-19",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-05",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-01-17",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 4.72,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Não permite festas/eventos"
+    ],
+    "camas": 2,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 2010,
+    "andar": 2,
+    "condominio": 914,
+    "iptu": 302,
+    "mobiliado": true,
+    "distancia_metro_km": 0.69,
+    "distancia_onibus_km": 0.7,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 24,
+    "status": "ativo",
+    "latitude": -25.411881,
+    "longitude": -49.26116,
+    "tags": [
+      "Com escritório",
+      "Próximo à praia",
+      "Ideal para famílias",
+      "Próximo ao metrô"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-10-28"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-22"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Avenida Paulista",
+      "numero": 6550,
+      "cep": "41010-511",
+      "complemento": "Apto 101"
+    },
+    "quartos": 4,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 61,
+    "preco_aluguel": 1871,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Secadora",
+      "Churrasqueira",
+      "Máquina de lavar",
+      "Aquecimento"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-04-09",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-09-02",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.69,
+    "regras_casa": [
+      "Proibido fumar",
+      "Check-in após 14h"
+    ],
+    "camas": 2,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 2020,
+    "andar": 7,
+    "condominio": 750,
+    "iptu": 257,
+    "mobiliado": false,
+    "distancia_metro_km": 4.51,
+    "distancia_onibus_km": 1.91,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 8,
+    "status": "ativo",
+    "latitude": -30.033749,
+    "longitude": -51.218047,
+    "tags": [
+      "Recém-reformado",
+      "Próximo à praia"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-26"
+      },
+      {
+        "inicio": "2025-09-16",
+        "fim": "2025-09-24"
+      },
+      {
+        "inicio": "2025-09-14",
+        "fim": "2025-09-16"
+      },
+      {
+        "inicio": "2025-10-08",
+        "fim": "2025-10-20"
+      },
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-09-20",
+        "fim": "2025-09-28"
+      },
+      {
+        "inicio": "2025-11-02",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-11-02",
+        "fim": "2025-11-10"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Belo Horizonte",
+      "bairro": "Centro",
+      "rua": "Rua das Acácias",
+      "numero": 7992,
+      "cep": "38736-943",
+      "complemento": ""
+    },
+    "quartos": 5,
+    "banheiros": 4,
+    "vagas_garagem": 3,
+    "area_m2": 266,
+    "preco_aluguel": 9427,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Wi-Fi",
+      "Academia",
+      "TV",
+      "Aceita pets",
+      "Churrasqueira",
+      "Secadora",
+      "Piscina"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-23",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-10-29",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-11-21",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-10-13",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.98,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Animais permitidos",
+      "Não permite festas/eventos",
+      "Check-out até 11h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "11:00",
+    "ano_construcao": 1986,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 417,
+    "mobiliado": true,
+    "distancia_metro_km": 1.14,
+    "distancia_onibus_km": 1.91,
+    "max_hospedes": 12,
+    "tempo_anuncio_meses": 40,
+    "status": "inativo",
+    "latitude": -19.912621,
+    "longitude": -43.942213,
+    "tags": [
+      "Acessível para cadeirantes",
+      "Com escritório",
+      "Recém-reformado"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-21"
+      },
+      {
+        "inicio": "2025-09-17",
+        "fim": "2025-09-22"
+      },
+      {
+        "inicio": "2025-09-24",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-10-08",
+        "fim": "2025-10-10"
+      },
+      {
+        "inicio": "2025-10-15",
+        "fim": "2025-10-25"
+      },
+      {
+        "inicio": "2025-10-23",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-11-10",
+        "fim": "2025-11-16"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Rua Augusta",
+      "numero": 7966,
+      "cep": "59277-889",
+      "complemento": ""
+    },
+    "quartos": 3,
+    "banheiros": 4,
+    "vagas_garagem": 3,
+    "area_m2": 154,
+    "preco_aluguel": 8222,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Elevador",
+      "Ar-condicionado",
+      "Estacionamento gratuito",
+      "Máquina de lavar",
+      "Aquecimento"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-01",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-04-29",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-05-25",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-12",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-06-02",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-09-26",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-18",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-02",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-08-14",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.96,
+    "regras_casa": [
+      "Proibido fumar",
+      "Check-in após 14h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "10:00",
+    "ano_construcao": 1994,
+    "andar": 1,
+    "condominio": 1976,
+    "iptu": 96,
+    "mobiliado": false,
+    "distancia_metro_km": 1.21,
+    "distancia_onibus_km": 1.06,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 26,
+    "status": "inativo",
+    "latitude": -15.809948,
+    "longitude": -47.869718,
+    "tags": [
+      "Silencioso"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-07"
+      },
+      {
+        "inicio": "2025-10-13",
+        "fim": "2025-10-16"
+      },
+      {
+        "inicio": "2025-09-26",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-09-13",
+        "fim": "2025-09-24"
+      },
+      {
+        "inicio": "2025-11-11",
+        "fim": "2025-11-19"
+      },
+      {
+        "inicio": "2025-09-26",
+        "fim": "2025-10-10"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-13"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Ipanema",
+      "rua": "Avenida Paulista",
+      "numero": 5530,
+      "cep": "80364-180",
+      "complemento": "Cobertura"
+    },
+    "quartos": 3,
+    "banheiros": 2,
+    "vagas_garagem": 1,
+    "area_m2": 271,
+    "preco_aluguel": 22612,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Churrasqueira",
+      "Aceita pets",
+      "Estacionamento gratuito",
+      "Varanda",
+      "Ar-condicionado",
+      "Elevador",
+      "Cozinha",
+      "Secadora"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-24",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-08",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-25",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-04",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.77,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Silêncio após as 22h",
+      "Check-in após 14h",
+      "Proibido fumar"
+    ],
+    "camas": 3,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 2018,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 126,
+    "mobiliado": false,
+    "distancia_metro_km": 3.23,
+    "distancia_onibus_km": 0.74,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 47,
+    "status": "inativo",
+    "latitude": -22.900606,
+    "longitude": -43.164637,
+    "tags": [
+      "Silencioso",
+      "Recém-reformado",
+      "Vista panorâmica",
+      "Pet friendly"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-21"
+      },
+      {
+        "inicio": "2025-10-21",
+        "fim": "2025-10-26"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "São Paulo",
+      "bairro": "Moema",
+      "rua": "Rua Augusta",
+      "numero": 2300,
+      "cep": "26704-534",
+      "complemento": "Fundos"
+    },
+    "quartos": 2,
+    "banheiros": 1,
+    "vagas_garagem": 0,
+    "area_m2": 293,
+    "preco_aluguel": 21946,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Secadora",
+      "Aceita pets",
+      "Churrasqueira",
+      "Piscina",
+      "Aquecimento"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-24",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-13",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-27",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-17",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-08-04",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-01-09",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-31",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.26,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Check-out até 11h",
+      "Check-in após 14h",
+      "Proibido fumar"
+    ],
+    "camas": 3,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "11:00",
+    "ano_construcao": 2008,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 219,
+    "mobiliado": false,
+    "distancia_metro_km": 2.42,
+    "distancia_onibus_km": 0.06,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 1,
+    "status": "ativo",
+    "latitude": -23.544206,
+    "longitude": -46.639034,
+    "tags": [
+      "Bairro nobre",
+      "Próximo ao metrô"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-07"
+      },
+      {
+        "inicio": "2025-11-08",
+        "fim": "2025-11-21"
+      },
+      {
+        "inicio": "2025-10-28",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-10"
+      },
+      {
+        "inicio": "2025-10-05",
+        "fim": "2025-10-19"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Rua XV de Novembro",
+      "numero": 1007,
+      "cep": "53163-227",
+      "complemento": ""
+    },
+    "quartos": 3,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 213,
+    "preco_aluguel": 6474,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Vista para o mar",
+      "Aceita pets",
+      "Aquecimento",
+      "Máquina de lavar",
+      "Secadora"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-01-09",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-20",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-06-06",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-04-13",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-29",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-12-27",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 4.43,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Check-out até 11h",
+      "Animais permitidos",
+      "Check-in após 14h"
+    ],
+    "camas": 2,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "11:00",
+    "ano_construcao": 2008,
+    "andar": 17,
+    "condominio": 377,
+    "iptu": 203,
+    "mobiliado": true,
+    "distancia_metro_km": 2.93,
+    "distancia_onibus_km": 1.04,
+    "max_hospedes": 7,
+    "tempo_anuncio_meses": 40,
+    "status": "inativo",
+    "latitude": -30.046524,
+    "longitude": -51.229459,
+    "tags": [
+      "Ideal para famílias",
+      "Próximo à praia",
+      "Com escritório"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-08",
+        "fim": "2025-11-19"
+      },
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-17"
+      },
+      {
+        "inicio": "2025-10-13",
+        "fim": "2025-10-24"
+      },
+      {
+        "inicio": "2025-10-17",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-09-28",
+        "fim": "2025-10-07"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-15"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Barra",
+      "rua": "Rua do Sol",
+      "numero": 8549,
+      "cep": "48860-353",
+      "complemento": "Bloco B"
+    },
+    "quartos": 3,
+    "banheiros": 1,
+    "vagas_garagem": 0,
+    "area_m2": 242,
+    "preco_aluguel": 12208,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Wi-Fi",
+      "Estacionamento gratuito",
+      "Jacuzzi",
+      "Aquecimento",
+      "Ar-condicionado",
+      "Varanda",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-30",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-07-25",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-08-28",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-11",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-02-10",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-29",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-28",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-02-24",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.61,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Animais permitidos",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 2008,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 318,
+    "mobiliado": false,
+    "distancia_metro_km": 0.52,
+    "distancia_onibus_km": 0.85,
+    "max_hospedes": 4,
+    "tempo_anuncio_meses": 43,
+    "status": "ativo",
+    "latitude": -22.898614,
+    "longitude": -43.161633,
+    "tags": [
+      "Próximo ao metrô",
+      "Com varanda",
+      "Silencioso"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-29",
+        "fim": "2025-10-09"
+      },
+      {
+        "inicio": "2025-10-07",
+        "fim": "2025-10-16"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-02"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-29"
+      },
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-14"
+      },
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-11-08",
+        "fim": "2025-11-13"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-04"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Rua das Acácias",
+      "numero": 7189,
+      "cep": "68058-797",
+      "complemento": "Bloco B"
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 276,
+    "preco_aluguel": 11541,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Estacionamento gratuito",
+      "Wi-Fi",
+      "Academia",
+      "TV",
+      "Aquecimento",
+      "Secadora",
+      "Jacuzzi",
+      "Máquina de lavar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-02-06",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-20",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-08-10",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-08",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-03-16",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-02-06",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-12-27",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-12-21",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.8,
+    "regras_casa": [
+      "Animais permitidos",
+      "Não permite festas/eventos",
+      "Proibido fumar",
+      "Silêncio após as 22h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "11:00",
+    "ano_construcao": 1978,
+    "andar": 9,
+    "condominio": 886,
+    "iptu": 190,
+    "mobiliado": false,
+    "distancia_metro_km": 2.74,
+    "distancia_onibus_km": 0.7,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 12,
+    "status": "ativo",
+    "latitude": -27.582016,
+    "longitude": -48.534922,
+    "tags": [
+      "Vista panorâmica",
+      "Bairro nobre",
+      "Com escritório",
+      "Silencioso"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-28",
+        "fim": "2025-11-07"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-09-14",
+        "fim": "2025-09-20"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 9348,
+      "cep": "28891-264",
+      "complemento": "Fundos"
+    },
+    "quartos": 5,
+    "banheiros": 1,
+    "vagas_garagem": 3,
+    "area_m2": 54,
+    "preco_aluguel": 1641,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "TV",
+      "Aquecimento",
+      "Churrasqueira",
+      "Máquina de lavar",
+      "Aceita pets",
+      "Piscina"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.2,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-04",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-19",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-14",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-20",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.73,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Não permite festas/eventos",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 1993,
+    "andar": 15,
+    "condominio": 1001,
+    "iptu": 363,
+    "mobiliado": true,
+    "distancia_metro_km": 4.87,
+    "distancia_onibus_km": 0.79,
+    "max_hospedes": 10,
+    "tempo_anuncio_meses": 45,
+    "status": "inativo",
+    "latitude": -30.028463,
+    "longitude": -51.198123,
+    "tags": [
+      "Com escritório"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-19"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-10-27",
+        "fim": "2025-11-10"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-09-27",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-09-20",
+        "fim": "2025-09-27"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Avenida Paulista",
+      "numero": 1141,
+      "cep": "46844-273",
+      "complemento": "Casa"
+    },
+    "quartos": 3,
+    "banheiros": 2,
+    "vagas_garagem": 2,
+    "area_m2": 65,
+    "preco_aluguel": 3589,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Cozinha",
+      "Ar-condicionado",
+      "Aceita pets",
+      "Vista para o mar",
+      "Piscina",
+      "Elevador",
+      "Aquecimento"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-09",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-01-01",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-12-17",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-09",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-18",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-24",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.83,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Não permite festas/eventos",
+      "Proibido fumar",
+      "Animais permitidos"
+    ],
+    "camas": 3,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 1970,
+    "andar": 3,
+    "condominio": 1663,
+    "iptu": 88,
+    "mobiliado": true,
+    "distancia_metro_km": 4.34,
+    "distancia_onibus_km": 0.31,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 9,
+    "status": "ativo",
+    "latitude": -15.79584,
+    "longitude": -47.873579,
+    "tags": [
+      "Com escritório",
+      "Vista panorâmica",
+      "Com varanda"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-10",
+        "fim": "2025-10-23"
+      },
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-08"
+      },
+      {
+        "inicio": "2025-09-15",
+        "fim": "2025-09-30"
+      },
+      {
+        "inicio": "2025-11-05",
+        "fim": "2025-11-16"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Copacabana",
+      "rua": "Avenida Atlântica",
+      "numero": 1048,
+      "cep": "40389-805",
+      "complemento": "Bloco B"
+    },
+    "quartos": 3,
+    "banheiros": 1,
+    "vagas_garagem": 0,
+    "area_m2": 187,
+    "preco_aluguel": 14509,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Jacuzzi",
+      "Aceita pets",
+      "Varanda",
+      "Academia",
+      "Cozinha",
+      "Elevador"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.8,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-10",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-25",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-09",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 4.99,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Check-in após 14h",
+      "Check-out até 11h",
+      "Proibido fumar"
+    ],
+    "camas": 3,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 1989,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 295,
+    "mobiliado": false,
+    "distancia_metro_km": 3.09,
+    "distancia_onibus_km": 0.46,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 18,
+    "status": "inativo",
+    "latitude": -22.914033,
+    "longitude": -43.176481,
+    "tags": [
+      "Vista panorâmica",
+      "Acessível para cadeirantes",
+      "Próximo à praia"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-10-29",
+        "fim": "2025-11-01"
+      },
+      {
+        "inicio": "2025-11-09",
+        "fim": "2025-11-15"
+      },
+      {
+        "inicio": "2025-11-10",
+        "fim": "2025-11-22"
+      },
+      {
+        "inicio": "2025-09-19",
+        "fim": "2025-09-22"
+      },
+      {
+        "inicio": "2025-09-19",
+        "fim": "2025-09-28"
+      },
+      {
+        "inicio": "2025-10-27",
+        "fim": "2025-11-11"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua XV de Novembro",
+      "numero": 4993,
+      "cep": "89693-590",
+      "complemento": "Apto 101"
+    },
+    "quartos": 1,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 232,
+    "preco_aluguel": 10278,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Wi-Fi",
+      "Vista para o mar",
+      "Jacuzzi",
+      "Varanda",
+      "Elevador",
+      "Cozinha",
+      "Piscina",
+      "TV"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-19",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-09",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-07",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-12-27",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-01-31",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 3.99,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Animais permitidos",
+      "Proibido fumar",
+      "Silêncio após as 22h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "10:00",
+    "ano_construcao": 1979,
+    "andar": 0,
+    "condominio": 810,
+    "iptu": 111,
+    "mobiliado": false,
+    "distancia_metro_km": 3.12,
+    "distancia_onibus_km": 0.87,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 36,
+    "status": "ativo",
+    "latitude": -8.062162,
+    "longitude": -34.859543,
+    "tags": [
+      "Próximo à praia",
+      "Recém-reformado",
+      "Bairro nobre"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-31",
+        "fim": "2025-11-15"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-07",
+        "fim": "2025-10-22"
+      },
+      {
+        "inicio": "2025-10-05",
+        "fim": "2025-10-09"
+      },
+      {
+        "inicio": "2025-10-08",
+        "fim": "2025-10-17"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Copacabana",
+      "rua": "Rua das Palmeiras",
+      "numero": 8750,
+      "cep": "48805-818",
+      "complemento": "Fundos"
+    },
+    "quartos": 1,
+    "banheiros": 4,
+    "vagas_garagem": 2,
+    "area_m2": 492,
+    "preco_aluguel": 34941,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Jacuzzi",
+      "Piscina",
+      "Estacionamento gratuito",
+      "Máquina de lavar",
+      "Ar-condicionado",
+      "Wi-Fi",
+      "Varanda",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-06-18",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-23",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-11-19",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-08-31",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-09",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-09-09",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-18",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-11",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 4.56,
+    "regras_casa": [
+      "Não permite festas/eventos",
+      "Animais permitidos",
+      "Check-out até 11h",
+      "Silêncio após as 22h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 2019,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 394,
+    "mobiliado": false,
+    "distancia_metro_km": 3.04,
+    "distancia_onibus_km": 1.65,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 11,
+    "status": "ativo",
+    "latitude": -22.919183,
+    "longitude": -43.173379,
+    "tags": [
+      "Ótima localização",
+      "Com escritório",
+      "Com varanda",
+      "Vista panorâmica"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-11"
+      },
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-11-01"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 2838,
+      "cep": "98896-321",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 4,
+    "vagas_garagem": 3,
+    "area_m2": 57,
+    "preco_aluguel": 1554,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Estacionamento gratuito",
+      "Churrasqueira",
+      "Ar-condicionado",
+      "TV",
+      "Wi-Fi"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-03-20",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-24",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-24",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-22",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-03-05",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-28",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-05-31",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-09-05",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-10-12",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-10",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.56,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Check-out até 11h",
+      "Check-in após 14h",
+      "Não permite festas/eventos"
+    ],
+    "camas": 3,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 2007,
+    "andar": 13,
+    "condominio": 1221,
+    "iptu": 235,
+    "mobiliado": false,
+    "distancia_metro_km": 3.85,
+    "distancia_onibus_km": 0.7,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 44,
+    "status": "inativo",
+    "latitude": -30.04255,
+    "longitude": -51.220533,
+    "tags": [
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-25"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-28",
+        "fim": "2025-10-11"
+      },
+      {
+        "inicio": "2025-09-13",
+        "fim": "2025-09-15"
+      },
+      {
+        "inicio": "2025-10-13",
+        "fim": "2025-10-24"
+      },
+      {
+        "inicio": "2025-09-13",
+        "fim": "2025-09-19"
+      },
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-07"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Ipanema",
+      "rua": "Rua Augusta",
+      "numero": 164,
+      "cep": "98895-790",
+      "complemento": "Apto 101"
+    },
+    "quartos": 5,
+    "banheiros": 2,
+    "vagas_garagem": 0,
+    "area_m2": 436,
+    "preco_aluguel": 42217,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Aquecimento",
+      "Ar-condicionado",
+      "Varanda",
+      "Wi-Fi",
+      "Aceita pets",
+      "TV"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-16",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-01-25",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-09-23",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 4.31,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Silêncio após as 22h",
+      "Animais permitidos"
+    ],
+    "camas": 1,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 1993,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 171,
+    "mobiliado": true,
+    "distancia_metro_km": 3.88,
+    "distancia_onibus_km": 0.06,
+    "max_hospedes": 10,
+    "tempo_anuncio_meses": 40,
+    "status": "ativo",
+    "latitude": -22.899506,
+    "longitude": -43.175168,
+    "tags": [
+      "Silencioso"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-08",
+        "fim": "2025-11-19"
+      },
+      {
+        "inicio": "2025-09-17",
+        "fim": "2025-09-24"
+      },
+      {
+        "inicio": "2025-09-17",
+        "fim": "2025-10-02"
+      },
+      {
+        "inicio": "2025-09-23",
+        "fim": "2025-10-02"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Fortaleza",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 4108,
+      "cep": "69524-717",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 3,
+    "area_m2": 120,
+    "preco_aluguel": 3135,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Estacionamento gratuito",
+      "Máquina de lavar",
+      "Elevador",
+      "Secadora",
+      "Varanda",
+      "Churrasqueira",
+      "Vista para o mar",
+      "Cozinha"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-07",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-02-01",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-28",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.14,
+    "regras_casa": [
+      "Animais permitidos",
+      "Silêncio após as 22h",
+      "Proibido fumar"
+    ],
+    "camas": 2,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 1986,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 158,
+    "mobiliado": true,
+    "distancia_metro_km": 1.84,
+    "distancia_onibus_km": 1.3,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 11,
+    "status": "ativo",
+    "latitude": -3.736604,
+    "longitude": -38.533107,
+    "tags": [
+      "Acessível para cadeirantes",
+      "Próximo à praia"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-11"
+      },
+      {
+        "inicio": "2025-11-11",
+        "fim": "2025-11-15"
+      },
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-10-26"
+      },
+      {
+        "inicio": "2025-11-05",
+        "fim": "2025-11-11"
+      },
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-10-23",
+        "fim": "2025-10-28"
+      },
+      {
+        "inicio": "2025-09-18",
+        "fim": "2025-09-27"
+      },
+      {
+        "inicio": "2025-10-08",
+        "fim": "2025-10-12"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Fortaleza",
+      "bairro": "Centro",
+      "rua": "Rua Augusta",
+      "numero": 8974,
+      "cep": "43209-465",
+      "complemento": "Apto 101"
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 1,
+    "area_m2": 112,
+    "preco_aluguel": 3078,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Jacuzzi",
+      "Ar-condicionado",
+      "TV",
+      "Churrasqueira"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-08-24",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-09-12",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-05-25",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.66,
+    "regras_casa": [
+      "Animais permitidos",
+      "Não permite festas/eventos",
+      "Silêncio após as 22h",
+      "Proibido fumar"
+    ],
+    "camas": 1,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 1984,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 240,
+    "mobiliado": false,
+    "distancia_metro_km": 0.14,
+    "distancia_onibus_km": 0.48,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 35,
+    "status": "inativo",
+    "latitude": -3.713641,
+    "longitude": -38.53196,
+    "tags": [
+      "Silencioso"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-05",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-11-07"
+      },
+      {
+        "inicio": "2025-11-06",
+        "fim": "2025-11-17"
+      },
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-13"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-25"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-26"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Rua Augusta",
+      "numero": 2310,
+      "cep": "52004-924",
+      "complemento": ""
+    },
+    "quartos": 3,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 137,
+    "preco_aluguel": 7215,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Churrasqueira",
+      "Academia",
+      "Wi-Fi",
+      "Aceita pets",
+      "Elevador"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-02-12",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-20",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-05-29",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-08",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-11-12",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-04",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-16",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-05-25",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-22",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-02-21",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.17,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Animais permitidos",
+      "Proibido fumar",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "10:00",
+    "ano_construcao": 2019,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 407,
+    "mobiliado": false,
+    "distancia_metro_km": 2.85,
+    "distancia_onibus_km": 1.15,
+    "max_hospedes": 7,
+    "tempo_anuncio_meses": 42,
+    "status": "inativo",
+    "latitude": -15.808906,
+    "longitude": -47.888466,
+    "tags": [
+      "Com varanda",
+      "Acessível para cadeirantes",
+      "Com escritório",
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-09-24",
+        "fim": "2025-10-03"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-20"
+      },
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-09"
+      },
+      {
+        "inicio": "2025-09-24",
+        "fim": "2025-09-30"
+      },
+      {
+        "inicio": "2025-10-18",
+        "fim": "2025-10-22"
+      },
+      {
+        "inicio": "2025-11-07",
+        "fim": "2025-11-11"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Avenida Atlântica",
+      "numero": 3767,
+      "cep": "47414-801",
+      "complemento": "Cobertura"
+    },
+    "quartos": 1,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 107,
+    "preco_aluguel": 3515,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Piscina",
+      "Wi-Fi",
+      "Vista para o mar",
+      "Aceita pets",
+      "Academia"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-21",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-07",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-11-01",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-11-12",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-23",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-11-19",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-12-09",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.82,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Silêncio após as 22h",
+      "Proibido fumar",
+      "Animais permitidos"
+    ],
+    "camas": 1,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "10:00",
+    "ano_construcao": 2007,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 385,
+    "mobiliado": true,
+    "distancia_metro_km": 4.52,
+    "distancia_onibus_km": 0.48,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 1,
+    "status": "inativo",
+    "latitude": -27.59483,
+    "longitude": -48.549039,
+    "tags": [
+      "Acessível para cadeirantes"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-08"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-09-23",
+        "fim": "2025-09-25"
+      },
+      {
+        "inicio": "2025-09-13",
+        "fim": "2025-09-22"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Rua do Sol",
+      "numero": 3180,
+      "cep": "13498-258",
+      "complemento": ""
+    },
+    "quartos": 2,
+    "banheiros": 2,
+    "vagas_garagem": 1,
+    "area_m2": 149,
+    "preco_aluguel": 7170,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "TV",
+      "Estacionamento gratuito",
+      "Cozinha",
+      "Aquecimento",
+      "Vista para o mar",
+      "Jacuzzi",
+      "Wi-Fi",
+      "Varanda"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-08-27",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-01-09",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-05-22",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-10",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-10-05",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.64,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Proibido fumar",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "11:00",
+    "ano_construcao": 1993,
+    "andar": 16,
+    "condominio": 1795,
+    "iptu": 317,
+    "mobiliado": true,
+    "distancia_metro_km": 0.2,
+    "distancia_onibus_km": 0.09,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 47,
+    "status": "inativo",
+    "latitude": -15.8041,
+    "longitude": -47.882006,
+    "tags": [
+      "Recém-reformado",
+      "Pet friendly"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-07",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-29"
+      },
+      {
+        "inicio": "2025-10-29",
+        "fim": "2025-11-08"
+      },
+      {
+        "inicio": "2025-09-15",
+        "fim": "2025-09-28"
+      },
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-05"
+      },
+      {
+        "inicio": "2025-10-08",
+        "fim": "2025-10-19"
+      },
+      {
+        "inicio": "2025-10-21",
+        "fim": "2025-10-30"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "São Paulo",
+      "bairro": "Jardim América",
+      "rua": "Avenida Atlântica",
+      "numero": 8677,
+      "cep": "42523-885",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 1,
+    "vagas_garagem": 3,
+    "area_m2": 298,
+    "preco_aluguel": 27985,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Cozinha",
+      "Jacuzzi",
+      "TV",
+      "Estacionamento gratuito",
+      "Elevador",
+      "Academia",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-06",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-07",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-06",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-02-25",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-11-13",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-03",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-09-30",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-05-01",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-01-22",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.08,
+    "regras_casa": [
+      "Silêncio após as 22h",
+      "Check-in após 14h",
+      "Proibido fumar"
+    ],
+    "camas": 1,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 2012,
+    "andar": 13,
+    "condominio": 215,
+    "iptu": 149,
+    "mobiliado": true,
+    "distancia_metro_km": 3.48,
+    "distancia_onibus_km": 1.06,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 8,
+    "status": "ativo",
+    "latitude": -23.535177,
+    "longitude": -46.614596,
+    "tags": [
+      "Silencioso",
+      "Bairro nobre",
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-10",
+        "fim": "2025-11-19"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-07"
+      },
+      {
+        "inicio": "2025-11-02",
+        "fim": "2025-11-13"
+      },
+      {
+        "inicio": "2025-10-17",
+        "fim": "2025-10-20"
+      },
+      {
+        "inicio": "2025-10-31",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-11-02",
+        "fim": "2025-11-17"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua do Sol",
+      "numero": 7548,
+      "cep": "86905-536",
+      "complemento": "Fundos"
+    },
+    "quartos": 4,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 381,
+    "preco_aluguel": 18210,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "TV",
+      "Máquina de lavar",
+      "Piscina",
+      "Varanda",
+      "Ar-condicionado",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-20",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-03-03",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-09-03",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-17",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.92,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Check-in após 14h",
+      "Silêncio após as 22h",
+      "Proibido fumar"
+    ],
+    "camas": 5,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 1977,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 372,
+    "mobiliado": true,
+    "distancia_metro_km": 2.15,
+    "distancia_onibus_km": 0.09,
+    "max_hospedes": 8,
+    "tempo_anuncio_meses": 45,
+    "status": "inativo",
+    "latitude": -8.049088,
+    "longitude": -34.876243,
+    "tags": [
+      "Ótima localização",
+      "Acessível para cadeirantes"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-28",
+        "fim": "2025-11-06"
+      },
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-10-24"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-11-06",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-10-18",
+        "fim": "2025-10-23"
+      },
+      {
+        "inicio": "2025-11-06",
+        "fim": "2025-11-15"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-09-30"
+      },
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-20"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Avenida Paulista",
+      "numero": 198,
+      "cep": "47845-985",
+      "complemento": "Casa"
+    },
+    "quartos": 2,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 43,
+    "preco_aluguel": 1364,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Ar-condicionado",
+      "Academia",
+      "Jacuzzi",
+      "Aquecimento",
+      "Cozinha",
+      "Secadora"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-21",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-08-02",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-09",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-13",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-06-10",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-09-10",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-29",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-09",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 4.24,
+    "regras_casa": [
+      "Animais permitidos",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "12:00",
+    "ano_construcao": 2019,
+    "andar": 5,
+    "condominio": 1742,
+    "iptu": 499,
+    "mobiliado": true,
+    "distancia_metro_km": 1.32,
+    "distancia_onibus_km": 0.55,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 41,
+    "status": "inativo",
+    "latitude": -30.026294,
+    "longitude": -51.205097,
+    "tags": [
+      "Pet friendly",
+      "Recém-reformado",
+      "Bairro nobre"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-29",
+        "fim": "2025-11-11"
+      },
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-08"
+      },
+      {
+        "inicio": "2025-10-20",
+        "fim": "2025-10-22"
+      },
+      {
+        "inicio": "2025-11-07",
+        "fim": "2025-11-22"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Rua do Sol",
+      "numero": 4895,
+      "cep": "14250-520",
+      "complemento": "Cobertura"
+    },
+    "quartos": 5,
+    "banheiros": 2,
+    "vagas_garagem": 2,
+    "area_m2": 119,
+    "preco_aluguel": 4375,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Varanda",
+      "Estacionamento gratuito",
+      "Vista para o mar",
+      "Piscina",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-27",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-27",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-11",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-04-16",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.33,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Animais permitidos",
+      "Não permite festas/eventos",
+      "Silêncio após as 22h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 1992,
+    "andar": 1,
+    "condominio": 1347,
+    "iptu": 437,
+    "mobiliado": true,
+    "distancia_metro_km": 3.0,
+    "distancia_onibus_km": 1.4,
+    "max_hospedes": 9,
+    "tempo_anuncio_meses": 7,
+    "status": "ativo",
+    "latitude": -27.602289,
+    "longitude": -48.528371,
+    "tags": [
+      "Ideal para famílias",
+      "Vista panorâmica",
+      "Bairro nobre"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-27",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-10-26",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-11-07",
+        "fim": "2025-11-21"
+      },
+      {
+        "inicio": "2025-09-19",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-10-23",
+        "fim": "2025-10-27"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Porto Alegre",
+      "bairro": "Centro",
+      "rua": "Avenida Atlântica",
+      "numero": 4277,
+      "cep": "25974-767",
+      "complemento": "Fundos"
+    },
+    "quartos": 5,
+    "banheiros": 4,
+    "vagas_garagem": 1,
+    "area_m2": 475,
+    "preco_aluguel": 15584,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Ar-condicionado",
+      "Varanda",
+      "TV",
+      "Máquina de lavar",
+      "Secadora",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-12",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-03-08",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-15",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-09-11",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-23",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-24",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-04",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-31",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.86,
+    "regras_casa": [
+      "Animais permitidos",
+      "Proibido fumar",
+      "Check-out até 11h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "10:00",
+    "ano_construcao": 2020,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 255,
+    "mobiliado": false,
+    "distancia_metro_km": 4.15,
+    "distancia_onibus_km": 0.63,
+    "max_hospedes": 8,
+    "tempo_anuncio_meses": 31,
+    "status": "ativo",
+    "latitude": -30.020118,
+    "longitude": -51.199536,
+    "tags": [
+      "Próximo à praia"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-06",
+        "fim": "2025-11-20"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-11-05"
+      },
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-07"
+      },
+      {
+        "inicio": "2025-10-07",
+        "fim": "2025-10-19"
+      },
+      {
+        "inicio": "2025-09-27",
+        "fim": "2025-10-03"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua das Flores",
+      "numero": 6551,
+      "cep": "77325-864",
+      "complemento": "Casa"
+    },
+    "quartos": 1,
+    "banheiros": 4,
+    "vagas_garagem": 2,
+    "area_m2": 220,
+    "preco_aluguel": 8847,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Churrasqueira",
+      "Secadora",
+      "Vista para o mar",
+      "Wi-Fi",
+      "TV"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-25",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-09-22",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-09-28",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-04-19",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-20",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-06",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-21",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-07-20",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.98,
+    "regras_casa": [
+      "Não permite festas/eventos",
+      "Animais permitidos",
+      "Check-out até 11h",
+      "Proibido fumar"
+    ],
+    "camas": 2,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 1983,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 291,
+    "mobiliado": true,
+    "distancia_metro_km": 0.79,
+    "distancia_onibus_km": 1.16,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 2,
+    "status": "ativo",
+    "latitude": -8.050819,
+    "longitude": -34.857078,
+    "tags": [
+      "Com varanda",
+      "Ideal para famílias",
+      "Silencioso",
+      "Próximo à praia"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-31",
+        "fim": "2025-11-10"
+      },
+      {
+        "inicio": "2025-09-16",
+        "fim": "2025-09-25"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-27"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-10-31"
+      },
+      {
+        "inicio": "2025-10-23",
+        "fim": "2025-10-31"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-23"
+      },
+      {
+        "inicio": "2025-10-06",
+        "fim": "2025-10-20"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-10-29"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Curitiba",
+      "bairro": "Centro",
+      "rua": "Rua XV de Novembro",
+      "numero": 6245,
+      "cep": "64067-352",
+      "complemento": "Cobertura"
+    },
+    "quartos": 5,
+    "banheiros": 2,
+    "vagas_garagem": 0,
+    "area_m2": 164,
+    "preco_aluguel": 4742,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Ar-condicionado",
+      "Aquecimento",
+      "Secadora",
+      "Piscina",
+      "Wi-Fi",
+      "Churrasqueira",
+      "Varanda",
+      "Jacuzzi"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.8,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-05-26",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-07-19",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-10",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-07-07",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-03-07",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-09-08",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-10-28",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-10-13",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-11",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 4.17,
+    "regras_casa": [
+      "Animais permitidos",
+      "Não permite festas/eventos",
+      "Proibido fumar"
+    ],
+    "camas": 5,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "12:00",
+    "ano_construcao": 1986,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 84,
+    "mobiliado": true,
+    "distancia_metro_km": 0.97,
+    "distancia_onibus_km": 1.73,
+    "max_hospedes": 7,
+    "tempo_anuncio_meses": 38,
+    "status": "ativo",
+    "latitude": -25.446071,
+    "longitude": -49.286823,
+    "tags": [
+      "Bairro nobre",
+      "Silencioso",
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-28",
+        "fim": "2025-10-01"
+      },
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-11-02"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Curitiba",
+      "bairro": "Trindade",
+      "rua": "Avenida Paulista",
+      "numero": 9274,
+      "cep": "88423-966",
+      "complemento": "Apto 101"
+    },
+    "quartos": 4,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 265,
+    "preco_aluguel": 7063,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Ar-condicionado",
+      "Vista para o mar",
+      "Aquecimento",
+      "Academia"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.1,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-12-27",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-01-18",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-29",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-11-22",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-08",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-15",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-04-12",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-07-26",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.25,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Animais permitidos",
+      "Check-out até 11h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Beliche",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "12:00",
+    "ano_construcao": 2012,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 202,
+    "mobiliado": true,
+    "distancia_metro_km": 4.91,
+    "distancia_onibus_km": 1.08,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 31,
+    "status": "ativo",
+    "latitude": -25.429904,
+    "longitude": -49.292011,
+    "tags": [
+      "Bairro nobre",
+      "Recém-reformado",
+      "Ótima localização"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-21",
+        "fim": "2025-11-01"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-03"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-11-09"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Curitiba",
+      "bairro": "Centro",
+      "rua": "Rua XV de Novembro",
+      "numero": 7014,
+      "cep": "79121-275",
+      "complemento": "Fundos"
+    },
+    "quartos": 4,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 168,
+    "preco_aluguel": 5391,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "TV",
+      "Ar-condicionado",
+      "Secadora",
+      "Vista para o mar"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-01-08",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-11",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-11-16",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 5.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-02-07",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-09-04",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.88,
+    "regras_casa": [
+      "Proibido fumar",
+      "Silêncio após as 22h"
+    ],
+    "camas": 5,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "11:00",
+    "ano_construcao": 2012,
+    "andar": 14,
+    "condominio": 1855,
+    "iptu": 225,
+    "mobiliado": false,
+    "distancia_metro_km": 0.48,
+    "distancia_onibus_km": 0.81,
+    "max_hospedes": 10,
+    "tempo_anuncio_meses": 11,
+    "status": "inativo",
+    "latitude": -25.412107,
+    "longitude": -49.253996,
+    "tags": [
+      "Recém-reformado",
+      "Ótima localização"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-27",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-10"
+      },
+      {
+        "inicio": "2025-10-11",
+        "fim": "2025-10-19"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-23",
+        "fim": "2025-11-05"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-24"
+      },
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-14"
+      },
+      {
+        "inicio": "2025-10-24",
+        "fim": "2025-11-01"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Avenida Paulista",
+      "numero": 7499,
+      "cep": "31981-182",
+      "complemento": "Fundos"
+    },
+    "quartos": 1,
+    "banheiros": 3,
+    "vagas_garagem": 0,
+    "area_m2": 196,
+    "preco_aluguel": 7370,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Ar-condicionado",
+      "Varanda",
+      "Estacionamento gratuito",
+      "Aceita pets",
+      "Máquina de lavar",
+      "Wi-Fi"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.1,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-09",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-04-13",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-16",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-03-04",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-09-12",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-01-05",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-10-14",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-20",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 4.58,
+    "regras_casa": [
+      "Proibido fumar",
+      "Não permite festas/eventos",
+      "Check-out até 11h",
+      "Check-in após 14h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 2011,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 234,
+    "mobiliado": true,
+    "distancia_metro_km": 3.05,
+    "distancia_onibus_km": 1.34,
+    "max_hospedes": 4,
+    "tempo_anuncio_meses": 24,
+    "status": "inativo",
+    "latitude": -27.592627,
+    "longitude": -48.564591,
+    "tags": [
+      "Bairro nobre",
+      "Vista panorâmica",
+      "Com varanda",
+      "Próximo ao metrô"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-05",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-28"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-09-29",
+        "fim": "2025-10-01"
+      },
+      {
+        "inicio": "2025-09-22",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-11-11",
+        "fim": "2025-11-16"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Florianópolis",
+      "bairro": "Trindade",
+      "rua": "Rua Augusta",
+      "numero": 4984,
+      "cep": "90368-875",
+      "complemento": "Casa"
+    },
+    "quartos": 5,
+    "banheiros": 1,
+    "vagas_garagem": 3,
+    "area_m2": 389,
+    "preco_aluguel": 15845,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Cozinha",
+      "TV",
+      "Secadora",
+      "Wi-Fi",
+      "Estacionamento gratuito",
+      "Máquina de lavar",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-18",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-18",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-08-29",
+        "hospede": "Lucas"
+      }
+    ],
+    "nota_media": 3.8,
+    "regras_casa": [
+      "Animais permitidos",
+      "Proibido fumar",
+      "Check-in após 14h"
+    ],
+    "camas": 1,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "10:00",
+    "ano_construcao": 1999,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 215,
+    "mobiliado": false,
+    "distancia_metro_km": 3.51,
+    "distancia_onibus_km": 0.09,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 43,
+    "status": "inativo",
+    "latitude": -27.585704,
+    "longitude": -48.529872,
+    "tags": [
+      "Ideal para famílias"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-10-02",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-13"
+      },
+      {
+        "inicio": "2025-10-26",
+        "fim": "2025-11-08"
+      },
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-12"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-29"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-11-03"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua do Sol",
+      "numero": 8710,
+      "cep": "92088-139",
+      "complemento": ""
+    },
+    "quartos": 3,
+    "banheiros": 3,
+    "vagas_garagem": 2,
+    "area_m2": 54,
+    "preco_aluguel": 2416,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Aquecimento",
+      "TV",
+      "Secadora",
+      "Churrasqueira",
+      "Máquina de lavar",
+      "Piscina",
+      "Ar-condicionado"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.7,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-02-12",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-03-17",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-23",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-09-14",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-08-08",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-12-21",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 4.91,
+    "regras_casa": [
+      "Animais permitidos",
+      "Check-out até 11h",
+      "Check-in após 14h"
+    ],
+    "camas": 3,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "10:00",
+    "ano_construcao": 2001,
+    "andar": 4,
+    "condominio": 819,
+    "iptu": 281,
+    "mobiliado": false,
+    "distancia_metro_km": 1.74,
+    "distancia_onibus_km": 0.28,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 26,
+    "status": "inativo",
+    "latitude": -8.036828,
+    "longitude": -34.889988,
+    "tags": [
+      "Ideal para famílias",
+      "Bairro nobre",
+      "Pet friendly",
+      "Com escritório"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-11-04",
+        "fim": "2025-11-09"
+      },
+      {
+        "inicio": "2025-09-18",
+        "fim": "2025-09-29"
+      },
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-25"
+      },
+      {
+        "inicio": "2025-10-26",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-26"
+      },
+      {
+        "inicio": "2025-09-28",
+        "fim": "2025-09-30"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Fortaleza",
+      "bairro": "Centro",
+      "rua": "Rua XV de Novembro",
+      "numero": 2815,
+      "cep": "84969-742",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 3,
+    "vagas_garagem": 3,
+    "area_m2": 51,
+    "preco_aluguel": 1458,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Vista para o mar",
+      "Wi-Fi",
+      "Varanda",
+      "Cozinha",
+      "Piscina"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 5.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-08-01",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-03-11",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-11-28",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.92,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Check-out até 11h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "11:00",
+    "ano_construcao": 2003,
+    "andar": 18,
+    "condominio": 403,
+    "iptu": 308,
+    "mobiliado": true,
+    "distancia_metro_km": 2.45,
+    "distancia_onibus_km": 0.12,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 42,
+    "status": "inativo",
+    "latitude": -3.702964,
+    "longitude": -38.537367,
+    "tags": [
+      "Bairro nobre",
+      "Com varanda",
+      "Próximo ao metrô",
+      "Recém-reformado"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-20",
+        "fim": "2025-10-27"
+      },
+      {
+        "inicio": "2025-10-05",
+        "fim": "2025-10-10"
+      },
+      {
+        "inicio": "2025-10-20",
+        "fim": "2025-10-27"
+      },
+      {
+        "inicio": "2025-10-11",
+        "fim": "2025-10-23"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua do Sol",
+      "numero": 478,
+      "cep": "58357-136",
+      "complemento": "Bloco B"
+    },
+    "quartos": 2,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 423,
+    "preco_aluguel": 18494,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Piscina",
+      "Cozinha",
+      "Aquecimento",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.8,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-30",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-01-01",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-03-19",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-02-09",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-15",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-28",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.6,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-06",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-14",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-10",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.06,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Silêncio após as 22h"
+    ],
+    "camas": 1,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "João Pedro",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/4.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "11:00",
+    "ano_construcao": 1983,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 213,
+    "mobiliado": false,
+    "distancia_metro_km": 2.27,
+    "distancia_onibus_km": 0.42,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 2,
+    "status": "ativo",
+    "latitude": -8.051699,
+    "longitude": -34.87994,
+    "tags": [
+      "Com varanda",
+      "Próximo ao metrô",
+      "Bairro nobre",
+      "Com escritório"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-21"
+      },
+      {
+        "inicio": "2025-10-07",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-25",
+        "fim": "2025-11-01"
+      },
+      {
+        "inicio": "2025-10-06",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-11-03",
+        "fim": "2025-11-10"
+      },
+      {
+        "inicio": "2025-10-01",
+        "fim": "2025-10-04"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-29"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Salvador",
+      "bairro": "Boa Viagem",
+      "rua": "Avenida Paulista",
+      "numero": 5071,
+      "cep": "87628-960",
+      "complemento": "Cobertura"
+    },
+    "quartos": 2,
+    "banheiros": 4,
+    "vagas_garagem": 0,
+    "area_m2": 235,
+    "preco_aluguel": 8138,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Varanda",
+      "Wi-Fi",
+      "Estacionamento gratuito",
+      "Aceita pets"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 5.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-07-13",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-23",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-30",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-09",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.18,
+    "regras_casa": [
+      "Animais permitidos",
+      "Não permite festas/eventos"
+    ],
+    "camas": 2,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "11:00",
+    "ano_construcao": 1986,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 372,
+    "mobiliado": true,
+    "distancia_metro_km": 2.17,
+    "distancia_onibus_km": 0.76,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 29,
+    "status": "inativo",
+    "latitude": -12.967396,
+    "longitude": -38.512662,
+    "tags": [
+      "Próximo ao metrô",
+      "Com varanda"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-18",
+        "fim": "2025-10-02"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-10-09"
+      },
+      {
+        "inicio": "2025-10-13",
+        "fim": "2025-10-26"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-29"
+      },
+      {
+        "inicio": "2025-09-26",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-10-01"
+      },
+      {
+        "inicio": "2025-10-12",
+        "fim": "2025-10-25"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "São Paulo",
+      "bairro": "Moema",
+      "rua": "Rua das Flores",
+      "numero": 3265,
+      "cep": "61716-248",
+      "complemento": "Fundos"
+    },
+    "quartos": 2,
+    "banheiros": 4,
+    "vagas_garagem": 0,
+    "area_m2": 300,
+    "preco_aluguel": 20847,
+    "descricao": "Apartamento aconchegante no coração da cidade, próximo a restaurantes e pontos turísticos.",
+    "comodidades": [
+      "Estacionamento gratuito",
+      "TV",
+      "Churrasqueira",
+      "Elevador",
+      "Ar-condicionado",
+      "Varanda",
+      "Aquecimento"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-22",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-06",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-04-01",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-03-31",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-30",
+        "hospede": "Juliana"
+      }
+    ],
+    "nota_media": 3.86,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Proibido fumar",
+      "Silêncio após as 22h"
+    ],
+    "camas": 1,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Flexível",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "11:00",
+    "ano_construcao": 2011,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 355,
+    "mobiliado": true,
+    "distancia_metro_km": 0.4,
+    "distancia_onibus_km": 1.19,
+    "max_hospedes": 2,
+    "tempo_anuncio_meses": 42,
+    "status": "inativo",
+    "latitude": -23.565464,
+    "longitude": -46.651245,
+    "tags": [
+      "Pet friendly",
+      "Acessível para cadeirantes"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-19"
+      },
+      {
+        "inicio": "2025-11-01",
+        "fim": "2025-11-16"
+      },
+      {
+        "inicio": "2025-10-16",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-10-28"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Recife",
+      "bairro": "Boa Viagem",
+      "rua": "Rua XV de Novembro",
+      "numero": 6491,
+      "cep": "44538-293",
+      "complemento": "Cobertura"
+    },
+    "quartos": 1,
+    "banheiros": 4,
+    "vagas_garagem": 2,
+    "area_m2": 231,
+    "preco_aluguel": 10013,
+    "descricao": "Casa espaçosa com piscina e área gourmet, perfeita para famílias.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Piscina",
+      "Cozinha",
+      "Aquecimento",
+      "Jacuzzi"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-15",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-09-17",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-10-25",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-11-25",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-07-10",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-11-19",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-26",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-04",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-05",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 4.28,
+    "regras_casa": [
+      "Proibido fumar",
+      "Não permite festas/eventos",
+      "Check-in após 14h"
+    ],
+    "camas": 1,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "16:00",
+    "checkout": "10:00",
+    "ano_construcao": 1995,
+    "andar": 5,
+    "condominio": 1545,
+    "iptu": 374,
+    "mobiliado": false,
+    "distancia_metro_km": 3.43,
+    "distancia_onibus_km": 0.74,
+    "max_hospedes": 4,
+    "tempo_anuncio_meses": 8,
+    "status": "ativo",
+    "latitude": -8.058566,
+    "longitude": -34.86295,
+    "tags": [
+      "Vista panorâmica",
+      "Próximo ao metrô",
+      "Recém-reformado"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-18",
+        "fim": "2025-09-23"
+      },
+      {
+        "inicio": "2025-09-22",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-20",
+        "fim": "2025-10-01"
+      },
+      {
+        "inicio": "2025-11-10",
+        "fim": "2025-11-21"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "São Paulo",
+      "bairro": "Centro",
+      "rua": "Rua das Palmeiras",
+      "numero": 6715,
+      "cep": "85520-872",
+      "complemento": "Cobertura"
+    },
+    "quartos": 3,
+    "banheiros": 4,
+    "vagas_garagem": 0,
+    "area_m2": 173,
+    "preco_aluguel": 8102,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Cozinha",
+      "Aceita pets",
+      "Elevador",
+      "Piscina",
+      "Secadora"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-11-20",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-10-08",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-09-15",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2024-09-20",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-06-28",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.7,
+    "regras_casa": [
+      "Animais permitidos",
+      "Check-out até 11h",
+      "Check-in após 14h",
+      "Silêncio após as 22h"
+    ],
+    "camas": 2,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Carlos Lima",
+      "superhost": false,
+      "foto": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 1978,
+    "andar": 14,
+    "condominio": 754,
+    "iptu": 236,
+    "mobiliado": false,
+    "distancia_metro_km": 1.92,
+    "distancia_onibus_km": 0.87,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 16,
+    "status": "inativo",
+    "latitude": -23.55554,
+    "longitude": -46.622877,
+    "tags": [
+      "Com escritório",
+      "Bairro nobre",
+      "Ótima localização",
+      "Com varanda"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-09-16",
+        "fim": "2025-09-20"
+      },
+      {
+        "inicio": "2025-11-07",
+        "fim": "2025-11-12"
+      },
+      {
+        "inicio": "2025-09-30",
+        "fim": "2025-10-14"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Belo Horizonte",
+      "bairro": "Centro",
+      "rua": "Rua do Sol",
+      "numero": 8285,
+      "cep": "34519-602",
+      "complemento": "Casa"
+    },
+    "quartos": 4,
+    "banheiros": 4,
+    "vagas_garagem": 0,
+    "area_m2": 132,
+    "preco_aluguel": 4333,
+    "descricao": "Estúdio moderno com vista incrível, ideal para viagens de negócios.",
+    "comodidades": [
+      "Aceita pets",
+      "Máquina de lavar",
+      "Ar-condicionado",
+      "Estacionamento gratuito"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.0,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-12-03",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-01-26",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-05-23",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-06-29",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-19",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 3.9,
+    "regras_casa": [
+      "Não permite festas/eventos",
+      "Check-out até 11h",
+      "Animais permitidos"
+    ],
+    "camas": 1,
+    "tipo_cama": "Solteiro",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Marina Dias",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/5.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 2018,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 419,
+    "mobiliado": false,
+    "distancia_metro_km": 1.71,
+    "distancia_onibus_km": 1.96,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 27,
+    "status": "inativo",
+    "latitude": -19.929435,
+    "longitude": -43.934846,
+    "tags": [
+      "Próximo ao metrô",
+      "Com escritório",
+      "Recém-reformado",
+      "Pet friendly"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-27",
+        "fim": "2025-11-04"
+      },
+      {
+        "inicio": "2025-10-28",
+        "fim": "2025-10-30"
+      },
+      {
+        "inicio": "2025-09-22",
+        "fim": "2025-10-06"
+      },
+      {
+        "inicio": "2025-09-25",
+        "fim": "2025-10-07"
+      }
+    ]
+  },
+  {
+    "tipo": "Casa",
+    "endereco": {
+      "cidade": "Belo Horizonte",
+      "bairro": "Savassi",
+      "rua": "Rua das Palmeiras",
+      "numero": 6501,
+      "cep": "99959-811",
+      "complemento": "Apto 101"
+    },
+    "quartos": 4,
+    "banheiros": 1,
+    "vagas_garagem": 1,
+    "area_m2": 252,
+    "preco_aluguel": 14995,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Elevador",
+      "Aquecimento",
+      "Secadora",
+      "TV",
+      "Wi-Fi",
+      "Piscina",
+      "Máquina de lavar",
+      "Estacionamento gratuito"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 3.7,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-15",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-03",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-10-30",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-05-10",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.5,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-03-08",
+        "hospede": "Pedro"
+      }
+    ],
+    "nota_media": 4.44,
+    "regras_casa": [
+      "Animais permitidos",
+      "Check-in após 14h",
+      "Não permite festas/eventos"
+    ],
+    "camas": 5,
+    "tipo_cama": "Sofá-cama",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Fernanda Alves",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/3.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 2001,
+    "andar": 0,
+    "condominio": 0,
+    "iptu": 459,
+    "mobiliado": true,
+    "distancia_metro_km": 0.13,
+    "distancia_onibus_km": 1.49,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 34,
+    "status": "ativo",
+    "latitude": -19.918961,
+    "longitude": -43.917759,
+    "tags": [
+      "Acessível para cadeirantes",
+      "Com escritório",
+      "Recém-reformado"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-22",
+        "fim": "2025-11-03"
+      },
+      {
+        "inicio": "2025-10-09",
+        "fim": "2025-10-23"
+      },
+      {
+        "inicio": "2025-09-21",
+        "fim": "2025-09-26"
+      },
+      {
+        "inicio": "2025-11-02",
+        "fim": "2025-11-08"
+      },
+      {
+        "inicio": "2025-09-20",
+        "fim": "2025-09-26"
+      },
+      {
+        "inicio": "2025-09-22",
+        "fim": "2025-09-24"
+      },
+      {
+        "inicio": "2025-11-08",
+        "fim": "2025-11-18"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Brasília",
+      "bairro": "Centro",
+      "rua": "Rua do Sol",
+      "numero": 3077,
+      "cep": "46457-457",
+      "complemento": "Apto 101"
+    },
+    "quartos": 2,
+    "banheiros": 2,
+    "vagas_garagem": 3,
+    "area_m2": 250,
+    "preco_aluguel": 12158,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Aceita pets",
+      "Academia",
+      "Varanda",
+      "Ar-condicionado",
+      "Wi-Fi"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961",
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.5,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-06-07",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.6,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-04-15",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-27",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.5,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-11-21",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2024-12-20",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-03-18",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2024-11-08",
+        "hospede": "Camila"
+      }
+    ],
+    "nota_media": 3.82,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Check-in após 14h"
+    ],
+    "camas": 3,
+    "tipo_cama": "King",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "13:00",
+    "checkout": "12:00",
+    "ano_construcao": 1974,
+    "andar": 9,
+    "condominio": 957,
+    "iptu": 254,
+    "mobiliado": true,
+    "distancia_metro_km": 0.81,
+    "distancia_onibus_km": 1.78,
+    "max_hospedes": 5,
+    "tempo_anuncio_meses": 44,
+    "status": "inativo",
+    "latitude": -15.799942,
+    "longitude": -47.870631,
+    "tags": [
+      "Próximo ao metrô"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-24"
+      },
+      {
+        "inicio": "2025-10-30",
+        "fim": "2025-11-05"
+      },
+      {
+        "inicio": "2025-10-05",
+        "fim": "2025-10-17"
+      },
+      {
+        "inicio": "2025-09-26",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-09-24",
+        "fim": "2025-10-05"
+      },
+      {
+        "inicio": "2025-10-14",
+        "fim": "2025-10-22"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Rio de Janeiro",
+      "bairro": "Ipanema",
+      "rua": "Rua XV de Novembro",
+      "numero": 8667,
+      "cep": "64763-157",
+      "complemento": "Fundos"
+    },
+    "quartos": 2,
+    "banheiros": 2,
+    "vagas_garagem": 2,
+    "area_m2": 206,
+    "preco_aluguel": 22007,
+    "descricao": "Cobertura luxuosa com jacuzzi e vista panorâmica.",
+    "comodidades": [
+      "Piscina",
+      "Varanda",
+      "Ar-condicionado",
+      "Aceita pets",
+      "Churrasqueira",
+      "Elevador"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.7,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-03-31",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-04-24",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2025-03-08",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 4.1,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-04-30",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 4.2,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-24",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-02-12",
+        "hospede": "Juliana"
+      },
+      {
+        "nota": 3.8,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-07-21",
+        "hospede": "Pedro"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-06-21",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 3.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2024-12-14",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.9,
+        "comentario": "Tive alguns problemas, mas foram resolvidos rapidamente.",
+        "data": "2025-06-04",
+        "hospede": "Rafael"
+      }
+    ],
+    "nota_media": 4.49,
+    "regras_casa": [
+      "Check-in após 14h",
+      "Não permite festas/eventos"
+    ],
+    "camas": 3,
+    "tipo_cama": "Casal",
+    "politica_cancelamento": "Rigorosa",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "14:00",
+    "checkout": "10:00",
+    "ano_construcao": 1995,
+    "andar": 8,
+    "condominio": 1161,
+    "iptu": 140,
+    "mobiliado": true,
+    "distancia_metro_km": 1.02,
+    "distancia_onibus_km": 0.31,
+    "max_hospedes": 6,
+    "tempo_anuncio_meses": 6,
+    "status": "inativo",
+    "latitude": -22.897605,
+    "longitude": -43.182621,
+    "tags": [
+      "Bairro nobre",
+      "Ótima localização",
+      "Próximo à praia",
+      "Pet friendly"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-26",
+        "fim": "2025-11-05"
+      },
+      {
+        "inicio": "2025-10-27",
+        "fim": "2025-11-06"
+      },
+      {
+        "inicio": "2025-10-10",
+        "fim": "2025-10-15"
+      },
+      {
+        "inicio": "2025-10-03",
+        "fim": "2025-10-16"
+      }
+    ]
+  },
+  {
+    "tipo": "Apartamento",
+    "endereco": {
+      "cidade": "Fortaleza",
+      "bairro": "Centro",
+      "rua": "Rua das Flores",
+      "numero": 195,
+      "cep": "93852-538",
+      "complemento": "Bloco B"
+    },
+    "quartos": 2,
+    "banheiros": 1,
+    "vagas_garagem": 2,
+    "area_m2": 215,
+    "preco_aluguel": 5214,
+    "descricao": "Quarto privativo em casa compartilhada, ambiente tranquilo e seguro.",
+    "comodidades": [
+      "Máquina de lavar",
+      "Jacuzzi",
+      "Ar-condicionado",
+      "TV"
+    ],
+    "fotos": [
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd",
+      "https://images.unsplash.com/photo-1460518451285-97b6aa326961"
+    ],
+    "avaliacoes": [
+      {
+        "nota": 4.8,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-08-24",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.8,
+        "comentario": "Anfitrião muito atencioso.",
+        "data": "2024-09-15",
+        "hospede": "Camila"
+      },
+      {
+        "nota": 4.7,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-04-30",
+        "hospede": "Rafael"
+      },
+      {
+        "nota": 4.3,
+        "comentario": "Ótima estadia, recomendo!",
+        "data": "2025-09-10",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.4,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-07-11",
+        "hospede": "Mariana"
+      },
+      {
+        "nota": 3.9,
+        "comentario": "Apartamento limpo e confortável.",
+        "data": "2025-05-07",
+        "hospede": "Lucas"
+      },
+      {
+        "nota": 4.0,
+        "comentario": "Localização excelente, voltaria com certeza.",
+        "data": "2025-01-18",
+        "hospede": "Mariana"
+      }
+    ],
+    "nota_media": 3.97,
+    "regras_casa": [
+      "Check-out até 11h",
+      "Proibido fumar"
+    ],
+    "camas": 2,
+    "tipo_cama": "Queen",
+    "politica_cancelamento": "Moderada",
+    "anfitriao": {
+      "nome": "Ana Souza",
+      "superhost": true,
+      "foto": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    "wifi": true,
+    "checkin": "15:00",
+    "checkout": "10:00",
+    "ano_construcao": 1983,
+    "andar": 17,
+    "condominio": 1097,
+    "iptu": 482,
+    "mobiliado": false,
+    "distancia_metro_km": 1.53,
+    "distancia_onibus_km": 0.99,
+    "max_hospedes": 3,
+    "tempo_anuncio_meses": 33,
+    "status": "inativo",
+    "latitude": -3.713527,
+    "longitude": -38.538803,
+    "tags": [
+      "Próximo à praia",
+      "Pet friendly",
+      "Bairro nobre",
+      "Com escritório"
+    ],
+    "disponibilidade": [
+      {
+        "inicio": "2025-10-04",
+        "fim": "2025-10-18"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-27"
+      },
+      {
+        "inicio": "2025-10-19",
+        "fim": "2025-10-30"
+      }
+    ]
+  }
+]

@@ -40,3 +40,15 @@ class RecommendationOutputItemSerializer(serializers.Serializer):
     city = serializers.CharField()
     predicted_price = serializers.FloatField()
     score = serializers.FloatField()
+
+
+class SurveyInputSerializer(serializers.Serializer):
+    budget = serializers.FloatField(min_value=0)
+    city = serializers.CharField(required=False, allow_blank=True)
+    property_type = serializers.CharField(required=False, allow_blank=True)
+    min_area = serializers.FloatField(required=False, min_value=0)
+    max_area = serializers.FloatField(required=False, min_value=0)
+    bedrooms = serializers.IntegerField(required=False, min_value=0)
+    bathrooms = serializers.IntegerField(required=False, min_value=0)
+    parking = serializers.IntegerField(required=False, min_value=0)
+    limit = serializers.IntegerField(required=False, min_value=1, max_value=50, default=10)

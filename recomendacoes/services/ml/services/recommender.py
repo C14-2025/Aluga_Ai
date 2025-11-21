@@ -6,6 +6,7 @@ BASE_APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_CSV = os.path.join(os.path.dirname(BASE_APP_DIR), 'data', 'sample_properties.csv')
 
 def _load_sample_candidates() -> List[Dict]:
+    """Retorna candidatos de amostra do CSV (mantido por compatibilidade)."""
     items = []
     if not os.path.exists(DATA_CSV):
         return items
@@ -23,6 +24,36 @@ def _load_sample_candidates() -> List[Dict]:
                 "parking": int(row["parking"]),
                 "property_type": row["property_type"],
             })
+    return items
+
+
+def _load_candidates_from_db() -> List[Dict]:
+    """Carrega candidatos diretamente do modelo Propriedade no banco.
+
+    Mapeia campos do modelo `propriedades.Propriedade` para o formato esperado
+    pelo recommender (id, title, city, neighborhood, area, bedrooms, bathrooms, parking, property_type).
+    """
+    try:
+        from propriedades.models import Propriedade
+    except Exception:
+        return []
+
+    qs = Propriedade.objects.filter(ativo=True)
+    items: List[Dict] = []
+    for p in qs:
+        # mapear mínimos; alguns campos podem não existir exatamente — usar defaults
+        items.append({
+            "id": int(getattr(p, 'id')),
+            "title": getattr(p, 'titulo', str(p)),
+            "city": getattr(p, 'city', '') or '',
+            "neighborhood": getattr(p, 'endereco', '') or '',
+            # área e contagens podem não existir; tentar extrair de campos comuns
+            "area": float(getattr(p, 'area_m2', getattr(p, 'area', 0) or 0)),
+            "bedrooms": int(getattr(p, 'quartos', getattr(p, 'bedrooms', 0) or 0)),
+            "bathrooms": int(getattr(p, 'banheiros', getattr(p, 'bathrooms', 0) or 0)),
+            "parking": int(getattr(p, 'vagas_garagem', getattr(p, 'parking', 0) or 0)),
+            "property_type": getattr(p, 'tipo', getattr(p, 'property_type', 'apartment')),
+        })
     return items
 
 def recommend(model, candidates: Optional[List[Dict]], budget: float, city: Optional[str], limit: int = 10) -> List[Dict]:

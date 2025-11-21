@@ -18,18 +18,24 @@ def _resolve_json_path() -> str:
     except Exception:
         pass
 
-    # 3) Caminho relativo por nome de pasta "Dados/imoveis_gerados.json"
+    # 3) Caminho relativo por nome de pasta "Dados/imoveis_gerados.json" ou "dados"
     cur = os.path.dirname(os.path.abspath(__file__))
     while True:
-        candidate = os.path.join(cur, 'Dados', 'imoveis_gerados.json')
-        if os.path.exists(candidate):
-            return candidate
+        for folder_name in ('Dados', 'dados'):
+            # checar arquivo diretamente em Dados/ e também em Dados/raw/
+            candidate1 = os.path.join(cur, folder_name, 'imoveis_gerados.json')
+            candidate2 = os.path.join(cur, folder_name, 'raw', 'imoveis_gerados.json')
+            if os.path.exists(candidate1):
+                return candidate1
+            if os.path.exists(candidate2):
+                return candidate2
 
-        # Alternativa quando a raiz se chama Aluga_Ai
-        if os.path.basename(cur).lower() == 'aluga_ai':
-            alt = os.path.join(cur, 'aluga_ai_web', 'Dados', 'imoveis_gerados.json')
-            if os.path.exists(alt):
-                return alt
+                # Alternativa quando a raiz se chama Aluga_Ai
+                if os.path.basename(cur).lower() == 'aluga_ai':
+                    for alt_folder in ('aluga_ai_web/Dados', 'aluga_ai_web/dados'):
+                        alt = os.path.join(cur, *alt_folder.split('/'), 'imoveis_gerados.json')
+                        if os.path.exists(alt):
+                            return alt
 
         parent = os.path.dirname(cur)
         if parent == cur:

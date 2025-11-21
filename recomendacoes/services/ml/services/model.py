@@ -115,6 +115,7 @@ class PriceModel:
         self.method = "baseline"
         self.pipeline = None
         self.baseline = _Baseline()
+        self.expected_features: list[str] | None = None
         self._load_or_train()
 
     @classmethod
@@ -126,7 +127,63 @@ class PriceModel:
     def _load_or_train(self):
         data = [d for d in iter_flattened() if d['preco_aluguel'] > 0 and d['area_m2'] > 0]
         if SKLEARN_OK:
-            # tentar carregar cache
+            # 1) tentar carregar modelo centralizado (treinado por aluga_ai_web/ml)
+            try:
+                from pathlib import Path
+                # procurar a raiz do repositório (onde está manage.py)
+                cur = Path(__file__).resolve()
+                repo_root = None
+                for p in list(cur.parents):
+                    if (p / 'manage.py').exists():
+                        repo_root = p
+                        break
+                if repo_root is not None:
+                    # possíveis locais de modelo treinado (prioridades)
+                    candidates = [
+                        repo_root / 'recomendacoes' / 'services' / 'ml' / 'model_store' / 'price_model.joblib',
+                        repo_root / 'recomendacoes' / 'models' / 'model.pkl',
+                        repo_root / 'aluga_ai_web' / 'ml' / 'models' / 'model.pkl',
+                    ]
+                    for shared_model in candidates:
+                        try:
+                            if shared_model.exists():
+                                self.pipeline = joblib.load(shared_model)
+                                self.method = 'ml'
+                                # try to load metadata with feature names if available
+                                try:
+                                    meta_path = shared_model.parent / 'metadata.json'
+                                    if meta_path.exists():
+                                        import json
+                                        with open(meta_path, 'r', encoding='utf-8') as mf:
+                                            meta = json.load(mf)
+                                            self.expected_features = meta.get('features')
+                                except Exception:
+                                    self.expected_features = None
+                                # try to load label encoders and scaler saved alongside the model
+                                try:
+                                    le_path = shared_model.parent / 'label_encoders.pkl'
+                                    sc_path = shared_model.parent / 'scaler.pkl'
+                                    if le_path.exists():
+                                        self.label_encoders = joblib.load(le_path)
+                                    if sc_path.exists():
+                                        self.scaler = joblib.load(sc_path)
+                                except Exception:
+                                    pass
+                                # fallback to sklearn attribute
+                                try:
+                                    if hasattr(self.pipeline, 'feature_names_in_'):
+                                        self.expected_features = list(self.pipeline.feature_names_in_.tolist())
+                                except Exception:
+                                    pass
+                                return
+                        except Exception:
+                            self.pipeline = None
+
+            except Exception:
+                # se algo falhar buscando o model central, continuar
+                pass
+
+            # 2) tentar carregar cache local do app
             if os.path.exists(MODEL_PATH):
                 try:
                     self.pipeline = joblib.load(MODEL_PATH)  # type: ignore
@@ -174,16 +231,78 @@ class PriceModel:
         if self.pipeline is not None and self.method == "ml":
             # predição via sklearn
             import pandas as pd  # type: ignore
-            X = pd.DataFrame([{
-                'tipo': features.get('tipo'),
-                'cidade': features.get('cidade'),
-                'area_m2': float(features.get('area_m2') or 0.0),
-                'quartos': int(features.get('quartos') or 0),
-                'banheiros': int(features.get('banheiros') or 0),
-                'vagas_garagem': int(features.get('vagas_garagem') or 0),
-                'condominio': float(features.get('condominio') or 0.0),
-                'iptu': float(features.get('iptu') or 0.0),
-            }])
+            # Build DataFrame with the expected features (fill missing with sensible defaults)
+            if self.expected_features is None:
+                # fallback to a minimal set
+                cols = ['tipo', 'cidade', 'area_m2', 'quartos', 'banheiros', 'vagas_garagem', 'condominio', 'iptu']
+            else:
+                cols = list(self.expected_features)
+
+            row = {}
+            for c in cols:
+                if c in ('tipo', 'cidade', 'politica_cancelamento', 'endereco_bairro'):
+                    row[c] = features.get(c) or ''
+                elif c in ('mobiliado', 'wifi', 'loc_estrategica', 'anfitriao_superhost'):
+                    row[c] = int(bool(features.get(c)))
+                else:
+                    # numeric fallback
+                    try:
+                        row[c] = float(features.get(c) or 0.0)
+                    except Exception:
+                        row[c] = 0.0
+
+            X = pd.DataFrame([row], columns=cols)
+
+            # If underlying estimator is a plain sklearn regressor (not a pipeline),
+            # ensure categorical features are encoded and numeric features scaled
+            try:
+                import numpy as _np
+                est = self.pipeline
+                if not hasattr(est, 'named_steps'):
+                    # prepare row vector in expected order
+                    feat_order = cols
+                    vec = []
+                    cat_keys = set(self.label_encoders.keys()) if isinstance(self.label_encoders, dict) else set()
+                    for f in feat_order:
+                        if f in cat_keys:
+                            le = self.label_encoders.get(f)
+                            val = str(row.get(f) or '')
+                            try:
+                                enc = int(le.transform([val])[0])
+                            except Exception:
+                                # unseen category -> map to 0
+                                try:
+                                    enc = int(le.transform([le.classes_[0]])[0])
+                                except Exception:
+                                    enc = 0
+                            vec.append(enc)
+                        else:
+                            try:
+                                vec.append(float(row.get(f) or 0.0))
+                            except Exception:
+                                vec.append(0.0)
+
+                    arr = _np.asarray([vec], dtype=float)
+                    # apply scaler to numeric columns if scaler exists
+                    if getattr(self, 'scaler', None) is not None:
+                        # determine numeric indices: those not in cat_keys
+                        numeric_idx = [i for i, f in enumerate(feat_order) if f not in cat_keys]
+                        # slice numeric columns and scale
+                        num_part = arr[:, numeric_idx]
+                        try:
+                            scaled = self.scaler.transform(num_part)
+                            arr[:, numeric_idx] = scaled
+                        except Exception:
+                            # if scaling fails, continue with unscaled
+                            pass
+
+                    # use arr for prediction
+                    pred = float(est.predict(arr)[0])
+                    details = None
+                    return pred, 'ml', details
+            except Exception:
+                # fallback to generic pipeline predict below
+                pass
             pred = float(self.pipeline.predict(X)[0])
             details = None
             # se RandomForest, opcionalmente expor desvio dos estimadores
@@ -196,6 +315,13 @@ class PriceModel:
                     details = {"std_pred": float(np.std(preds))}
             except Exception:
                 pass
+            # logar a predição para monitoramento
+            try:
+                from recomendacoes.services.ml.monitoring import log_prediction
+                metadata = {'features': self.expected_features} if self.expected_features else None
+                log_prediction({k: features.get(k) for k in X.columns.tolist()}, pred, 'ml', details=details, metadata=metadata)
+            except Exception:
+                pass
             return pred, "ml", details
         # fallback
         pred = self.baseline.predict(features)
@@ -206,4 +332,10 @@ class PriceModel:
             "k_vagas": self.baseline.k_v,
             "bias_overall": self.baseline.bias_overall,
         }
+        # log baseline também
+        try:
+            from recomendacoes.services.ml.monitoring import log_prediction
+            log_prediction(features, pred, 'baseline', details=(details if return_details else None), metadata={'method': 'baseline'})
+        except Exception:
+            pass
         return pred, "baseline", (details if return_details else None)
