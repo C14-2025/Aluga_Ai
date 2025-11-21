@@ -1,6 +1,11 @@
  pipeline {
     agent any
     
+    // Parâmetros de execução
+    parameters {
+        string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
+    }
+    
     // CI/CD automático: nenhum parâmetro de execução manual
     
     environment {
@@ -11,7 +16,8 @@
         // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
         DOCKERHUB_REPO = 'seu-usuario/aluga-ai'
         CREDENTIALS_ID = 'dockerhub-credentials'
-        NOTIFY_EMAIL = ''
+        // Valor proveniente do parâmetro
+        NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
     }
     
     stages {
