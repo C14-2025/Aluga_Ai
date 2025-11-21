@@ -256,7 +256,7 @@
                 }
             }
         }
-        stage('Deploy Application') {
+        stage('Deploy Application ') {
             // Deploy automático somente na branch main
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
