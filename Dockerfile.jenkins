@@ -24,7 +24,7 @@ RUN apt-get update && \
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Copia lista de plugins e instala
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+COPY jenkins-plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
 # Adiciona usuário jenkins ao grupo docker
