@@ -23,14 +23,9 @@ RUN apt-get update && \
 # Cria link simbólico para python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# Copia lista de plugins (usando jenkins-plugins.txt) e instala
+# Copia lista de plugins e instala
 COPY jenkins-plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
-
-# Jenkins Configuration as Code (CASC) para reproduzir usuários e configs
-COPY jenkins-casc.yaml /usr/share/jenkins/ref/casc.yaml
-ENV CASC_JENKINS_CONFIG=/usr/share/jenkins/ref/casc.yaml \
-    JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
 # Adiciona usuário jenkins ao grupo docker
 RUN groupadd -f docker && usermod -aG docker jenkins

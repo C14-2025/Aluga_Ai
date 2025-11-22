@@ -9,9 +9,9 @@
 Plataforma acadêmica que simula um marketplace de aluguel de imóveis (temporário e longa duração) com:
 - Geração e enriquecimento de dados de propriedades (scripts ETL)
 - Persistência / CRUD (Supabase simplificado)
-- Sistema de recomendação validado por script de análise
+- Sistema de recomendação pessoal (ativado após favoritos) + validação por script
 - Testes automatizados (pytest / Django test runner)
-- Pipeline CI/CD parametrizada em Jenkins
+- Pipeline CI/CD em Jenkins (stages para validação e testes de recomendação)
 - Containerização (Docker)
 
 Inclui também integração com API externa (exemplo inicial) e estrutura expansível para novas features.
@@ -130,15 +130,35 @@ python aluga_ai_web/Dados/etl.py
 Geração de dados simulados: `ConstrucaoDeDados.py`
 
 ## 6. Sistema de Recomendação
-Validação rápida:
+
+### Fluxo de uso na interface
+
+1. Usuário navega pelos imóveis utilizando filtros simples (cidade, bairro, tipo, área, preço, amenidades). Estes filtros NÃO disparam recomendações – apenas refinam a lista principal.
+2. Ao favoritar imóveis (botão ☆ / ★), o sistema calcula recomendações pessoais e as persiste em `UserRecommendation`.
+3. A aba "Recomendados" surge e exibe até 6 imóveis sugeridos (score + preço estimado).
+4. Remover favoritos recalcula o conjunto; se não houver favoritos suficientes, a aba mostra aviso.
+
+### Validação via script (checagem rápida)
+
 ```powershell
 venv\Scripts\activate
 python jobs/validate_recommendation_system.py
 ```
-Resultados consolidados em `validation_results.json`.
+
+Saída: `validation_results.json` (arquivos, carregamento de modelo, predição, recomendação).
+
+### Teste automatizado de recomendação pessoal
+
+```powershell
+pytest recomendacoes/tests/test_personal_recommend.py -q
+```
+
+Cobertura: criação de usuário, favoritos iniciais, endpoint `/api/ml/personal_recommend/`, exclusão dos favoritos nas recomendações e persistência em `UserRecommendation`.
 
 ## 7. Containerização
+
 Dockerfile simplificado:
+
 ```dockerfile
 FROM python:3.13-slim
 WORKDIR /app
@@ -147,128 +167,142 @@ RUN pip install -r requirements.txt
 COPY . .
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ```
+
 Build & run:
+
 ```powershell
 docker build -t aluga-ai:dev .
 docker run -it --rm -p 8000:8000 aluga-ai:dev
 ```
+
 Parar:
+
 ```powershell
 docker stop $(docker ps -q --filter ancestor=aluga-ai:dev)
 ```
+
 Ou via Docker Compose:
+
 ```powershell
 docker-compose up -d app
 docker-compose down
 ```
 
 ## 8. CI/CD (Jenkins)
-Pipeline declarativa em `Jenkinsfile` com parâmetros:
+
+Pipeline declarativa em `Jenkinsfile` com parâmetros atuais:
+
 | Param | Default | Descrição |
 |-------|---------|-----------|
-| RUN_TESTS | true | Executa estágios de teste/qualidade/validação. |
-| BUILD_DOCKER_IMAGE | false | Constrói imagem Docker. |
-| PUSH_TO_REGISTRY | false | Faz push da imagem para Docker Hub. |
-| DEPLOY_APP | false | Deploy (somente branch `main`). |
-| DOCKERHUB_REPO | `seu-usuario/aluga-ai` | Repositório Docker destino. |
-| CREDENTIALS_ID | `dockerhub-credentials` | ID de credencial Jenkins para login. |
-| NOTIFY_EMAIL | (vazio) | E-mail para notificações de sucesso/falha. |
+| NOTIFY_EMAIL | (vazio) | Email para notificação de sucesso/falha. |
+| DOCKERHUB_REPO | `alvarocareli/aluga-ai` | Repositório Docker Hub destino. |
 
-Fluxo condicional:
-1. Checkout / Prepare sempre.
-2. Testes + Qualidade se `RUN_TESTS`.
-3. Build se `BUILD_DOCKER_IMAGE`.
-4. Push se Build + `PUSH_TO_REGISTRY`.
-5. Deploy se Build + Push + `DEPLOY_APP` + branch `main`.
+### Stages principais
 
-Relatórios: HTML (pytest), artefatos (`pylint_report.txt`, `flake8_report.txt`, `server.log`).
-Guia de uso completo (Jenkins, webhook, Docker Hub): ver `Como_usar.md`.
+- Checkout / Prepare (define tag da imagem)
+- Setup Python / Install Dependencies / Migrations
+- Testes Banco de Dados (`BancoDeDados/test_bd.py`)
+- Testes API / ETL (`Dados/test_etl.py` + execução `etl.py`)
+- Testes Propriedades & Reservas
+- Validação Recomendação (script `jobs/validate_recommendation_system.py`)
+- Testes Django gerais (`manage.py test`)
+- Code Quality (`pylint`, `flake8`)
+- Teste de subida de servidor (`runserver` + curl)
+- Testes Recomendação Personalizada (`recomendacoes/tests/test_personal_recommend.py`)
+- Deploy (somente branch `main`)
+
+Relatórios/artefatos: HTML pytest, `validation_results.json`, logs server, lint reports.
+
+Adicionar novos testes: criar arquivos `test_*.py` em `recomendacoes/tests/`.
 
 ### 8.1. Jenkins via Docker Compose (detalhes)
-- Serviço `jenkins` definido em `docker-compose.yml` com volume nomeado `jenkins_home` que persiste tudo (usuários, jobs, histórico, credenciais).
-- `Dockerfile.jenkins` instala plugins por `jenkins-plugin-cli` e copia `jenkins-casc.yaml` (JCasC) para configuração automática.
-- Credenciais admin do Jenkins vêm do `.env` (não commitar `.env`, use `.env.example`).
-- Se quiser um reset completo do Jenkins (opcional), remova o volume e suba novamente:
-   ```powershell
-   docker compose down
-   docker volume rm aluga_ai_jenkins_home
-   docker compose up -d --build jenkins
-   ```
-   ATENÇÃO: isso apaga jobs/usuários/histórico do Jenkins. Faça backup antes se necessário.
+
+Serviço `jenkins` em `docker-compose.yml` com volume `jenkins_home` (persiste usuários, jobs, histórico, credenciais).
+`Dockerfile.jenkins` instala plugins via `jenkins-plugin-cli` e aplica `jenkins-casc.yaml` (JCasC).
+Credenciais admin vêm do `.env` (não commitar `.env`, use `.env.example`).
+Reset completo (apaga tudo):
+
+```powershell
+docker compose down
+docker volume rm aluga_ai_jenkins_home
+docker compose up -d --build jenkins
+```
+
+ATENÇÃO: apaga jobs/usuários/histórico; faça backup antes.
 
 ### 8.2. Atualizando a imagem / mudanças recentes
-- Após editar `Dockerfile.jenkins`, `jenkins-plugins.txt` ou `jenkins-casc.yaml`:
-   ```powershell
-   docker compose build jenkins
-   docker compose up -d jenkins
-   ```
-- Em Jenkins JÁ inicializado (volume existente), novos plugins podem precisar ser instalados no volume e Jenkins reiniciado:
-   ```powershell
-   docker exec jenkins-aluga-ai jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt --verbose
-   docker restart jenkins-aluga-ai
-   ```
+
+Após editar `Dockerfile.jenkins`, `jenkins-plugins.txt` ou `jenkins-casc.yaml`:
+
+```powershell
+docker compose build jenkins
+docker compose up -d jenkins
+```
+
+Em Jenkins já inicializado (volume existente), reinstalar plugins e reiniciar:
+
+```powershell
+docker exec jenkins-aluga-ai jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt --verbose
+docker restart jenkins-aluga-ai
+```
 
 ### 8.3. Disparo automático por Git (opcional)
-- O job `Aluga_Ai_Pipeline` default usa script inline e não dispara em commits.
-- Para builds automáticos por commit, crie um Pipeline “from SCM” ou Multibranch apontando para seu repositório e configure:
-   - Webhook (recomendado) OU
-   - Poll SCM (cron), por exemplo `H/5 * * * *`.
 
-### Cenários
-| Objetivo | Configuração |
-|----------|--------------|
-| Somente testes | RUN_TESTS=true; demais false |
-| Build local | RUN_TESTS=true; BUILD_DOCKER_IMAGE=true |
-| Publicar imagem | RUN_TESTS=true; BUILD_DOCKER_IMAGE=true; PUSH_TO_REGISTRY=true |
-| Deploy produção | (branch main) todos true |
+Job padrão usa script inline e não dispara em commits.
+Para builds automáticos: criar Pipeline "from SCM" ou Multibranch e configurar:
 
-### Criação Multibranch
-1. New Item  Multibranch Pipeline
-2. Git URL do repositório
-3. Scan Repository
-4. Executar branch `Actions_to_Jenkins`
+- Webhook (recomendado) OU
+- Poll SCM (`H/5 * * * *`).
+
+### Multibranch (opcional)
+
+Criar um job Multibranch apontando para o repositório para builds automáticos por branch/PR (webhook ou polling).
 
 ## 9. Branches
-- `main`: linha principal / produção
-- `Actions_to_Jenkins`: migração CI/CD
-- Futuras feature branches: integração automática via multibranch
+
+`main` (produção), `Ajustes-IntegraçaoIA` (recomendações / integração recente) e futuras feature branches (multibranch opcional).
 
 ## 10. Qualidade de Código
-Ferramentas: `pylint`, `flake8` (não bloqueiam build: `--exit-zero`).
-Possível expansão: adicionar cobertura (`coverage.py`) e métricas.
+
+Ferramentas: `pylint`, `flake8` (não bloqueiam build: `--exit-zero`). Expansão planejada: cobertura (`coverage.py`), métricas de complexidade, duplicação.
 
 ## 11. Troubleshooting Rápido
+
 | Sintoma | Causa | Solução |
 |--------|-------|---------|
-| Erro venv no Jenkins | Ambiente limpo sem Python global | Jenkinsfile já cria venv; garantir imagem base padrão. |
-| Plugin HTML não publica | Plugin ausente | Instalar "HTML Publisher" no Jenkins. |
-| Push Docker falha | Credenciais inválidas | Recriar credencial `dockerhub-credentials`. |
-| Deploy ignorado | Branch diferente de main | Fazer merge para `main`. |
-| Teste ETL falha | Mudança em schema | Atualizar testes e scripts de geração. |
-| Não consigo logar no Jenkins (pede password inicial) | Novo volume na sua máquina | Use admin/senha do `.env` (JCasC) — não é o `initialAdminPassword`. |
-| Jenkins não mostra o job | Plugins JCasC/Job DSL não instalados ainda | Rode o comando de plugin-cli acima e reinicie Jenkins. |
-| Porta 8080/8000 em uso | Outro serviço usando a porta | Feche o serviço conflitando ou mude portas no compose. |
+| Erro venv no Jenkins | Ambiente limpo | Jenkinsfile cria venv; checar Python base. |
+| HTML report não publica | Plugin ausente | Instalar "HTML Publisher". |
+| Push Docker falha | Credencial incorreta | Recriar `dockerhub-credentials`. |
+| Deploy ignorado | Branch ≠ main | Fazer merge para `main`. |
+| Teste ETL falha | Schema mudou | Ajustar script e teste. |
+| Login Jenkins pede senha inicial | Volume novo | Usar admin/senha do `.env` (JCasC). |
+| Job pipeline não aparece | Plugins ausentes | Reinstalar plugins, reiniciar Jenkins. |
+| Portas ocupadas | Conflito local | Alterar portas ou parar serviço. |
 
 ## 12. Próximas Extensões
-- Cobertura de testes (coverage + badge)
-- Geração de imagem multi-stage (menor tamanho)
-- Webhooks para builds automáticos em cada push
-- Testes de integração + carga
-- Observabilidade (logging estruturado / métricas)
+
+- Cobertura de testes e badge
+- Multi-stage Docker para reduzir imagem
+- Webhooks Git para disparo automático
+- Testes de integração e carga
+- Observabilidade (logs estruturados / métricas / tracing)
 
 ## 13. Contribuição
+
 1. Criar branch feature
 2. Implementar + testes
 3. Commit + push
 4. Abrir PR para `main`
-5. Esperar validação da pipeline e revisão
+5. Aguardar pipeline e revisão
 
 ## 14. Licença / Uso
+
 Uso acadêmico e estudo. Ajuste conforme necessidade institucional.
 
 ## 15. Contato / Suporte
+
 Em caso de dúvidas: abrir Issue ou contatar responsáveis da turma.
 
 ---
-_Este README foi atualizado para refletir a migração de GitHub Actions para Jenkins e a adoção de uma pipeline parametrizada com suporte a Docker e deploy._
-Os testes automatizados garantem que a resposta da API está correta.
+_README atualizado: fluxo de recomendação pessoal, nova organização de testes e ajustes no Jenkinsfile._
+Os testes automatizados garantem funcionamento de CRUD, ETL e recomendações pessoais.

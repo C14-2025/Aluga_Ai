@@ -1,22 +1,24 @@
-pipeline {
+ pipeline {
     agent any
     
-    // Parâmetros para controlar o comportamento da pipeline
+    // Parâmetros de execução
     parameters {
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Executar todos os testes')
-        booleanParam(name: 'BUILD_DOCKER_IMAGE', defaultValue: false, description: 'Construir imagem Docker da aplicação')
-        booleanParam(name: 'PUSH_TO_REGISTRY', defaultValue: false, description: 'Push da imagem para DockerHub')
-        booleanParam(name: 'DEPLOY_APP', defaultValue: false, description: 'Deploy da aplicação (branch main apenas)')
-        string(name: 'DOCKERHUB_REPO', defaultValue: 'seu-usuario/aluga-ai', description: 'Repositório DockerHub (ex: usuario/aluga-ai)')
-        string(name: 'CREDENTIALS_ID', defaultValue: 'dockerhub-credentials', description: 'ID das credenciais Docker no Jenkins')
-        string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para notificações (deixe vazio para desabilitar)')
+        string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
+        string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
+    
+    // CI/CD automático: nenhum parâmetro de execução manual
     
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
         PYTHONPATH = "${WORKSPACE}"
         WORKDIR = "${env.WORKSPACE}"
+        // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
+        DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
+        CREDENTIALS_ID = 'dockerhub-credentials'
+        // Valor proveniente do parâmetro
+        NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
     }
     
     stages {
@@ -33,8 +35,8 @@ pipeline {
                     // Determina tag da imagem a partir do commit
                     env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
                     env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
-                    env.IMAGE = "${params.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
-                    env.IMAGE_LATEST = "${params.DOCKERHUB_REPO}:latest"
+                    env.IMAGE = "${env.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
+                    env.IMAGE_LATEST = "${env.DOCKERHUB_REPO}:latest"
                     echo "Image será: ${env.IMAGE}"
                 }
             }
@@ -73,7 +75,6 @@ pipeline {
         }
         
         stage('Testes Unitários - Banco de Dados') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de Banco de Dados...'
                 dir('aluga_ai_web') {
@@ -99,7 +100,6 @@ pipeline {
         }
         
         stage('Testes Unitários - API') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de API...'
                 dir('aluga_ai_web') {
@@ -125,7 +125,6 @@ pipeline {
         }
 
         stage('Testes Unitários - Propriedades e Reservas') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de Propriedades e Reservas...'
                 sh '''
@@ -153,7 +152,6 @@ pipeline {
         }
         
         stage('Testes ETL') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de ETL...'
                 dir('aluga_ai_web/Dados') {
@@ -179,7 +177,6 @@ pipeline {
         }
         
         stage('Executar ETL') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando processo de ETL...'
                 dir('aluga_ai_web/Dados') {
@@ -192,7 +189,6 @@ pipeline {
         }
         
         stage('Validação do Sistema de Recomendação') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Validando sistema de recomendação...'
                 sh '''
@@ -206,9 +202,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Testes Recomendação Personalizada') {
+            steps {
+                echo 'Executando testes de recomendação personalizada...'
+                sh '''
+                    . venv/bin/activate
+                    pytest recomendacoes/tests/test_personal_recommend.py --maxfail=1 -q || true
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
+                }
+            }
+        }
         
         stage('Django Tests') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes do Django...'
                 sh '''
@@ -219,7 +229,6 @@ pipeline {
         }
         
         stage('Code Quality Check') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Verificando qualidade do código...'
                 sh '''
@@ -236,7 +245,6 @@ pipeline {
         }
         
         stage('Test Django Server') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Testando se o servidor Django inicia corretamente...'
                 sh '''
@@ -263,74 +271,9 @@ pipeline {
                 }
             }
         }
-        
-        stage('Build Docker Image') {
-            when { expression { return params.BUILD_DOCKER_IMAGE } }
-            steps {
-                echo "Construindo imagem Docker: ${env.IMAGE}"
-                sh """
-                    docker build -t ${env.IMAGE} -t ${env.IMAGE_LATEST} -f Dockerfile .
-                """
-            }
-        }
-        
-        stage('Test Docker Image') {
-            when { expression { return params.BUILD_DOCKER_IMAGE } }
-            steps {
-                echo 'Testando imagem Docker...'
-                sh """
-                    # Cria diretório para artefatos
-                    mkdir -p \${WORKSPACE}/docker_artifacts
-                    
-                    # Testa se a imagem inicia corretamente
-                    docker run --rm -d --name aluga-ai-test-${BUILD_NUMBER} \
-                        -e DEBUG=0 \
-                        ${env.IMAGE} || true
-                    
-                    # Aguarda container iniciar
-                    sleep 10
-                    
-                    # Verifica se está rodando
-                    docker ps | grep aluga-ai-test-${BUILD_NUMBER} || echo "Container não iniciou"
-                    
-                    # Para o container de teste
-                    docker stop aluga-ai-test-${BUILD_NUMBER} || true
-                """
-            }
-        }
-        
-        stage('Push to Registry') {
-            when { 
-                allOf {
-                    expression { return params.PUSH_TO_REGISTRY }
-                    expression { return params.BUILD_DOCKER_IMAGE }
-                }
-            }
-            steps {
-                echo "Fazendo push da imagem para ${params.DOCKERHUB_REPO}"
-                withCredentials([usernamePassword(
-                    credentialsId: params.CREDENTIALS_ID, 
-                    usernameVariable: 'DOCKER_USER', 
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE}
-                        docker push ${IMAGE_LATEST}
-                        docker logout
-                    '''
-                }
-            }
-        }
-        
-        stage('Deploy Application') {
-            when { 
-                allOf {
-                    expression { return params.DEPLOY_APP }
-                    expression { return params.BUILD_DOCKER_IMAGE }
-                    branch 'main'
-                }
-            }
+        stage('Deploy Application ') {
+            // Deploy automático somente na branch main
+            when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''

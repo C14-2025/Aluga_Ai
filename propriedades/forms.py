@@ -5,9 +5,12 @@ from usuarios.forms import BRAZIL_STATE_CHOICES
 
 
 class PropriedadeForm(forms.ModelForm):
-    city = forms.CharField(label="Cidade", required=True,
+    # Deixe coerente com o modelo (city/state são opcionais no model -> required=False no form)
+    descricao = forms.CharField(label="Descrição", required=False, widget=forms.Textarea)
+    endereco = forms.CharField(label="Endereço", required=False)
+    city = forms.CharField(label="Cidade", required=False,
         widget=forms.TextInput(attrs={"placeholder": "Cidade"}))
-    state = forms.ChoiceField(label="Estado", required=True, choices=BRAZIL_STATE_CHOICES)
+    state = forms.ChoiceField(label="Estado", required=False, choices=BRAZIL_STATE_CHOICES)
     comodidades = forms.MultipleChoiceField(
         label="Comodidades",
         choices=AMENITIES_CHOICES,
