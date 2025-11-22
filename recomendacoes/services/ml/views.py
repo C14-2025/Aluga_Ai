@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -8,11 +8,11 @@ from .serializers import (
     PriceOutputSerializer,
     RecommendationInputSerializer,
     RecommendationOutputItemSerializer,
+    SurveyInputSerializer,
 )
 from .services.model import PriceModel
 from .services.recommender import recommend as reco_recommend
-from .serializers import SurveyInputSerializer
-from rest_framework.permissions import IsAdminUser
+
 
 class PricePredictionView(APIView):
     permission_classes = [IsAuthenticated]
@@ -28,6 +28,7 @@ class PricePredictionView(APIView):
             "details": {k: float(v) for k, v in (details or {}).items()} if details else None
         })
         return Response(out.data, status=status.HTTP_200_OK)
+
 
 class RecommendationView(APIView):
     permission_classes = [AllowAny]
@@ -142,6 +143,109 @@ class RetrainView(APIView):
             return Response({'status': 'error', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+def compute_personal_recommendations_for_user(user, limit: int = 10):
+    """Compute personal recommendations for `user` and persist them.
+
+    Returns a dict compatible with the view response: {'status':..., 'results': [...], 'avg_price': ...}
+    """
+    try:
+        from favoritos.models import Favorito, UserRecommendation
+        from propriedades.models import Propriedade
+    except Exception:
+        return {'status': 'error', 'detail': 'Imports failed', 'results': [], 'avg_price': 0.0}
+
+    favs = Favorito.objects.filter(user=user).select_related('propriedade')
+    if not favs:
+        return {'status': 'empty', 'detail': 'Nenhum favorito; personalize adicionando alguns.', 'results': [], 'avg_price': 0.0}
+
+    tipos = {}
+    cidades = {}
+    amenities_freq = {}
+    prices = []
+    for f in favs:
+        p = f.propriedade
+        t = (p.quartos, p.banheiros, p.vagas_garagem)
+        tipo = (getattr(p, 'tipo', None) or 'Apartamento')
+        tipos[tipo] = tipos.get(tipo, 0) + 1
+        if p.city:
+            cidades[p.city] = cidades.get(p.city, 0) + 1
+        prices.append(float(p.preco_por_noite))
+        for a in (p.comodidades or []):
+            amenities_freq[a] = amenities_freq.get(a, 0) + 1
+
+    avg_price = sum(prices) / len(prices) if prices else 0.0
+    tipo_pref = max(tipos, key=tipos.get) if tipos else None
+    cidade_pref = max(cidades, key=cidades.get) if cidades else None
+    amenity_top = {a for a, c in amenities_freq.items() if c >= 2}
+
+    # candidatos: ativos não favoritados
+    cand_qs = Propriedade.objects.filter(ativo=True).exclude(id__in=[f.propriedade.id for f in favs])
+    model = PriceModel.instance()
+    results = []
+    for p in cand_qs[:500]:
+        features_model = {
+            'tipo': getattr(p, 'tipo', tipo_pref),
+            'cidade': p.city,
+            'area_m2': p.area_m2 or 0,
+            'quartos': p.quartos or 0,
+            'banheiros': p.banheiros or 0,
+            'vagas_garagem': p.vagas_garagem or 0,
+            'condominio': float(p.condominio or 0),
+            'iptu': float(p.iptu or 0),
+        }
+        pred, _method, _details = model.predict(features_model, return_details=False)
+        budget_diff = abs(pred - avg_price)
+        price_fit = max(0.0, 1.0 - (budget_diff / max(avg_price, 1.0)))
+        sim = 0.0
+        overlap = set()
+        if tipo_pref and getattr(p, 'tipo', tipo_pref) == tipo_pref:
+            sim += 0.3
+        if cidade_pref and p.city and p.city == cidade_pref:
+            sim += 0.2
+        if amenity_top:
+            overlap = amenity_top.intersection(set(p.comodidades or []))
+            sim += 0.1 * min(len(overlap), 3)
+        final_score = round(price_fit * 0.5 + sim * 0.5, 4)
+        reasons = []
+        if tipo_pref and getattr(p, 'tipo', tipo_pref) == tipo_pref:
+            reasons.append('Tipo que você favoritou')
+        if cidade_pref and p.city == cidade_pref:
+            reasons.append('Cidade de seus favoritos')
+        if overlap:
+            reasons.append(f"Amenidades em comum: {', '.join(list(overlap)[:3])}")
+        if price_fit > 0.7:
+            reasons.append('Dentro da sua faixa de preço média')
+        results.append({
+            'id': p.id,
+            'titulo': p.titulo,
+            'predicted_price': pred,
+            'score': final_score,
+            'reasons': reasons,
+        })
+
+    # ordenar e limitar
+    results.sort(key=lambda r: r['score'], reverse=True)
+    top = results[:limit]
+
+    # Persistir recomendações (limpa antigas da mesma fonte)
+    try:
+        UserRecommendation.objects.filter(user=user, source='personal').delete()
+        bulk = [
+            UserRecommendation(
+                user=user,
+                propriedade_id=r['id'],
+                score=r['score'],
+                predicted_price=float(r['predicted_price']),
+                source='personal'
+            ) for r in top
+        ]
+        UserRecommendation.objects.bulk_create(bulk, ignore_conflicts=True)
+    except Exception:
+        pass
+
+    return {'status': 'ok', 'results': top, 'avg_price': avg_price}
+
+
 class PersonalRecommendationView(APIView):
     """Recomendações personalizadas baseadas nos favoritos do usuário.
 
@@ -153,99 +257,6 @@ class PersonalRecommendationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        from favoritos.models import Favorito
-        from favoritos.models import UserRecommendation
-        from propriedades.models import Propriedade
-        favs = Favorito.objects.filter(user=request.user).select_related('propriedade')
-        if not favs:
-            return Response({'status': 'empty', 'detail': 'Nenhum favorito; personalize adicionando alguns.'}, status=200)
-
-        # perfil simples
-        tipos = {}
-        cidades = {}
-        amenities_freq = {}
-        prices = []
-        for f in favs:
-            p = f.propriedade
-            if p.titulo:
-                pass
-            t = (p.quartos, p.banheiros, p.vagas_garagem)
-            tipo = (getattr(p, 'tipo', None) or 'Apartamento')
-            tipos[tipo] = tipos.get(tipo, 0) + 1
-            if p.city:
-                cidades[p.city] = cidades.get(p.city, 0) + 1
-            prices.append(float(p.preco_por_noite))
-            for a in (p.comodidades or []):
-                amenities_freq[a] = amenities_freq.get(a, 0) + 1
-
-        import math
-        avg_price = sum(prices)/len(prices) if prices else 0.0
-        tipo_pref = max(tipos, key=tipos.get)
-        cidade_pref = max(cidades, key=cidades.get) if cidades else None
-        amenity_top = {a for a, c in amenities_freq.items() if c >= 2}
-
-        # candidatos: ativos não favoritados
-        cand_qs = Propriedade.objects.filter(ativo=True).exclude(id__in=[f.propriedade.id for f in favs])
-        model = PriceModel.instance()
-        results = []
-        for p in cand_qs[:500]:  # limitar para performance
-            features_model = {
-                'tipo': getattr(p, 'tipo', tipo_pref),
-                'cidade': p.city,
-                'area_m2': p.area_m2 or 0,
-                'quartos': p.quartos or 0,
-                'banheiros': p.banheiros or 0,
-                'vagas_garagem': p.vagas_garagem or 0,
-                'condominio': float(p.condominio or 0),
-                'iptu': float(p.iptu or 0),
-            }
-            pred, _method, _details = model.predict(features_model, return_details=False)
-            # score de ajuste ao orçamento médio
-            budget_diff = abs(pred - avg_price)
-            price_fit = max(0.0, 1.0 - (budget_diff / max(avg_price, 1.0)))
-            # similaridade de preferências (tipo + cidade + amenidades)
-            sim = 0.0
-            if tipo_pref and getattr(p, 'tipo', tipo_pref) == tipo_pref:
-                sim += 0.3
-            if cidade_pref and p.city and p.city == cidade_pref:
-                sim += 0.2
-            if amenity_top:
-                overlap = amenity_top.intersection(set(p.comodidades or []))
-                sim += 0.1 * min(len(overlap), 3)
-            final_score = round(price_fit * 0.5 + sim * 0.5, 4)
-            reasons = []
-            if tipo_pref and getattr(p, 'tipo', tipo_pref) == tipo_pref:
-                reasons.append('Tipo que você favoritou')
-            if cidade_pref and p.city == cidade_pref:
-                reasons.append('Cidade de seus favoritos')
-            if overlap:
-                reasons.append(f"Amenidades em comum: {', '.join(list(overlap)[:3])}")
-            if price_fit > 0.7:
-                reasons.append('Dentro da sua faixa de preço média')
-            results.append({
-                'id': p.id,
-                'titulo': p.titulo,
-                'predicted_price': pred,
-                'score': final_score,
-                'reasons': reasons,
-            })
-        # ordenar e limitar
-        results.sort(key=lambda r: r['score'], reverse=True)
         limit = int(request.data.get('limit', 10))
-        top = results[:limit]
-        # Persistir recomendações (limpa antigas da mesma fonte para evitar crescimento desnecessário)
-        try:
-            UserRecommendation.objects.filter(user=request.user, source='personal').delete()
-            bulk = [
-                UserRecommendation(
-                    user=request.user,
-                    propriedade_id=r['id'],
-                    score=r['score'],
-                    predicted_price=float(r['predicted_price']),
-                    source='personal'
-                ) for r in top
-            ]
-            UserRecommendation.objects.bulk_create(bulk, ignore_conflicts=True)
-        except Exception:
-            pass
-        return Response({'status': 'ok', 'results': top, 'avg_price': avg_price})
+        out = compute_personal_recommendations_for_user(request.user, limit=limit)
+        return Response(out, status=200)

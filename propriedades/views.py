@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Propriedade, PropriedadeImagem
+from django.db.models import Q
 from .forms import PropriedadeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,60 +13,71 @@ def lista_propriedades(request):
     props = Propriedade.objects.filter(ativo=True)
     if q:
         props = props.filter(titulo__icontains=q)
-    # Recomendações no topo da home (SSR) usando o modelo atual
-    # opção de data (sazonalidade)
-    import datetime
-    raw_date = request.GET.get('date')  # formato yyyy-mm-dd
-    season_date = None
+    # Aplicar filtros simples via GET (para a seção "Filtros de recomendação" atuar como filtros)
     try:
-        if raw_date:
-            season_date = datetime.datetime.strptime(raw_date, '%Y-%m-%d').date()
+        city = (request.GET.get("city") or "").strip()
+        neighborhood = (request.GET.get("neighborhood") or "").strip()
+        ptype = (request.GET.get("property_type") or "").strip()
+        min_area = request.GET.get("min_area")
+        max_area = request.GET.get("max_area")
+        bedrooms = request.GET.get("bedrooms")
+        bathrooms = request.GET.get("bathrooms")
+        parking = request.GET.get("parking")
+        min_price = request.GET.get("min_price")
+        max_price = request.GET.get("max_price")
+        amenities = request.GET.getlist("amenities")
+
+        if city:
+            props = props.filter(city__icontains=city)
+        if neighborhood:
+            props = props.filter(endereco__icontains=neighborhood)
+        if ptype:
+            # campo 'tipo' pode não existir em todos os registros; tentar filtrar por atributo
+            props = props.filter(Q(tipo__icontains=ptype) | Q(property_type__icontains=ptype) | Q(titulo__icontains=ptype))
+        if min_area:
+            try:
+                props = props.filter(area_m2__gte=int(min_area))
+            except Exception:
+                pass
+        if max_area:
+            try:
+                props = props.filter(area_m2__lte=int(max_area))
+            except Exception:
+                pass
+        if bedrooms:
+            try:
+                props = props.filter(quartos__gte=int(bedrooms))
+            except Exception:
+                pass
+        if bathrooms:
+            try:
+                props = props.filter(banheiros__gte=int(bathrooms))
+            except Exception:
+                pass
+        if parking:
+            try:
+                props = props.filter(vagas_garagem__gte=int(parking))
+            except Exception:
+                pass
+        if min_price:
+            try:
+                props = props.filter(preco_por_noite__gte=float(min_price))
+            except Exception:
+                pass
+        if max_price:
+            try:
+                props = props.filter(preco_por_noite__lte=float(max_price))
+            except Exception:
+                pass
+        # amenidades: exigir que cada amenity esteja contida no JSONField 'comodidades'
+        for a in [x.strip().lower() for x in amenities if x]:
+            props = props.filter(comodidades__icontains=a) if a else props
     except Exception:
-        season_date = None
-
-    try:
-        from recomendacoes.services.ml.services.model import PriceModel
-        from recomendacoes.services.ml.services.recommender import recommend as reco_recommend
-        # sazonalidade simples
-        season_factor_map = {1:1.15,2:1.10,3:1.05,4:1.00,5:1.00,6:1.08,7:1.20,8:1.18,9:1.04,10:1.03,11:1.07,12:1.25}
-        def apply_season(price: float) -> float:
-            if not season_date:
-                return price
-            return price * season_factor_map.get(season_date.month, 1.0)
-
-        # orçamento/cidade opcionais via GET; defaults razoáveis
-        try:
-            budget = float(request.GET.get("budget", 500) or 500)
-        except Exception:
-            budget = 500.0
-        city = (request.GET.get("city") or "").strip() or None
-
-        model = PriceModel.instance()
-        recs = reco_recommend(model=model, candidates=None, budget=budget, city=city, limit=6)
-        # mapear para objetos do Django e anexar metadados
-        id_to_prop = {p.id: p for p in Propriedade.objects.filter(id__in=[r["id"] for r in recs])}
-        recomendadas = []
-        for r in recs:
-            p = id_to_prop.get(r["id"])
-            if p is not None:
-                base_pred = float(r.get("predicted_price") or 0.0)
-                recomendadas.append({
-                    "prop": p,
-                    "predicted_price": apply_season(base_pred),
-                    "score": r.get("score"),
-                    "season_applied": bool(season_date),
-                })
-
-        # reordenar lista principal opcionalmente quando rank=recommend
-        if (request.GET.get("rank") or "").lower() in ("1", "true", "recommend", "reco"):
-            score_map = {r["id"]: r.get("score", 0.0) for r in recs}
-            props = sorted(list(props), key=lambda p: score_map.get(p.id, 0.0), reverse=True)
-
-    except Exception:
-        recomendadas = []
-        budget = None
-
-    # Se usuário autenticado, tentar carregar recomendações personalizadas persistidas (substitui bloco genérico se existir)
+        # se qualquer erro de parsing ocorrer, ignorar filtros
+        pass
+    # Recomendações: somente pessoais, exibidas após usuário favoritar imóveis.
+    recomendadas = []
+    # Se usuário autenticado, tentar carregar recomendações personalizadas persistidas
     if request.user.is_authenticated:
         try:
             from favoritos.models import UserRecommendation
@@ -80,7 +92,35 @@ def lista_propriedades(request):
         except Exception:
             pass
 
-    return render(request, "propriedades/lista.html", {"propriedades": props, "recomendadas": recomendadas, "reco_budget": budget, 'season_date': season_date})
+    # Para facilitar a lógica no template (evita chamadas a .filter/.exists no template),
+    # transformamos a lista/queryset em lista materializada e marcamos um atributo
+    # booleano `is_favorito` em cada propriedade para o usuário atual.
+    try:
+        props_list = list(props) if not isinstance(props, list) else props
+        if request.user.is_authenticated:
+            from favoritos.models import Favorito
+            fav_ids = set(Favorito.objects.filter(user=request.user, propriedade__in=props_list).values_list('propriedade_id', flat=True))
+        else:
+            fav_ids = set()
+        for p in props_list:
+            p.is_favorito = (p.id in fav_ids)
+    except Exception:
+        # Em caso de erro inesperado, garantimos que `propriedades` ainda esteja disponível
+        props_list = list(props) if not isinstance(props, list) else props
+        for p in props_list:
+            p.is_favorito = False
+
+    # Lista de amenidades selecionadas para marcar checkboxes no template
+    selected_amenities = request.GET.getlist("amenities")
+    return render(
+        request,
+        "propriedades/lista.html",
+        {
+            "propriedades": props_list,
+            "recomendadas": recomendadas,
+            "selected_amenities": selected_amenities,
+        },
+    )
 
 from .models import AMENITIES_CHOICES
 

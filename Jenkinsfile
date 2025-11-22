@@ -202,6 +202,21 @@
                 }
             }
         }
+
+        stage('Testes Recomendação Personalizada') {
+            steps {
+                echo 'Executando testes de recomendação personalizada...'
+                sh '''
+                    . venv/bin/activate
+                    pytest recomendacoes/tests/test_personal_recommend.py --maxfail=1 -q || true
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
+                }
+            }
+        }
         
         stage('Django Tests') {
             steps {

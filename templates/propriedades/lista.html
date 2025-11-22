@@ -1,211 +1,128 @@
 {% extends 'base.html' %} {% block content %}
-<div class="page-header">
-  <h1>Imóveis disponíveis</h1>
-  {% if user.is_authenticated %}
-  <a class="btn btn-primary" href="{% url 'propriedades:nova' %}">Quero anunciar</a>
-  {% else %}
-  <a class="btn btn-primary" href="{% url 'usuarios:login' %}?next={% url 'propriedades:nova' %}">Quero anunciar</a>
-  {% endif %}
+<div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+  <h1 style="margin:0;">Home</h1>
+  <div>
+    {% if user.is_authenticated %}
+      <a class="btn btn-primary" href="{% url 'propriedades:nova' %}">Anunciar Imóvel</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'usuarios:login' %}?next={% url 'propriedades:nova' %}">Anunciar Imóvel</a>
+    {% endif %}
+  </div>
 </div>
 
-{% if recomendadas %}
-<section style="margin: 8px 0 16px;">
-  <h2 style="margin-bottom:8px;">Recomendados para você{% if reco_budget %} (orçamento R$ {{ reco_budget }}){% endif %}{% if season_date %} — valores ajustados para {{ season_date|date:'d/m/Y' }}{% endif %}</h2>
-  <div class="cards">
-    {% for item in recomendadas %}
-      <div class="card">
-        <h3><a href="{% url 'propriedades:detalhe' item.prop.pk %}">{{ item.prop.titulo }}</a></h3>
-        <p>{{ item.prop.descricao|truncatechars:120 }}</p>
-        <p class="muted">Preço previsto{% if item.season_applied %} (sazonal){% endif %}: R$ {{ item.predicted_price|floatformat:2 }} | Score: {{ item.score }}</p>
-      </div>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-<form method="get" class="search" style="margin-bottom: 16px; display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
-  <div>
+<div class="tabs" style="margin-top:16px; display:flex; gap:8px;">
+  <button type="button" class="tab-btn active" data-tab="lista">Imóveis</button>
+  {% if recomendadas %}<button type="button" class="tab-btn" data-tab="reco">Recomendados</button>{% endif %}
+</div>
+
+<details style="margin:16px 0;" open>
+  <summary style="cursor:pointer; font-weight:600;">Filtros</summary>
+  <form id="filtrosForm" method="get" style="margin-top:12px; display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
     <label style="font-size:12px; font-weight:600;">Título<br>
       <input type="text" name="q" placeholder="Buscar por título..." value="{{ request.GET.q }}" />
     </label>
-  </div>
-  <div>
-    <label style="font-size:12px; font-weight:600;">Data (sazonalidade)<br>
-      <input type="date" name="date" value="{{ request.GET.date }}" />
+    <label style="font-size:12px; font-weight:600;">Cidade<br>
+      <input type="text" name="city" value="{{ request.GET.city }}" />
     </label>
-  </div>
-  <div>
-    <button class="btn btn-primary" type="submit" style="margin-top:4px;">Aplicar</button>
-  </div>
-  {% csrf_token %}
-</form>
-
-<details style="margin-top:12px;">
-  <summary style="cursor:pointer; font-weight:600;">Filtros de recomendação</summary>
-  <div id="homeReco" style="margin-top:8px;">
-    <form id="homeRecoForm">
-      {% csrf_token %}
-      <div style="display:flex; gap:12px; flex-wrap:wrap;">
-        <label>Orçamento (R$): <input type="number" step="0.01" name="budget" required /></label>
-        <label>Cidade: <input type="text" name="city" /></label>
-        <label>Bairro: <input type="text" name="neighborhood" /></label>
-        <label>Tipo:
-          <select name="property_type">
-            <option value="">(Qualquer)</option>
-            <option value="apartment">Apartamento</option>
-            <option value="studio">Studio</option>
-            <option value="house">Casa</option>
-            <option value="kitnet">Kitnet</option>
-          </select>
-        </label>
-        <label>Área mín (m²): <input type="number" step="1" min="0" name="min_area" /></label>
-        <label>Área máx (m²): <input type="number" step="1" min="0" name="max_area" /></label>
-        <label>Quartos: <input type="number" step="1" min="0" name="bedrooms" /></label>
-        <label>Banheiros: <input type="number" step="1" min="0" name="bathrooms" /></label>
-        <label>Vagas: <input type="number" step="1" min="0" name="parking" /></label>
-        <label>Preço mín (R$): <input type="number" step="0.01" min="0" name="min_price" /></label>
-        <label>Preço máx (R$): <input type="number" step="0.01" min="0" name="max_price" /></label>
-        <label>Limite: <input type="number" name="limit" value="10" min="1" max="50" /></label>
-      </div>
-      <fieldset style="margin-top:8px;">
-        <legend>Amenidades</legend>
-        <label><input type="checkbox" name="amenities" value="wifi" /> Wi‑Fi</label>
-        <label><input type="checkbox" name="amenities" value="piscina" /> Piscina</label>
-        <label><input type="checkbox" name="amenities" value="tv" /> TV</label>
-        <label><input type="checkbox" name="amenities" value="lavadora" /> Máquina de lavar</label>
-        <label><input type="checkbox" name="amenities" value="ar" /> Ar‑condicionado</label>
-        <label><input type="checkbox" name="amenities" value="cozinha" /> Cozinha equipada</label>
-        <label><input type="checkbox" name="amenities" value="estacionamento" /> Estacionamento</label>
-        <label><input type="checkbox" name="amenities" value="pet" /> Aceita pets</label>
-        <label><input type="checkbox" name="amenities" value="churrasqueira" /> Churrasqueira</label>
-      </fieldset>
-      <div style="margin-top:8px; display:flex; gap:8px;">
-        <button type="submit" class="btn btn-secondary">Buscar recomendações</button>
-        <button type="button" id="btnAuto" class="btn">Atualizar automaticamente</button>
-      </div>
-    </form>
-    <div id="recoResults" style="margin-top:12px; display:none;">
-      <h3>Resultados de recomendação</h3>
-      <table style="width:100%; border-collapse:collapse;">
-        <thead>
-          <tr><th>ID</th><th>Título</th><th>Cidade</th><th>Preço Previsto</th><th>Score</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p id="recoEmpty" style="display:none;">Sem recomendações no momento.</p>
+    <label style="font-size:12px; font-weight:600;">Bairro<br>
+      <input type="text" name="neighborhood" value="{{ request.GET.neighborhood }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Tipo<br>
+      <select name="property_type">
+        <option value="">(Qualquer)</option>
+        <option value="apartment" {% if request.GET.property_type == 'apartment' %}selected{% endif %}>Apartamento</option>
+        <option value="studio" {% if request.GET.property_type == 'studio' %}selected{% endif %}>Studio</option>
+        <option value="house" {% if request.GET.property_type == 'house' %}selected{% endif %}>Casa</option>
+        <option value="kitnet" {% if request.GET.property_type == 'kitnet' %}selected{% endif %}>Kitnet</option>
+      </select>
+    </label>
+    <label style="font-size:12px; font-weight:600;">Área mín (m²)<br>
+      <input type="number" step="1" min="0" name="min_area" value="{{ request.GET.min_area }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Área máx (m²)<br>
+      <input type="number" step="1" min="0" name="max_area" value="{{ request.GET.max_area }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Quartos<br>
+      <input type="number" step="1" min="0" name="bedrooms" value="{{ request.GET.bedrooms }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Banheiros<br>
+      <input type="number" step="1" min="0" name="bathrooms" value="{{ request.GET.bathrooms }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Vagas<br>
+      <input type="number" step="1" min="0" name="parking" value="{{ request.GET.parking }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Preço mín (R$)<br>
+      <input type="number" step="0.01" min="0" name="min_price" value="{{ request.GET.min_price }}" />
+    </label>
+    <label style="font-size:12px; font-weight:600;">Preço máx (R$)<br>
+      <input type="number" step="0.01" min="0" name="max_price" value="{{ request.GET.max_price }}" />
+    </label>
+    <fieldset style="margin-top:8px; min-width:240px;">
+      <legend style="font-size:12px; font-weight:600;">Amenidades</legend>
+      <label><input type="checkbox" name="amenities" value="wifi" {% if 'wifi' in selected_amenities %}checked{% endif %}/> Wi‑Fi</label>
+      <label><input type="checkbox" name="amenities" value="piscina" {% if 'piscina' in selected_amenities %}checked{% endif %}/> Piscina</label>
+      <label><input type="checkbox" name="amenities" value="tv" {% if 'tv' in selected_amenities %}checked{% endif %}/> TV</label>
+      <label><input type="checkbox" name="amenities" value="lavadora" {% if 'lavadora' in selected_amenities %}checked{% endif %}/> Máquina de lavar</label>
+      <label><input type="checkbox" name="amenities" value="ar" {% if 'ar' in selected_amenities %}checked{% endif %}/> Ar‑condicionado</label>
+      <label><input type="checkbox" name="amenities" value="cozinha" {% if 'cozinha' in selected_amenities %}checked{% endif %}/> Cozinha equipada</label>
+      <label><input type="checkbox" name="amenities" value="estacionamento" {% if 'estacionamento' in selected_amenities %}checked{% endif %}/> Estacionamento</label>
+      <label><input type="checkbox" name="amenities" value="pet" {% if 'pet' in selected_amenities %}checked{% endif %}/> Aceita pets</label>
+      <label><input type="checkbox" name="amenities" value="churrasqueira" {% if 'churrasqueira' in selected_amenities %}checked{% endif %}/> Churrasqueira</label>
+    </fieldset>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button class="btn btn-secondary" type="submit">Aplicar filtros</button>
+      <button type="button" id="btnAuto" class="btn">Auto</button>
     </div>
-  </div>
+  </form>
 </details>
-<div class="cards">
-  {% for p in propriedades %}
-  <div class="card">
-    <h3><a href="{% url 'propriedades:detalhe' p.pk %}">{{ p.titulo }}</a></h3>
-    <p>{{ p.descricao|truncatechars:120 }}</p>
-    <p class="muted">Preço por noite: R$ {{ p.preco_por_noite }}</p>
-    {% if user.is_authenticated %}
-      <button class="btn btn-sm" data-fav="{{ p.id }}" data-state="{% if p.favoritado_por.filter(user=user).exists %}on{% else %}off{% endif %}">
-        {% if p.favoritado_por.filter(user=user).exists %}★ Favorito{% else %}☆ Favoritar{% endif %}
-      </button>
-    {% endif %}
+
+<div id="tab-lista" class="tab-pane active">
+  <div class="cards">
+    {% for p in propriedades %}
+      <div class="card">
+        <h3><a href="{% url 'propriedades:detalhe' p.pk %}">{{ p.titulo }}</a></h3>
+        <p>{{ p.descricao|truncatechars:120 }}</p>
+        <p class="muted">Preço por noite: R$ {{ p.preco_por_noite }}</p>
+        {% if user.is_authenticated %}
+          <button class="btn btn-sm" data-fav="{{ p.id }}" data-state="{% if p.is_favorito %}on{% else %}off{% endif %}">
+            {% if p.is_favorito %}★ Favorito{% else %}☆ Favoritar{% endif %}
+          </button>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>Nenhuma propriedade encontrada com estes filtros.</p>
+    {% endfor %}
   </div>
-  {% empty %}
-  <p>Nenhuma propriedade disponível.</p>
-  {% endfor %}
 </div>
+
+<div id="tab-reco" class="tab-pane" style="display:none;">
+  {% if recomendadas %}
+    <h2 style="margin:8px 0 12px;">Recomendados para você</h2>
+    <div class="cards">
+      {% for item in recomendadas %}
+        <div class="card">
+          <h3><a href="{% url 'propriedades:detalhe' item.prop.pk %}">{{ item.prop.titulo }}</a></h3>
+          <p>{{ item.prop.descricao|truncatechars:120 }}</p>
+          <p class="muted">Score: {{ item.score }} | Preço estimado: R$ {{ item.predicted_price|floatformat:2 }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Ainda não há recomendações. Favorite alguns imóveis para gerar recomendações.</p>
+  {% endif %}
+</div>
+
 <script>
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-const form = document.getElementById('homeRecoForm');
-if (form) {
-  const buildPayload = () => {
-    const data = new FormData(form);
-    const payload = {
-      budget: parseFloat(data.get('budget') || '0'),
-      city: data.get('city') || undefined,
-      neighborhood: data.get('neighborhood') || undefined,
-      property_type: data.get('property_type') || undefined,
-      min_area: data.get('min_area') ? Number(data.get('min_area')) : undefined,
-      max_area: data.get('max_area') ? Number(data.get('max_area')) : undefined,
-      bedrooms: data.get('bedrooms') !== '' ? Number(data.get('bedrooms')) : undefined,
-      bathrooms: data.get('bathrooms') !== '' ? Number(data.get('bathrooms')) : undefined,
-      parking: data.get('parking') !== '' ? Number(data.get('parking')) : undefined,
-      min_price: data.get('min_price') ? Number(data.get('min_price')) : undefined,
-      max_price: data.get('max_price') ? Number(data.get('max_price')) : undefined,
-      limit: parseInt(data.get('limit') || '10', 10),
-      amenities: Array.from(document.querySelectorAll('#homeRecoForm input[name="amenities"]:checked')).map(x => x.value),
-    };
-    return payload;
-  };
-
-  const renderResults = (items) => {
-    const wrap = document.getElementById('recoResults');
-    const tbody = wrap.querySelector('tbody');
-    const empty = document.getElementById('recoEmpty');
-    tbody.innerHTML = '';
-    if (!items || items.length === 0) {
-      wrap.style.display = 'block';
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-    wrap.style.display = 'block';
-    items.forEach(it => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${it.id}</td><td>${it.title}</td><td>${it.city}</td><td>R$ ${Number(it.predicted_price).toFixed(2)}</td><td>${Number(it.score).toFixed(4)}</td>`;
-      tbody.appendChild(tr);
-    });
-  };
-
-  const fetchRecs = async () => {
-    const payload = buildPayload();
-    try {
-      const resp = await fetch('/api/ml/survey_recommend/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') || '' },
-        body: JSON.stringify(payload)
-      });
-      if (!resp.ok) { console.warn('Erro', resp.status); return; }
-      const items = await resp.json();
-      renderResults(items);
-    } catch (e) { console.error(e); }
-  };
-
-  // submit manual
-  form.addEventListener('submit', (e) => { e.preventDefault(); fetchRecs(); });
-
-  // modo auto: dispara ao editar campos
-  const btnAuto = document.getElementById('btnAuto');
-  let auto = false; let debounce;
-  const toggleAuto = () => {
-    auto = !auto; btnAuto.classList.toggle('btn-primary', auto);
-    if (auto) fetchRecs();
-  };
-  btnAuto.addEventListener('click', toggleAuto);
-  form.addEventListener('input', () => { if (!auto) return; clearTimeout(debounce); debounce = setTimeout(fetchRecs, 350); });
-}
-</script>
-<script>
-// Favoritar/unfavoritar
-document.querySelectorAll('button[data-fav]').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    const id = btn.getAttribute('data-fav');
-    const state = btn.getAttribute('data-state');
-    const url = state === 'on' ? `/favoritos/remove/${id}/` : `/favoritos/add/${id}/`;
-    try {
-      const resp = await fetch(url, {method:'POST', headers:{'X-CSRFToken': getCookie('csrftoken') || ''}});
-      if (!resp.ok) return;
-      const data = await resp.json();
-      if (data.favorited) {
-        btn.setAttribute('data-state','on');
-        btn.innerHTML = '★ Favorito';
-      } else {
-        btn.setAttribute('data-state','off');
-        btn.innerHTML = '☆ Favoritar';
-      }
-    } catch(e){console.error(e);}
-  });
-});
+function getCookie(name){const value=`; ${document.cookie}`;const parts=value.split(`; ${name}=`);if(parts.length===2)return parts.pop().split(';').shift();}
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tab=btn.dataset.tab;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');document.getElementById('tab-'+tab).style.display='block';});});
+// Auto submit filters
+const filtrosForm=document.getElementById('filtrosForm');const btnAuto=document.getElementById('btnAuto');let auto=false;let debounce;
+if(filtrosForm&&btnAuto){btnAuto.addEventListener('click',()=>{auto=!auto;btnAuto.classList.toggle('btn-primary',auto);if(auto)filtrosForm.submit();});filtrosForm.addEventListener('input',()=>{if(!auto)return;clearTimeout(debounce);debounce=setTimeout(()=>filtrosForm.submit(),350);});}
+// Favoritar
+document.querySelectorAll('button[data-fav]').forEach(btn=>{btn.addEventListener('click',async()=>{const id=btn.getAttribute('data-fav');const state=btn.getAttribute('data-state');const url= state==='on'? `/favoritos/remove/${id}/`:`/favoritos/add/${id}/`;try{const resp=await fetch(url,{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')||''}});if(!resp.ok)return;const data=await resp.json();if(data.favorited){btn.setAttribute('data-state','on');btn.innerHTML='★ Favorito';}else{btn.setAttribute('data-state','off');btn.innerHTML='☆ Favoritar';}
+// Se gerou novas recomendações, mostrar aba de recomendações
+if(data.recommendations && Array.isArray(data.recommendations)){window.location.reload();}
+}catch(e){console.error(e);}});});
 </script>
 {% endblock %}
