@@ -20,7 +20,7 @@
         // Valor proveniente do parâmetro
         NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
         // E-mail padrão caso nenhum seja passado como parâmetro
-        DEFAULT_NOTIFY_EMAIL = 'alvaro.sampaio@ge.inatel.br'
+        DEFAULT_NOTIFY_EMAIL = 'alvaro.sampaio@ges.inatel.br'
         // SMTP settings for Python SMTP stage (update to your SMTP server)
         SMTP_HOST = 'smtp.example.com'
         SMTP_PORT = '587'
