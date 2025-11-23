@@ -194,6 +194,11 @@
                     . venv/bin/activate
                     if [ -f Favoritos/tests.py ]; then
                         pytest Favoritos/tests.py --template=html1/index.html --report=report_favoritos.html || true
+                        mkdir -p aluga_ai_web
+                        mv -f report_favoritos.html aluga_ai_web/report_favoritos.html || true
+                    else
+                        echo "No Favoritos/tests.py found, skipping Favoritos tests"
+                    fi
                 '''
             }
             post {
@@ -210,6 +215,7 @@
                 }
             }
         }
+        
 
         stage('Testes Unitários - Mensagens') {
             steps {
@@ -218,6 +224,8 @@
                     . venv/bin/activate
                     if [ -f Mensagens/tests.py ]; then
                         pytest Mensagens/tests.py --template=html1/index.html --report=report_mensagens.html || true
+                    fi
+                        mv -f report_mensagens.html aluga_ai_web/report_mensagens.html || true
                 '''
             }
             post {
