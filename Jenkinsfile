@@ -450,94 +450,25 @@
     
     post {
         always {
-            echo 'Pipeline finalizada!'
-            // Limpa workspace
-            cleanWs()
-        }
-        success {
-            echo 'Pipeline executada com sucesso!'
             script {
-                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
-                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
-                // Try sending using the Email Extension plugin first; if it's not available or fails,
-                // fall back to the existing shell `mail` command.
-                try {
-                    def buildStatus = currentBuild.currentResult
-                    def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
-                    emailext(
-                        subject: "✅ Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            <p>This is a Jenkins CICD pipeline status.</p>
-                            <p>Project: ${env.JOB_NAME}</p>
-                            <p>Build Number: ${env.BUILD_NUMBER}</p>
-                            <p>Build Status: ${buildStatus}</p>
-                            <p>Started by: ${buildUser}</p>
-                            <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        """,
-                        to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
-                        from: "${env.DEFAULT_NOTIFY_EMAIL}",
-                        replyTo: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
-                        mimeType: 'text/html',
-                        attachmentsPattern: 'reports/*.html,reports/*.txt'
-                    )
-                    echo "emailext notification sent"
-                } catch (err) {
-                    echo "emailext failed or unavailable: ${err}"
-                    // fallback to shell mail
-                    sh '''
-                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
-                        BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} executed successfully. See ${BUILD_URL}"
-                        if command -v mail >/dev/null 2>&1; then
-                            echo "$BODY" | mail -s "✅ Pipeline Success - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
-                            echo "Post success: shell mail attempted to $TO"
-                        else
-                            echo "mail command not found on agent; cannot send post-success email"
-                        fi
-                    '''
-                }
-            }
-        }
-        failure {
-            echo 'Pipeline falhou!'
-            script {
-                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
-                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
-                // Try sending using the Email Extension plugin first; if it's not available or fails,
-                // fall back to the existing shell `mail` command.
-                try {
-                    def buildStatus = currentBuild.currentResult
-                    def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
-                    emailext(
-                        subject: "❌ Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            <p>This is a Jenkins CICD pipeline status.</p>
-                            <p><strong>Result:</strong> ${buildStatus}</p>
-                            <p>Project: ${env.JOB_NAME}</p>
-                            <p>Build Number: ${env.BUILD_NUMBER}</p>
-                            <p>Started by: ${buildUser}</p>
-                            <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        """,
-                        to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
-                        from: "${env.DEFAULT_NOTIFY_EMAIL}",
-                        replyTo: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
-                        mimeType: 'text/html',
-                        attachmentsPattern: 'trivyfs.txt,server.log,reports/*.html'
-                    )
-                    echo "emailext failure notification sent"
-                } catch (err) {
-                    echo "emailext failed or unavailable: ${err}"
-                    // fallback to shell mail
-                    sh '''
-                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
-                        BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} failed. See ${BUILD_URL}console"
-                        if command -v mail >/dev/null 2>&1; then
-                            echo "$BODY" | mail -s "❌ Pipeline Failed - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
-                            echo "Post failure: shell mail attempted to $TO"
-                        else
-                            echo "mail command not found on agent; cannot send post-failure email"
-                        fi
-                    '''
-                }
+                def buildStatus = currentBuild.currentResult
+                def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
+                emailext(
+                    subject: "Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: """
+                        <p>This is a Jenkins  CICD pipeline status.</p>
+                        <p>Project: ${env.JOB_NAME}</p>
+                        <p>Build Number: ${env.BUILD_NUMBER}</p>
+                        <p>Build Status: ${buildStatus}</p>
+                        <p>Started by: ${buildUser}</p>
+                        <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    """,
+                    to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                    from: "${env.DEFAULT_NOTIFY_EMAIL}",
+                    replyTo: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                    mimeType: 'text/html',
+                    attachmentsPattern: 'trivyfs.txt'
+                )
             }
         }
     }
