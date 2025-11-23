@@ -322,37 +322,7 @@
                 }
             }
 
-        stage('Send Email via Python (SMTP)') {
-            steps {
-                echo 'Sending email via Python using Jenkins Credentials...'
-                // requires a Jenkins credential (username/password) with id 'smtp-creds'
-                withCredentials([usernamePassword(credentialsId: 'smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
-                    sh '''
-                        python - <<'PY'
-import os, smtplib
-to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
-smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
-smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-user = os.environ.get('SMTP_USER')
-password = os.environ.get('SMTP_PASS')
-subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
-body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
-msg = f"Subject: {subject}\n\n{body}"
-try:
-    s = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
-    s.starttls()
-    s.login(user, password)
-    s.sendmail(user, [to], msg)
-    s.quit()
-    print('Email sent to', to)
-except Exception as e:
-    print('Failed to send email:', e)
-    raise
-PY
-                    '''
-                }
-            }
-        }
+        
         
         stage('Test Django Server') {
             steps {
