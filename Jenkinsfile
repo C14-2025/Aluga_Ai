@@ -373,38 +373,17 @@
             script {
                 echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
                 echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
-                if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
-                    emailext(
-                        subject: "✅ Pipeline Executada com Sucesso - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            <html>
-                            <body>
-                                <h2>Pipeline Executada com Sucesso!</h2>
-                                <p><b>Job:</b> ${env.JOB_NAME}</p>
-                                <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                                <p><b>Status:</b> ${currentBuild.result}</p>
-                                <p><b>Branch:</b> ${env.BRANCH_NAME}</p>
-                                <p><b>Duração:</b> ${currentBuild.durationString}</p>
-                                <br>
-                                <h3>Stages Executados:</h3>
-                                <ul>
-                                    <li>✓ Testes de Banco de Dados</li>
-                                    <li>✓ Testes de API</li>
-                                    <li>✓ Testes de ETL</li>
-                                    <li>✓ Validação Sistema de Recomendação</li>
-                                    <li>✓ Testes Django</li>
-                                    <li>✓ Verificação de Qualidade</li>
-                                    <li>✓ Teste do Servidor Django</li>
-                                </ul>
-                                <br>
-                                <p>Verifique os detalhes em: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                            </body>
-                            </html>
-                        """,
-                        to: params.NOTIFY_EMAIL,
-                        mimeType: 'text/html'
-                    )
-                }
+                // Send notification using shell mail (avoids dependency on emailext/S MTP plugin)
+                sh '''
+                    TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+                    BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} executed successfully. See ${BUILD_URL}"
+                    if command -v mail >/dev/null 2>&1; then
+                        echo "$BODY" | mail -s "✅ Pipeline Success - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
+                        echo "Post success: shell mail attempted to $TO"
+                    else
+                        echo "mail command not found on agent; cannot send post-success email"
+                    fi
+                '''
             }
         }
         failure {
@@ -412,30 +391,17 @@
             script {
                 echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
                 echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
-                if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
-                    emailext(
-                        subject: "❌ Pipeline Falhou - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            <html>
-                            <body>
-                                <h2 style="color: red;">Pipeline Falhou!</h2>
-                                <p><b>Job:</b> ${env.JOB_NAME}</p>
-                                <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                                <p><b>Status:</b> ${currentBuild.result}</p>
-                                <p><b>Branch:</b> ${env.BRANCH_NAME}</p>
-                                <p><b>Duração:</b> ${currentBuild.durationString}</p>
-                                <br>
-                                <p style="color: red;"><b>Ação necessária:</b> Verifique os logs para identificar o problema.</p>
-                                <br>
-                                <p>Verifique os detalhes em: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                                <p>Console Output: <a href="${env.BUILD_URL}console">${env.BUILD_URL}console</a></p>
-                            </body>
-                            </html>
-                        """,
-                        to: params.NOTIFY_EMAIL,
-                        mimeType: 'text/html'
-                    )
-                }
+                // Send failure notification using shell mail
+                sh '''
+                    TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+                    BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} failed. See ${BUILD_URL}console"
+                    if command -v mail >/dev/null 2>&1; then
+                        echo "$BODY" | mail -s "❌ Pipeline Failed - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
+                        echo "Post failure: shell mail attempted to $TO"
+                    else
+                        echo "mail command not found on agent; cannot send post-failure email"
+                    fi
+                '''
             }
         }
     }
