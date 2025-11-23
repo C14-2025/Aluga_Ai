@@ -11,3 +11,5 @@ numpy
 django
 flake8
 pylint
+scikit-learn
+joblib

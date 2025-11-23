@@ -25,6 +25,9 @@ INSTALLED_APPS = [
     "reservas.apps.ReservasConfig",
     "avaliacoes.apps.AvaliacoesConfig",
     "mensagens.apps.MensagensConfig",
+    # App de recomendações (contém ML, endpoints e comandos)
+    "recomendacoes.apps.RecomendacoesConfig",
+    "favoritos",
 ]
 
 MIDDLEWARE = [

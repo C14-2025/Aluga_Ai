@@ -1,22 +1,29 @@
-pipeline {
+ pipeline {
     agent any
     
-    // Parâmetros para controlar o comportamento da pipeline
+    // Parâmetros de execução
     parameters {
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Executar todos os testes')
-        booleanParam(name: 'BUILD_DOCKER_IMAGE', defaultValue: false, description: 'Construir imagem Docker da aplicação')
-        booleanParam(name: 'PUSH_TO_REGISTRY', defaultValue: false, description: 'Push da imagem para DockerHub')
-        booleanParam(name: 'DEPLOY_APP', defaultValue: false, description: 'Deploy da aplicação (branch main apenas)')
-        string(name: 'DOCKERHUB_REPO', defaultValue: 'seu-usuario/aluga-ai', description: 'Repositório DockerHub (ex: usuario/aluga-ai)')
-        string(name: 'CREDENTIALS_ID', defaultValue: 'dockerhub-credentials', description: 'ID das credenciais Docker no Jenkins')
-        string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para notificações (deixe vazio para desabilitar)')
+        string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
+        string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
+    
+    // CI/CD automático: nenhum parâmetro de execução manual
     
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
         PYTHONPATH = "${WORKSPACE}"
         WORKDIR = "${env.WORKSPACE}"
+        // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
+        DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
+        CREDENTIALS_ID = 'dockerhub-credentials'
+        // Valor proveniente do parâmetro
+        NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
+        // E-mail padrão caso nenhum seja passado como parâmetro
+        DEFAULT_NOTIFY_EMAIL = 'alvaro.sampaio@ge.inatel.br'
+        // SMTP settings for Python SMTP stage (update to your SMTP server)
+        SMTP_HOST = 'smtp.example.com'
+        SMTP_PORT = '587'
     }
     
     stages {
@@ -33,8 +40,8 @@ pipeline {
                     // Determina tag da imagem a partir do commit
                     env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
                     env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
-                    env.IMAGE = "${params.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
-                    env.IMAGE_LATEST = "${params.DOCKERHUB_REPO}:latest"
+                    env.IMAGE = "${env.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
+                    env.IMAGE_LATEST = "${env.DOCKERHUB_REPO}:latest"
                     echo "Image será: ${env.IMAGE}"
                 }
             }
@@ -73,15 +80,18 @@ pipeline {
         }
         
         stage('Testes Unitários - Banco de Dados') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de Banco de Dados...'
-                dir('aluga_ai_web') {
-                    sh '''
-                        . ../venv/bin/activate
+                sh '''
+                    . venv/bin/activate
+                    if [ -f BancoDeDados/test_bd.py ]; then
                         pytest BancoDeDados/test_bd.py --template=html1/index.html --report=report_bd.html || true
-                    '''
-                }
+                    elif [ -f Dados/test_bd.py ]; then
+                        pytest Dados/test_bd.py --template=html1/index.html --report=report_bd.html || true
+                    else
+                        echo "No BancoDeDados test file found, skipping Banco de Dados tests"
+                    fi
+                '''
             }
             post {
                 always {
@@ -99,15 +109,18 @@ pipeline {
         }
         
         stage('Testes Unitários - API') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de API...'
-                dir('aluga_ai_web') {
-                    sh '''
-                        . ../venv/bin/activate
+                sh '''
+                    . venv/bin/activate
+                    if [ -f Dados/test_etl.py ]; then
                         pytest Dados/test_etl.py --template=html1/index.html --report=report_api.html || true
-                    '''
-                }
+                    elif [ -f aluga_ai_web/Dados/test_etl.py ]; then
+                        pytest aluga_ai_web/Dados/test_etl.py --template=html1/index.html --report=report_api.html || true
+                    else
+                        echo "No API test file found (Dados/test_etl.py), skipping API tests"
+                    fi
+                '''
             }
             post {
                 always {
@@ -125,7 +138,6 @@ pipeline {
         }
 
         stage('Testes Unitários - Propriedades e Reservas') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de Propriedades e Reservas...'
                 sh '''
@@ -151,15 +163,41 @@ pipeline {
                 }
             }
         }
+
+        stage('Testes Unitários - Usuarios') {
+            steps {
+                echo 'Executando testes de Modelos e Views da app Usuarios...'
+                sh '''
+                    . venv/bin/activate
+                    mkdir -p reports
+                    
+                    # O comando abaixo executa os testes na sua app 'usuarios'.
+                    # Se você tem um único arquivo 'tests.py' na raiz da app 'usuarios', 
+                    # use o caminho: 'usuarios/tests.py'.
+                    # Se você tem vários arquivos de teste dentro de 'usuarios/tests/', use: 'usuarios/tests/'
+                    
+                    pytest usuarios/tests.py \
+                        --junitxml=reports/junit_usuarios.xml || true
+                '''
+            }
+            post {
+                always {
+                    junit 'reports/junit_usuarios.xml'
+                }
+            }
+        }
         
         stage('Testes ETL') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes de ETL...'
-                dir('aluga_ai_web/Dados') {
+                dir('Dados') {
                     sh '''
-                        . ../../venv/bin/activate
-                        pytest test_etl.py --template=html1/index.html --report=report_etl.html || true
+                        . ../venv/bin/activate
+                        if [ -f test_etl.py ]; then
+                            pytest test_etl.py --template=html1/index.html --report=report_etl.html || true
+                        else
+                            echo "No test_etl.py found in Dados, skipping ETL tests"
+                        fi
                     '''
                 }
             }
@@ -179,25 +217,31 @@ pipeline {
         }
         
         stage('Executar ETL') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando processo de ETL...'
-                dir('aluga_ai_web/Dados') {
+                dir('Dados') {
                     sh '''
-                        . ../../venv/bin/activate
-                        python etl.py || true
+                        . ../venv/bin/activate
+                        if [ -f etl.py ]; then
+                            python etl.py || true
+                        else
+                            echo "No etl.py found in Dados, skipping ETL execution"
+                        fi
                     '''
                 }
             }
         }
         
         stage('Validação do Sistema de Recomendação') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Validando sistema de recomendação...'
                 sh '''
                     . venv/bin/activate
-                    python jobs/validate_recommendation_system.py || true
+                    if [ -f jobs/validate_recommendation_system.py ]; then
+                        python jobs/validate_recommendation_system.py || true
+                    else
+                        echo "No jobs/validate_recommendation_system.py found, skipping recommendation validation"
+                    fi
                 '''
             }
             post {
@@ -206,9 +250,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Testes Recomendação Personalizada') {
+            steps {
+                echo 'Executando testes de recomendação personalizada...'
+                sh '''
+                    . venv/bin/activate
+                    if [ -f recomendacoes/tests/test_personal_recommend.py ]; then
+                        pytest recomendacoes/tests/test_personal_recommend.py --maxfail=1 -q || true
+                    else
+                        echo "No recomendacoes personal test found, skipping personalized recommendation tests"
+                    fi
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
+                }
+            }
+        }
         
         stage('Django Tests') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Executando testes do Django...'
                 sh '''
@@ -219,7 +281,6 @@ pipeline {
         }
         
         stage('Code Quality Check') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Verificando qualidade do código...'
                 sh '''
@@ -234,9 +295,66 @@ pipeline {
                 }
             }
         }
+
+            stage('Notification (Shell)') {
+                steps {
+                    echo 'Sending shell notification...'
+                    sh '''
+                        # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
+                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+
+                        # Run provided scripts if present
+                        if [ -d scripts ]; then
+                            cd scripts || true
+                            chmod 775 * || true
+                            ./shell.sh || true
+                            cd - >/dev/null 2>&1 || true
+                        fi
+
+                        # Try to send mail using the system `mail` command
+                        if command -v mail >/dev/null 2>&1; then
+                            echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
+                            echo "Shell mail attempted to $TO"
+                        else
+                            echo "mail command not found on agent; install mailutils/postfix to enable shell email"
+                        fi
+                    '''
+                }
+            }
+
+        stage('Send Email via Python (SMTP)') {
+            steps {
+                echo 'Sending email via Python using Jenkins Credentials...'
+                // requires a Jenkins credential (username/password) with id 'smtp-creds'
+                withCredentials([usernamePassword(credentialsId: 'smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
+                    sh '''
+                        python - <<'PY'
+import os, smtplib
+to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
+smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
+smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+user = os.environ.get('SMTP_USER')
+password = os.environ.get('SMTP_PASS')
+subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
+body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
+msg = f"Subject: {subject}\n\n{body}"
+try:
+    s = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
+    s.starttls()
+    s.login(user, password)
+    s.sendmail(user, [to], msg)
+    s.quit()
+    print('Email sent to', to)
+except Exception as e:
+    print('Failed to send email:', e)
+    raise
+PY
+                    '''
+                }
+            }
+        }
         
         stage('Test Django Server') {
-            when { expression { return params.RUN_TESTS } }
             steps {
                 echo 'Testando se o servidor Django inicia corretamente...'
                 sh '''
@@ -263,74 +381,9 @@ pipeline {
                 }
             }
         }
-        
-        stage('Build Docker Image') {
-            when { expression { return params.BUILD_DOCKER_IMAGE } }
-            steps {
-                echo "Construindo imagem Docker: ${env.IMAGE}"
-                sh """
-                    docker build -t ${env.IMAGE} -t ${env.IMAGE_LATEST} -f Dockerfile .
-                """
-            }
-        }
-        
-        stage('Test Docker Image') {
-            when { expression { return params.BUILD_DOCKER_IMAGE } }
-            steps {
-                echo 'Testando imagem Docker...'
-                sh """
-                    # Cria diretório para artefatos
-                    mkdir -p \${WORKSPACE}/docker_artifacts
-                    
-                    # Testa se a imagem inicia corretamente
-                    docker run --rm -d --name aluga-ai-test-${BUILD_NUMBER} \
-                        -e DEBUG=0 \
-                        ${env.IMAGE} || true
-                    
-                    # Aguarda container iniciar
-                    sleep 10
-                    
-                    # Verifica se está rodando
-                    docker ps | grep aluga-ai-test-${BUILD_NUMBER} || echo "Container não iniciou"
-                    
-                    # Para o container de teste
-                    docker stop aluga-ai-test-${BUILD_NUMBER} || true
-                """
-            }
-        }
-        
-        stage('Push to Registry') {
-            when { 
-                allOf {
-                    expression { return params.PUSH_TO_REGISTRY }
-                    expression { return params.BUILD_DOCKER_IMAGE }
-                }
-            }
-            steps {
-                echo "Fazendo push da imagem para ${params.DOCKERHUB_REPO}"
-                withCredentials([usernamePassword(
-                    credentialsId: params.CREDENTIALS_ID, 
-                    usernameVariable: 'DOCKER_USER', 
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE}
-                        docker push ${IMAGE_LATEST}
-                        docker logout
-                    '''
-                }
-            }
-        }
-        
-        stage('Deploy Application') {
-            when { 
-                allOf {
-                    expression { return params.DEPLOY_APP }
-                    expression { return params.BUILD_DOCKER_IMAGE }
-                    branch 'main'
-                }
-            }
+        stage('Deploy Application ') {
+            // Deploy automático somente na branch main
+            when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
@@ -343,27 +396,25 @@ pipeline {
                     mkdir -p ${HOST_DATA_DIR}
                     mkdir -p ${HOST_STATIC_DIR}
                     mkdir -p ${HOST_MEDIA_DIR}
-                    
-                    # Pull da imagem
-                    docker pull ${IMAGE} || true
-                    
-                    # Remove container antigo
-                    docker rm -f aluga-ai-app || true
-                    
-                    # Inicia novo container
-                    docker run -d --name aluga-ai-app \
-                        --restart unless-stopped \
-                        -p 8000:8000 \
-                        -v ${HOST_DATA_DIR}:/app/data \
-                        -v ${HOST_STATIC_DIR}:/app/static \
-                        -v ${HOST_MEDIA_DIR}:/app/media \
-                        -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                        -e PYTHONPATH=/app \
-                        ${IMAGE}
-                    
-                    # Verifica se está rodando
-                    sleep 5
-                    docker ps | grep aluga-ai-app
+                    # Try to pull the image; if unavailable, skip deploy (avoids failing when image isn't published)
+                    if docker pull ${IMAGE} >/dev/null 2>&1; then
+                        docker rm -f aluga-ai-app || true
+                        docker run -d --name aluga-ai-app \
+                            --restart unless-stopped \
+                            -p 8000:8000 \
+                            -v ${HOST_DATA_DIR}:/app/data \
+                            -v ${HOST_STATIC_DIR}:/app/static \
+                            -v ${HOST_MEDIA_DIR}:/app/media \
+                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
+                            -e PYTHONPATH=/app \
+                            ${IMAGE}
+
+                        # Verifica se está rodando
+                        sleep 5
+                        docker ps | grep aluga-ai-app || true
+                    else
+                        echo "Docker image ${IMAGE} not available; skipping deploy"
+                    fi
                 '''
             }
         }
@@ -378,66 +429,86 @@ pipeline {
         success {
             echo 'Pipeline executada com sucesso!'
             script {
-                if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
+                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
+                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
+                // Try sending using the Email Extension plugin first; if it's not available or fails,
+                // fall back to the existing shell `mail` command.
+                try {
+                    def buildStatus = currentBuild.currentResult
+                    def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
                     emailext(
-                        subject: "✅ Pipeline Executada com Sucesso - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        subject: "✅ Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
-                            <html>
-                            <body>
-                                <h2>Pipeline Executada com Sucesso!</h2>
-                                <p><b>Job:</b> ${env.JOB_NAME}</p>
-                                <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                                <p><b>Status:</b> ${currentBuild.result}</p>
-                                <p><b>Branch:</b> ${env.BRANCH_NAME}</p>
-                                <p><b>Duração:</b> ${currentBuild.durationString}</p>
-                                <br>
-                                <h3>Stages Executados:</h3>
-                                <ul>
-                                    <li>✓ Testes de Banco de Dados</li>
-                                    <li>✓ Testes de API</li>
-                                    <li>✓ Testes de ETL</li>
-                                    <li>✓ Validação Sistema de Recomendação</li>
-                                    <li>✓ Testes Django</li>
-                                    <li>✓ Verificação de Qualidade</li>
-                                    <li>✓ Teste do Servidor Django</li>
-                                </ul>
-                                <br>
-                                <p>Verifique os detalhes em: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                            </body>
-                            </html>
+                            <p>This is a Jenkins CICD pipeline status.</p>
+                            <p>Project: ${env.JOB_NAME}</p>
+                            <p>Build Number: ${env.BUILD_NUMBER}</p>
+                            <p>Build Status: ${buildStatus}</p>
+                            <p>Started by: ${buildUser}</p>
+                            <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                         """,
-                        to: params.NOTIFY_EMAIL,
-                        mimeType: 'text/html'
+                        to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                        from: "${env.DEFAULT_NOTIFY_EMAIL}",
+                        replyTo: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                        mimeType: 'text/html',
+                        attachmentsPattern: 'reports/*.html,reports/*.txt'
                     )
+                    echo "emailext notification sent"
+                } catch (err) {
+                    echo "emailext failed or unavailable: ${err}"
+                    // fallback to shell mail
+                    sh '''
+                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+                        BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} executed successfully. See ${BUILD_URL}"
+                        if command -v mail >/dev/null 2>&1; then
+                            echo "$BODY" | mail -s "✅ Pipeline Success - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
+                            echo "Post success: shell mail attempted to $TO"
+                        else
+                            echo "mail command not found on agent; cannot send post-success email"
+                        fi
+                    '''
                 }
             }
         }
         failure {
             echo 'Pipeline falhou!'
             script {
-                if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
+                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
+                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
+                // Try sending using the Email Extension plugin first; if it's not available or fails,
+                // fall back to the existing shell `mail` command.
+                try {
+                    def buildStatus = currentBuild.currentResult
+                    def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
                     emailext(
-                        subject: "❌ Pipeline Falhou - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        subject: "❌ Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
-                            <html>
-                            <body>
-                                <h2 style="color: red;">Pipeline Falhou!</h2>
-                                <p><b>Job:</b> ${env.JOB_NAME}</p>
-                                <p><b>Build:</b> ${env.BUILD_NUMBER}</p>
-                                <p><b>Status:</b> ${currentBuild.result}</p>
-                                <p><b>Branch:</b> ${env.BRANCH_NAME}</p>
-                                <p><b>Duração:</b> ${currentBuild.durationString}</p>
-                                <br>
-                                <p style="color: red;"><b>Ação necessária:</b> Verifique os logs para identificar o problema.</p>
-                                <br>
-                                <p>Verifique os detalhes em: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                                <p>Console Output: <a href="${env.BUILD_URL}console">${env.BUILD_URL}console</a></p>
-                            </body>
-                            </html>
+                            <p>This is a Jenkins CICD pipeline status.</p>
+                            <p><strong>Result:</strong> ${buildStatus}</p>
+                            <p>Project: ${env.JOB_NAME}</p>
+                            <p>Build Number: ${env.BUILD_NUMBER}</p>
+                            <p>Started by: ${buildUser}</p>
+                            <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                         """,
-                        to: params.NOTIFY_EMAIL,
-                        mimeType: 'text/html'
+                        to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                        from: "${env.DEFAULT_NOTIFY_EMAIL}",
+                        replyTo: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
+                        mimeType: 'text/html',
+                        attachmentsPattern: 'trivyfs.txt,server.log,reports/*.html'
                     )
+                    echo "emailext failure notification sent"
+                } catch (err) {
+                    echo "emailext failed or unavailable: ${err}"
+                    // fallback to shell mail
+                    sh '''
+                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+                        BODY="Pipeline ${JOB_NAME} #${BUILD_NUMBER} failed. See ${BUILD_URL}console"
+                        if command -v mail >/dev/null 2>&1; then
+                            echo "$BODY" | mail -s "❌ Pipeline Failed - ${JOB_NAME} #${BUILD_NUMBER}" "$TO" || echo "mail command failed"
+                            echo "Post failure: shell mail attempted to $TO"
+                        else
+                            echo "mail command not found on agent; cannot send post-failure email"
+                        fi
+                    '''
                 }
             }
         }

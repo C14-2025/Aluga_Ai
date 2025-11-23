@@ -43,9 +43,22 @@ class ModelTrainer:
     """Treina modelo para predição de preços de imóveis."""
 
     def __init__(self):
-        root = project_root()
-        self.etl_dir = (root.parent / "Dados" / "processed").resolve()
-        self.ml_dir = (root / "models").resolve()
+        # localizar raiz do repositório (onde está manage.py)
+        from pathlib import Path
+        cur = Path(__file__).resolve()
+        repo_root = None
+        for p in list(cur.parents):
+            if (p / 'manage.py').exists():
+                repo_root = p
+                break
+        if repo_root is None:
+            repo_root = Path.cwd()
+
+        # ETL outputs agora em /dados/processed
+        self.etl_dir = (repo_root / "dados" / "processed").resolve()
+
+        # salvar artefatos do treino no model_store do app recomendacoes
+        self.ml_dir = (repo_root / "recomendacoes" / "services" / "ml" / "model_store").resolve()
         self.ml_dir.mkdir(parents=True, exist_ok=True)
 
         self.label_encoders: dict[str, LabelEncoder] = {}
@@ -144,7 +157,8 @@ class ModelTrainer:
         return X_train_sc, X_test_sc, numeric_cols
 
     def _save_artifacts(self, model, features: list[str], extra_metadata: dict | None = None) -> None:
-        joblib.dump(model, self.ml_dir / "model.pkl")
+        # salvar modelo principal usado pelo serviço de recomendação
+        joblib.dump(model, self.ml_dir / "price_model.joblib")
         joblib.dump(self.label_encoders, self.ml_dir / "label_encoders.pkl")
         joblib.dump(self.scaler, self.ml_dir / "scaler.pkl")
 

@@ -3,9 +3,18 @@ import sys
 import pandas as pd
 from pathlib import Path
 
-# Caminho absoluto para o dataset final
-# Ajuste o caminho conforme necessário para o pipeline
-DATASET_PATH = Path(__file__).resolve().parent.parent / 'Dados' / 'processed' / 'dataset_final.csv'
+# Localiza a raiz do repositório (onde está manage.py) e aponta para dados/processed
+cur = Path(__file__).resolve()
+repo_root = None
+for p in list(cur.parents):
+    if (p / 'manage.py').exists():
+        repo_root = p
+        break
+if repo_root is None:
+    repo_root = Path.cwd()
+
+# Caminho absoluto para o dataset final em /dados/processed
+DATASET_PATH = repo_root / 'dados' / 'processed' / 'dataset_final.csv'
 
 def carregar_dataset_final():
     """Carrega o dataset final processado para modelagem."""

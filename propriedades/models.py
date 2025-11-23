@@ -23,6 +23,13 @@ class Propriedade(models.Model):
     city = models.CharField("Cidade", max_length=100, blank=True)
     state = models.CharField("Estado", max_length=100, blank=True)
     preco_por_noite = models.DecimalField(max_digits=8, decimal_places=2)
+    # Campos extras para enriquecer recomendação / modelo de preço
+    area_m2 = models.IntegerField(null=True, blank=True)
+    quartos = models.IntegerField(null=True, blank=True)
+    banheiros = models.IntegerField(null=True, blank=True)
+    vagas_garagem = models.IntegerField(null=True, blank=True)
+    condominio = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    iptu = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
     ativo = models.BooleanField(default=True)
     comodidades = models.JSONField(default=list, blank=True)
