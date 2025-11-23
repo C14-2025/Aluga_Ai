@@ -3,7 +3,7 @@ Comando Django para executar o job de validação do sistema
 Uso: python manage.py validate_system
 """
 from django.core.management.base import BaseCommand
-from jobs.validate_recommendation_system import validate_recommendation_system
+from jobs.tests.validate_recommendation_system import validate_recommendation_system
 
 
 class Command(BaseCommand):

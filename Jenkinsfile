@@ -19,6 +19,8 @@
         CREDENTIALS_ID = 'dockerhub-credentials'
         // Valor proveniente do parâmetro
         NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
+        // E-mail padrão caso nenhum seja passado como parâmetro
+        DEFAULT_NOTIFY_EMAIL = 'alvaro.sampaio@ge.inatel.br'
     }
     
     stages {
@@ -267,6 +269,32 @@
                 }
             }
         }
+
+            stage('Notification (Shell)') {
+                steps {
+                    echo 'Sending shell notification...'
+                    sh '''
+                        # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
+                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+
+                        # Run provided scripts if present
+                        if [ -d scripts ]; then
+                            cd scripts || true
+                            chmod 775 * || true
+                            ./shell.sh || true
+                            cd - >/dev/null 2>&1 || true
+                        fi
+
+                        # Try to send mail using the system `mail` command
+                        if command -v mail >/dev/null 2>&1; then
+                            echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
+                            echo "Shell mail attempted to $TO"
+                        else
+                            echo "mail command not found on agent; install mailutils/postfix to enable shell email"
+                        fi
+                    '''
+                }
+            }
         
         stage('Test Django Server') {
             steps {
