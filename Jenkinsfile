@@ -343,6 +343,8 @@
         success {
             echo 'Pipeline executada com sucesso!'
             script {
+                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
+                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
                 if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
                     emailext(
                         subject: "✅ Pipeline Executada com Sucesso - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -380,6 +382,8 @@
         failure {
             echo 'Pipeline falhou!'
             script {
+                echo "DEBUG: params.NOTIFY_EMAIL='${params.NOTIFY_EMAIL}'"
+                echo "DEBUG: env.NOTIFY_EMAIL='${env.NOTIFY_EMAIL}'"
                 if (params.NOTIFY_EMAIL && params.NOTIFY_EMAIL.trim() != '') {
                     emailext(
                         subject: "❌ Pipeline Falhou - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
