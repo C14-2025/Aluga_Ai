@@ -66,8 +66,8 @@ class UsuariosFormsTests(TestCase):
             "username": "newuser",
             "first_name": "Novo",
             "email": "new@email.com",
-            "password_1": "securepass123",
-            "password_2": "securepass123",
+            "password1": "securepass123",
+            "password2": "securepass123",
             "phone_number": "(99) 98765-4321",
             "city": "Rio de Janeiro",
             "state": "RJ"
@@ -81,8 +81,8 @@ class UsuariosFormsTests(TestCase):
             "username": "anotheruser",
             "first_name": "Outro",
             "email": "existing@email.com", # E-mail já em uso
-            "password_1": "securepass123",
-            "password_2": "securepass123",
+            "password1": "securepass123",
+            "password2": "securepass123",
         }
         form = RegistrationForm(data=form_data)
         self.assertFalse(form.is_valid())
@@ -98,8 +98,8 @@ class UsuariosFormsTests(TestCase):
             "username": "phoneuser",
             "first_name": "Telefone",
             "email": "phone@email.com",
-            "password_1": "securepass123",
-            "password_2": "securepass123",
+            "password1": "securepass123",
+            "password2": "securepass123",
             "phone_number": "not-a-phone!", # Formato inválido
         }
         form = RegistrationForm(data=form_data)
@@ -116,8 +116,8 @@ class UsuariosFormsTests(TestCase):
             "username": "nophoneuser",
             "first_name": "Sem Telefone",
             "email": "nophone@email.com",
-            "password_1": "securepass123",
-            "password_2": "securepass123",
+            "password1": "securepass123",
+            "password2": "securepass123",
             "phone_number": "", # Telefone não é obrigatório
         }
         form = RegistrationForm(data=form_data)
@@ -165,8 +165,8 @@ class UsuariosViewsTests(TestCase):
             "username": "newuser",
             "first_name": "NovoNome",
             "email": "newuser@test.com",
-            "password_1": "testpass123",
-            "password_2": "testpass123",
+            "password1": "testpass123",
+            "password2": "testpass123",
             "phone_number": "11999998888",
             "city": "São Paulo",
             "state": "SP"
@@ -201,8 +201,8 @@ class UsuariosViewsTests(TestCase):
             "username": "failuser",
             "first_name": "Fail",
             "email": "fail@test.com",
-            "password_1": "testpass123",
-            "password_2": "notmatching",
+            "password1": "testpass123",
+            "password2": "notmatching",
         }
         initial_user_count = User.objects.count()
         response = self.client.post(self.registration_url, new_user_data)
