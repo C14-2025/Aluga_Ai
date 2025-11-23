@@ -187,6 +187,62 @@
             }
         }
         
+        stage('Testes Unitários - Favoritos') {
+            steps {
+                echo 'Executando testes de Favoritos...'
+                sh '''
+                    . venv/bin/activate
+                    if [ -f Favoritos/tests.py ]; then
+                        pytest Favoritos/tests.py --template=html1/index.html --report=report_favoritos.html || true
+                        mkdir -p aluga_ai_web
+                        mv -f report_favoritos.html aluga_ai_web/report_favoritos.html || true
+                    else
+                        echo "No Favoritos/tests.py found, skipping Favoritos tests"
+                    fi
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'aluga_ai_web/report_favoritos.html', allowEmptyArchive: true
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'aluga_ai_web',
+                        reportFiles: 'report_favoritos.html',
+                        reportName: 'Report Favoritos'
+                    ])
+                }
+            }
+        }
+        
+
+        stage('Testes Unitários - Mensagens') {
+            steps {
+                echo 'Executando testes de Mensagens...'
+                sh '''
+                    . venv/bin/activate
+                    if [ -f Mensagens/tests.py ]; then
+                        pytest Mensagens/tests.py --template=html1/index.html --report=report_mensagens.html || true
+                    fi
+                        mv -f report_mensagens.html aluga_ai_web/report_mensagens.html || true
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'aluga_ai_web/report_mensagens.html', allowEmptyArchive: true
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'aluga_ai_web',
+                        reportFiles: 'report_mensagens.html',
+                        reportName: 'Report Mensagens'
+                    ])
+                }
+            }
+        }
+
         stage('Testes ETL') {
             steps {
                 echo 'Executando testes de ETL...'
