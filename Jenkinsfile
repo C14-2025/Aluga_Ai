@@ -163,6 +163,29 @@
                 }
             }
         }
+
+        stage('Testes Unitários - Usuarios') {
+            steps {
+                echo 'Executando testes de Modelos e Views da app Usuarios...'
+                sh '''
+                    . venv/bin/activate
+                    mkdir -p reports
+                    
+                    # O comando abaixo executa os testes na sua app 'usuarios'.
+                    # Se você tem um único arquivo 'tests.py' na raiz da app 'usuarios', 
+                    # use o caminho: 'usuarios/tests.py'.
+                    # Se você tem vários arquivos de teste dentro de 'usuarios/tests/', use: 'usuarios/tests/'
+                    
+                    pytest usuarios/tests.py \
+                        --junitxml=reports/junit_usuarios.xml || true
+                '''
+            }
+            post {
+                always {
+                    junit 'reports/junit_usuarios.xml'
+                }
+            }
+        }
         
         stage('Testes ETL') {
             steps {
