@@ -419,11 +419,11 @@ pipeline {
             steps {
                 echo 'Starting deployment of the new image on the target environment...'
                 sh '''
-                    # Puxa a nova imagem do serviço 'aluga_ai' (nome corrigido)
-                    docker-compose -f docker-compose.yml pull aluga_ai
+                    # Puxa a nova imagem do serviço 'aluga-ai-app' (nome corrigido)
+                    docker-compose -f docker-compose.yml pull aluga-ai-app
                     
                     # Faz o rollout: derruba o container antigo e sobe o novo com a imagem 'latest'
-                    docker-compose -f docker-compose.yml up -d --no-deps aluga_ai
+                    docker-compose -f docker-compose.yml up -d --no-deps aluga-ai-app
                     
                     echo "Deployment of aluga_ai complete."
                 '''
