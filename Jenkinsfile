@@ -474,28 +474,39 @@
                     HOST_MEDIA_DIR="/opt/aluga-ai/media"
 
                     # Cria diretórios se não existirem
-                    mkdir -p ${HOST_DATA_DIR}
-                    mkdir -p ${HOST_STATIC_DIR}
-                    mkdir -p ${HOST_MEDIA_DIR}
+                    mkdir -p ${HOST_DATA_DIR} ${HOST_STATIC_DIR} ${HOST_MEDIA_DIR}
 
-                    # Try to pull the image; if unavailable, skip deploy (avoids failing when image isn't published)
-                    if docker pull ${IMAGE} >/dev/null 2>&1; then
-                        docker rm -f aluga-ai-app || true
-                        docker run -d --name aluga-ai-app \
-                            --restart unless-stopped \
-                            -p 8000:8000 \
-                            -v ${HOST_DATA_DIR}:/app/data \
-                            -v ${HOST_STATIC_DIR}:/app/static \
-                            -v ${HOST_MEDIA_DIR}:/app/media \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                            -e PYTHONPATH=/app \
-                            ${IMAGE}
-
-                        # Verifica se está rodando
-                        sleep 5
-                        docker ps | grep aluga-ai-app || true
+                    # Prefer docker compose if a compose file exists so the service is managed by compose
+                    if [ -f docker-compose.yml ] || [ -f docker-compose.yaml ]; then
+                        echo "docker-compose detected — deploying with docker compose"
+                        # Make IMAGE available to docker compose (if compose file references an env var)
+                        export IMAGE=${IMAGE}
+                        # Pull images if possible, then bring up services recreating changed ones
+                        docker compose pull || true
+                        docker compose up -d --remove-orphans || true
+                        echo "docker compose deployment finished"
                     else
-                        echo "Docker image ${IMAGE} not available; skipping deploy"
+                        echo "No docker-compose file; falling back to docker run"
+                        # Try to pull the image; if unavailable, skip deploy (avoids failing when image isn't published)
+                        if docker pull ${IMAGE} >/dev/null 2>&1; then
+                            # Remove any existing non-compose container with the same name
+                            docker rm -f aluga-ai-app || true
+                            docker run -d --name aluga-ai-app \
+                                --restart unless-stopped \
+                                -p 8000:8000 \
+                                -v ${HOST_DATA_DIR}:/app/data \
+                                -v ${HOST_STATIC_DIR}:/app/static \
+                                -v ${HOST_MEDIA_DIR}:/app/media \
+                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
+                                -e PYTHONPATH=/app \
+                                ${IMAGE}
+
+                            # Verifica se está rodando
+                            sleep 5
+                            docker ps | grep aluga-ai-app || true
+                        else
+                            echo "Docker image ${IMAGE} not available; skipping deploy"
+                        fi
                     fi
                 '''
             }
