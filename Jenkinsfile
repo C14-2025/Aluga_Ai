@@ -663,22 +663,19 @@
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
-                        if [ -z "${HOST_STATIC_DIR}" ]; then
-                            HOST_STATIC_DIR="${WORKSPACE}/static"
-                        fi
                         if [ -z "${HOST_MEDIA_DIR}" ]; then
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
                         # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
+                        mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
 
                         # Remove o container antigo (tenta nomes antigos e novo para segurança)
                         docker rm -f aluga-ai aluga-ai-app || true 
 
                         # Roda o novo container (use host dir variables which are now guaranteed non-empty)
 
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
