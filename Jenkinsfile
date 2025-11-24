@@ -668,7 +668,7 @@
                         fi
 
                         # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
+                        mkdir -p "${HOST_DATA_DIR}" "${HOST_MEDIA_DIR}"
 
                         # Remove o container antigo (tenta nomes antigos e novo para segurança)
                         docker rm -f aluga-ai aluga-ai-app || true 
