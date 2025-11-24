@@ -677,7 +677,7 @@
                         docker rm -f aluga-ai aluga-ai-app || true 
 
                         # Roda o novo container (use host dir variables which are now guaranteed non-empty)
-                        CID=$(docker run -d --name aluga_ai --restart unless-stopped -p 8001:8001 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        CID=$(docker run -d --name aluga_ai --restart unless-stopped -p 8001:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
