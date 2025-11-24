@@ -336,7 +336,8 @@
                     if [ -d recomendacoes/services/ml/model_store ]; then
                         echo "=== Artefatos do modelo gerados ==="
                         ls -lh recomendacoes/services/ml/model_store/ || true
-                        ARTIFACT_COUNT=$(find recomendacoes/services/ml/model_store -type f \( -name "*.joblib" -o -name "*.pkl" -o -name "*.json" \) 2>/dev/null | wc -l)
+                        # Conta artefatos usando método alternativo para evitar problemas de escape
+                        ARTIFACT_COUNT=$(find recomendacoes/services/ml/model_store -type f 2>/dev/null | grep -E '\\.(joblib|pkl|json)$' | wc -l)
                         echo "Total de artefatos gerados: $ARTIFACT_COUNT"
                         if [ "$ARTIFACT_COUNT" -eq 0 ]; then
                             echo "AVISO: Nenhum artefato foi gerado no diretório model_store"
