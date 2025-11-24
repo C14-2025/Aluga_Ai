@@ -45,7 +45,7 @@ services:
     networks:
       - aluga-ai-network
     restart: unless-stopped
-    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8001"
 
 volumes:
   jenkins_home:

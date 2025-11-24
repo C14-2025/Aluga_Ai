@@ -673,14 +673,23 @@
                         # Create host directories so docker bind-mounts won't be empty
                         mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
 
-                        # Remove o container antigo (nome: aluga-ai-app)
-                        docker rm -f aluga-ai-app || true 
+                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
+                        docker rm -f aluga-ai aluga-ai-app || true 
 
                         # Roda o novo container (use host dir variables which are now guaranteed non-empty)
-                        docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} # Usa a tag latest que foi publicada
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        echo "Started container ID: $CID"
 
-                        sleep 5
-                        docker ps | grep aluga-ai-app || true
+                        if [ -n "${CID}" ]; then
+                            sleep 5
+                            # Mostrar se o container está ativo (filtra por ID)
+                            docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
+                            # Mostrar estado detalhado e últimos logs para diagnóstico
+                            docker inspect --format '{{json .State}}' "${CID}" || true
+                            docker logs --tail 50 "${CID}" || true
+                        else
+                            echo "docker run did not return a container id; container may have failed to start"
+                        fi
                     else
                         echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
