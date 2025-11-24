@@ -6,19 +6,11 @@ jenkins:
   numExecutors: 2
   mode: NORMAL
   securityRealm:
-    jenkins:
-      systemMessage: |
-        Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
-        Multibranch Pipeline configurado via Job DSL.
-        Integração com Docker e GitHub.
-      numExecutors: 2
-      mode: NORMAL
-      securityRealm:
-        local:
-          allowsSignup: false
-          users:
-            - id: ${JENKINS_ADMIN_ID:-admin}
-              password: ${JENKINS_ADMIN_PASSWORD:-admin123}
+    local:
+      allowsSignup: false
+      users:
+        - id: ${JENKINS_ADMIN_ID:-admin}
+          password: ${JENKINS_ADMIN_PASSWORD:-admin123}
 
   credentials:
     system:
