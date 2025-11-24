@@ -1,4 +1,4 @@
-jenkins-casc.yamljenkins:
+jenkins:
   systemMessage: |
     Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
     Multibranch Pipeline configurado via Job DSL.
@@ -10,15 +10,14 @@ jenkins-casc.yamljenkins:
       allowsSignup: false
       users:
         - id: ${JENKINS_ADMIN_ID:-admin}
-        - password: ${JENKINS_ADMIN_PASSWORD:-admin123}
-    mailer:
-      smtpHost: "smtp.gmail.com"
-      smtpPort: 465
-      useSsl: true
-      useTls: false
-      smtpAuthUsername: "alvaroscareli@gmail.com"
-      smtpAuthPassword: "${SMTP_PASSWORD}"
-      charset: "UTF-8"
+          password: ${JENKINS_ADMIN_PASSWORD:-admin123}
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+unclassified:
+  location:
+    url: http://localhost:8080/
+  shell:
     shell: "/bin/bash"
 credentials:
   system:
@@ -28,24 +27,18 @@ credentials:
           description: "Global domain"
           specifications: []
         credentials:
-          - usernamePassword:
-              scope: SYSTEM
-              id: "dockerhub-credentials"
-              username: "${DOCKERHUB_USER}"
-              password: "${DOCKERHUB_PASSWORD}"
-              description: "Credenciais DockerHub (injetadas por env)"
-          - usernamePassword:
-              scope: SYSTEM
-              id: "git-credentials"
-              username: "${GIT_USER}"
-              password: "${GIT_PASSWORD}"
-              description: "Credenciais Git (se privado). Deixe vazio se público."
-                - usernamePassword:
-                  scope: SYSTEM
-                  id: "smpt-gmail"
-                  username: "alvaroscareli@gmail.com"
-                  password: "${SMTP_PASSWORD}"
-                  description: "Credencial SMTP Gmail para notificações."
+        - usernamePassword:
+            scope: SYSTEM
+            id: "dockerhub-credentials"
+            username: "${DOCKERHUB_USER}"
+            password: "${DOCKERHUB_PASSWORD}"
+            description: "Credenciais DockerHub (injetadas por env)"
+        - usernamePassword:
+            scope: SYSTEM
+            id: "git-credentials"
+            username: "${GIT_USER}"
+            password: "${GIT_PASSWORD}"
+            description: "Credenciais Git (se privado). Deixe vazio se público."
 jobs:
   - script: |
       // Multibranch Pipeline para o repositório remoto
@@ -59,8 +52,9 @@ jobs:
                 id('aluga-ai-git')
                 remote('${GIT_REPO_URL}')
                 credentialsId('${GIT_CREDENTIALS_ID:-git-credentials}')
-                includes('*')
-                excludes('')
+                traits {
+                  gitBranchDiscovery() // Descobre todos os branches
+                }
               }
             }
             strategy {
@@ -74,8 +68,5 @@ jobs:
           workflowBranchProjectFactory {
             scriptPath('Jenkinsfile')
           }
-        }
-        triggers {
-          periodic(1) // scan a cada ~1 minuto
         }
       }
