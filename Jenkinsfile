@@ -765,10 +765,11 @@ pipeline {
                         # Verifica se a aplicação está respondendo
                         echo "Verificando se a aplicação está respondendo na porta ${PORT}..."
                         sleep 5
-                        if curl -f -s -o /dev/null -w "%{http_code}" http://localhost:${PORT} | grep -q "200\|301\|302"; then
-                            echo "SUCESSO: Aplicação está respondendo na porta ${PORT}"
+                        HTTP_CODE=$(curl -f -s -o /dev/null -w "%{http_code}" http://localhost:${PORT} || echo "000")
+                        if echo "${HTTP_CODE}" | grep -qE "^(200|301|302)$"; then
+                            echo "SUCESSO: Aplicação está respondendo na porta ${PORT} com código HTTP ${HTTP_CODE}"
                         else
-                            echo "AVISO: Aplicação pode não estar respondendo corretamente. Verificando logs..."
+                            echo "AVISO: Aplicação retornou código HTTP ${HTTP_CODE}. Verificando logs..."
                             docker logs --tail 50 "${CID}" || true
                         fi
                         
