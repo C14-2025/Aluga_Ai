@@ -478,13 +478,13 @@
                     mkdir -p ${HOST_STATIC_DIR}
                     mkdir -p ${HOST_MEDIA_DIR}
 
-                    # Atualiza a imagem do serviço via docker-compose
-                    docker compose pull aluga-ai-app
-                    docker compose up -d --force-recreate aluga-ai-app
+                    # Atualiza a imagem do serviço via docker-compose (V1)
+                    docker-compose pull aluga-ai-app
+                    docker-compose up -d --force-recreate aluga-ai-app
 
                     # Verifica se está rodando
                     sleep 5
-                    docker compose ps | grep aluga-ai-app || true
+                    docker-compose ps | grep aluga-ai-app || true
                 '''
             }
         }
