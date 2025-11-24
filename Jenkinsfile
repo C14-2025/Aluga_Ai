@@ -37,11 +37,8 @@
         stage('Prepare') {
             steps {
                 script {
-                    // Determina tag da imagem a partir do commit
-                    env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
-                    env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
-                    env.IMAGE = "${env.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
-                    env.IMAGE_LATEST = "${env.DOCKERHUB_REPO}:latest"
+                    // Sempre usar a tag 'latest' para a imagem Docker
+                    env.IMAGE = "${env.DOCKERHUB_REPO}:latest"
                     echo "Image será: ${env.IMAGE}"
                 }
             }
