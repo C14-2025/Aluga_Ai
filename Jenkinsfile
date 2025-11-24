@@ -663,9 +663,6 @@
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
-                        if [ -z "${HOST_STATIC_DIR}" ]; then
-                            HOST_STATIC_DIR="${WORKSPACE}/static"
-                        fi
                         if [ -z "${HOST_MEDIA_DIR}" ]; then
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
