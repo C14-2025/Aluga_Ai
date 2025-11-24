@@ -46,31 +46,7 @@ pipeline {
                 }
             }
         }
-        
-        // --- NOVO ESTÁGIO: BUILD E PUSH DOCKER ---
-        stage('Build and Push Docker Image') {
-            steps {
-                echo "Building and pushing ${env.IMAGE} to Docker Hub..."
-                // Usa as credenciais do Docker Hub (ID: dockerhub-credentials)
-                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        set -e
-                        # 1. Build da imagem com a tag do commit
-                        docker build -t ${IMAGE} .
 
-                        # 2. Login e Push
-                        echo "${DOCKER_PASS}" | docker login -u ${DOCKER_USER} --password-stdin
-                        docker push ${IMAGE}
-
-                        # 3. Tag 'latest' e Push (para ser o fallback)
-                        docker tag ${IMAGE} ${IMAGE_LATEST}
-                        docker push ${IMAGE_LATEST}
-                        
-                        echo "Image pushed successfully: ${IMAGE} and ${IMAGE_LATEST}"
-                    '''
-                }
-            }
-        }
         // ------------------------------------------
 
         stage('Setup Python Environment') {
@@ -90,7 +66,7 @@ pipeline {
                 echo 'Instalando dependências...'
                 sh '''
                     . venv/bin/activate
-                    pip install -r requirements.txt
+                    pip install -r requirements.txt pytest pytest-html || true
                 '''
             }
         }
@@ -122,6 +98,7 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mv -f report_bd.html aluga_ai_web/report_bd.html || true'
                     archiveArtifacts artifacts: 'aluga_ai_web/report_bd.html', allowEmptyArchive: true
                     publishHTML([
                         allowMissing: true,
@@ -151,6 +128,7 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mv -f report_api.html aluga_ai_web/report_api.html || true'
                     archiveArtifacts artifacts: 'aluga_ai_web/report_api.html', allowEmptyArchive: true
                     publishHTML([
                         allowMissing: true,
@@ -246,7 +224,7 @@ pipeline {
                     if [ -f Mensagens/tests.py ]; then
                         pytest Mensagens/tests.py --template=html1/index.html --report=report_mensagens.html || true
                     fi
-                        mv -f report_mensagens.html aluga_ai_web/report_mensagens.html || true
+                    mv -f report_mensagens.html aluga_ai_web/report_mensagens.html || true
                 '''
             }
             post {
@@ -373,6 +351,89 @@ pipeline {
             }
         }
 
+        stage('Test Django Server') {
+            steps {
+                echo 'Testando se o servidor Django inicia corretamente...'
+                sh '''
+                    . venv/bin/activate
+                    # Inicia o servidor em background
+                    nohup python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
+                    SERVER_PID=$!
+
+                    # Aguarda o servidor iniciar
+                    sleep 10
+
+                    # Testa se o servidor está respondendo
+                    curl -I http://127.0.0.1:8000 || echo "Servidor não respondeu na porta 8000"
+
+                    # Mata o processo do servidor
+                    kill $SERVER_PID || true
+
+                    echo "Servidor Django testado com sucesso"
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'server.log', allowEmptyArchive: true
+                }
+            }
+        }
+        
+        // -------------------------------------------------------------
+        // --- ETAPAS DE CD (Build, Push e Deploy) ADICIONADAS AQUI ---
+        // -------------------------------------------------------------
+        
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker image: ${env.IMAGE}"
+                // Cria a imagem usando o Dockerfile no contexto atual
+                sh "docker build -t ${env.IMAGE} ."
+                echo "Imagem Docker construída com sucesso: ${env.IMAGE}"
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo "Pushing Docker images to ${env.DOCKERHUB_REPO}..."
+                // Autentica no Docker Hub usando a credencial predefinida
+                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+                        
+                        # Faz o push da imagem taggeada pelo commit
+                        docker push ${env.IMAGE}
+                        
+                        # Taggeia e faz o push da tag 'latest'
+                        docker tag ${env.IMAGE} ${env.IMAGE_LATEST}
+                        docker push ${env.IMAGE_LATEST}
+                        
+                        docker logout
+                    """
+                }
+                echo "Push concluído para: ${env.IMAGE} e ${env.IMAGE_LATEST}"
+            }
+        }
+
+        stage('Deployment (CD)') {
+            steps {
+                echo 'Starting deployment of the new image on the target environment...'
+                // Isso requer que o seu docker-compose.yml tenha sido modificado para usar a 'image' do Docker Hub
+                sh '''
+                    # Puxa a nova imagem
+                    docker-compose -f docker-compose.yml pull aluga-ai-app
+                    
+                    # Faz o rollout: derruba o container antigo e sobe o novo com a imagem 'latest'
+                    docker-compose -f docker-compose.yml up -d --no-deps aluga-ai-app
+                    
+                    echo "Deployment of aluga-ai-app complete."
+                '''
+            }
+        }
+        
+        // -------------------------------------------------------------
+        // --- Etapas de Notificação Originais ---
+        // -------------------------------------------------------------
+        
         stage('Notification (Shell)') {
             steps {
                 echo 'Sending shell notification...'
@@ -458,56 +519,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Test Django Server') {
-            steps {
-                echo 'Testando se o servidor Django inicia corretamente...'
-                sh '''
-                    . venv/bin/activate
-                    # Inicia o servidor em background
-                    nohup python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
-                    SERVER_PID=$!
-
-                    # Aguarda o servidor iniciar
-                    sleep 10
-
-                    # Testa se o servidor está respondendo
-                    curl -I http://127.0.0.1:8000 || echo "Servidor não respondeu na porta 8000"
-
-                    # Mata o processo do servidor
-                    kill $SERVER_PID || true
-
-                    echo "Servidor Django testado com sucesso"
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'server.log', allowEmptyArchive: true
-                }
-            }
-        }
-        
-        // --- ESTÁGIO DE DEPLOY ATUALIZADO (usando docker compose) ---
-        stage('Deploy Application ') {
-            when { expression { return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'deploy' } }
-            steps {
-                echo 'Fazendo deploy da aplicação via docker compose...'
-                sh '''
-                    set -e
-
-                    # Tenta fazer pull da imagem mais recente (opcional, mas bom)
-                    docker compose pull aluga-ai-app || true
-
-                    # Recria o serviço 'aluga-ai-app', que usará a imagem mais recente enviada
-                    # 'aluga-ai-app' é o nome do serviço no seu docker-compose.yml
-                    docker compose up -d --force-recreate aluga-ai-app
-
-                    # Lista containers para verificação
-                    docker compose ps || true
-                '''
-            }
-        }
-        // -------------------------------------------------------------
     }
 
     post {

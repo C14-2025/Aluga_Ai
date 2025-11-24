@@ -29,23 +29,27 @@ services:
 
   # Serviço da Aplicação Django
   aluga-ai-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # ALTERADO: Agora aponta para a imagem no Docker Hub.
+    # O Jenkins fará o build, push (com a tag 'latest') e depois o deploy desta imagem.
+    image: alvarocareli/aluga-ai:latest 
     container_name: aluga-ai-app
     ports:
       - "8001:8000"
     volumes:
-      - .:/app
+      # Removi a montagem de .:/app para garantir que o container use apenas o que está na imagem.
+      # Apenas volumes de persistência (como media) devem ser mantidos.
       - media_volume:/app/media
     environment:
-      - DEBUG=1
+      # Mude o DEBUG para 0/False para um ambiente de "produção/staging"
+      - DEBUG=0
       - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings
       - PYTHONPATH=/app
     networks:
       - aluga-ai-network
     restart: unless-stopped
-    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    # Ajustei o comando para usar um servidor de produção (como Gunicorn)
+    # e rodar as migrações/coletar estáticos antes de iniciar.
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput && gunicorn aluga_ai_web.wsgi:application --bind 0.0.0.0:8000"
 
 volumes:
   jenkins_home:
