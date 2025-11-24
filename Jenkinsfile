@@ -386,32 +386,30 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image: ${env.IMAGE}"
-                // Cria a imagem usando o Dockerfile no contexto atual
-                sh "docker build -t ${env.IMAGE} ."
-                echo "Imagem Docker construída com sucesso: ${env.IMAGE}"
+                script {
+                    dockerimagename = "${env.IMAGE}"
+                    echo "Building Docker image: ${dockerimagename}"
+                    dockerImage = docker.build(dockerimagename)
+                    echo "Imagem Docker construída com sucesso: ${dockerimagename}"
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 echo "Pushing Docker images to ${env.DOCKERHUB_REPO}..."
-                // Autentica no Docker Hub usando a credencial predefinida
-                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-                        
-                        # Faz o push da imagem taggeada pelo commit
-                        docker push ${env.IMAGE}
-                        
-                        # Taggeia e faz o push da tag 'latest'
-                        docker tag ${env.IMAGE} ${env.IMAGE_LATEST}
-                        docker push ${env.IMAGE_LATEST}
-                        
-                        docker logout
-                    """
+                script {
+                    try {
+                        docker.withRegistry('https://registry.hub.docker.com', env.CREDENTIALS_ID) {
+                            echo "Pushing ${dockerimagename} to registry"
+                            dockerImage.push()
+                            dockerImage.push('latest')
+                        }
+                    } catch (err) {
+                        echo "Docker push failed: ${err}"
+                        currentBuild.result = 'UNSTABLE'
+                    }
                 }
-                echo "Push concluído para: ${env.IMAGE} e ${env.IMAGE_LATEST}"
             }
         }
 
@@ -518,132 +516,7 @@ pipeline {
             }
         }
         
-        stage('Test Django Server') {
-            steps {
-                echo 'Testando se o servidor Django inicia corretamente...'
-                sh '''
-                    . venv/bin/activate
-                    # Inicia o servidor em background
-                    nohup python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
-                    SERVER_PID=$!
-                    
-                    # Aguarda o servidor iniciar
-                    sleep 10
-                    
-                    # Testa se o servidor está respondendo
-                    curl -I http://127.0.0.1:8000 || echo "Servidor não respondeu na porta 8000"
-                    
-                    # Mata o processo do servidor
-                    kill $SERVER_PID || true
-                    
-                    echo "Servidor Django testado com sucesso"
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'server.log', allowEmptyArchive: true
-                }
-            }
-        }
-        stage('Build image') {
-            when { branch 'main' }
-            steps{
-                script {
-                    dockerimagename = "${IMAGE}"
-                    echo "Building docker image ${dockerimagename}"
-                    dockerImage = docker.build(dockerimagename)
-                }
-            }
-        }
-
-        stage('Pushing Image') {
-            when { branch 'main' }
-            environment {
-                registryCredential = 'dockerhublogin'
-            }
-            steps{
-                script {
-                    try {
-                        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                            echo "Pushing ${dockerimagename} to registry"
-                            dockerImage.push() // push the tag used during build
-                            // also push a 'latest' tag for convenience
-                            dockerImage.push('latest')
-                        }
-                    } catch (err) {
-                        echo "Docker push failed: ${err}"
-                        currentBuild.result = 'UNSTABLE'
-                    }
-                }
-            }
-        }
-
-        stage('Deploy Application ') {
-            when { expression { return env.BRANCH_NAME == 'main' } }
-            steps {
-                echo 'Fazendo deploy da aplicação...'
-                sh '''
-                    # ... (Diretórios e mkdir -p) ...
-                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
-                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
-                        # Ensure host directories are defined; fall back to workspace subdirs when empty
-                        if [ -z "${HOST_DATA_DIR}" ]; then
-                            HOST_DATA_DIR="${WORKSPACE}/data"
-                        fi
-                        if [ -z "${HOST_STATIC_DIR}" ]; then
-                            HOST_STATIC_DIR="${WORKSPACE}/static"
-                        fi
-                        if [ -z "${HOST_MEDIA_DIR}" ]; then
-                            HOST_MEDIA_DIR="${WORKSPACE}/media"
-                        fi
-
-                        # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
-
-                        # Determine which host port to use (default 8000)
-                        PORT="${HOST_PORT:-8000}"
-                        echo "Resolved deploy port: ${PORT}"
-
-                        # If port is in use, try to free it if used by a docker container; otherwise abort
-                        if ss -ltnp 2>/dev/null | grep -q ":${PORT} "; then
-                            echo "Port ${PORT} is in use on the host. Attempting to identify owner..."
-                            # Try to find a docker container that publishes this port
-                            OCCUPIER=$(docker ps --format '{{.ID}} {{.Names}} {{.Ports}}' | grep -E "0.0.0.0:${PORT}->" | awk '{print $1}' | head -n1 || true)
-                            if [ -n "${OCCUPIER}" ]; then
-                                echo "Port ${PORT} is used by docker container ${OCCUPIER}; removing it to free the port"
-                                docker rm -f "${OCCUPIER}" || true
-                            else
-                                echo "Port ${PORT} is used by a non-docker process. Aborting deploy to avoid conflict."
-                                echo "Use a different port via HOST_PORT env var or stop the process using port ${PORT}."
-                                exit 0
-                            fi
-                        else
-                            echo "Port ${PORT} is free. Proceeding with deploy."
-                        fi
-
-                        # Remove any previous containers by name to avoid name conflict
-                        docker rm -f aluga-ai aluga-ai-app || true 
-
-                        # Roda o novo container using the resolved port
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p ${PORT}:${PORT} -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        echo "Started container ID: $CID"
-
-                        if [ -n "${CID}" ]; then
-                            sleep 5
-                            # Mostrar se o container está ativo (filtra por ID)
-                            docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
-                            # Mostrar estado detalhado e últimos logs para diagnóstico
-                            docker inspect --format '{{json .State}}' "${CID}" || true
-                            docker logs --tail 50 "${CID}" || true
-                        else
-                            echo "docker run did not return a container id; container may have failed to start"
-                        fi
-                    else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
-                    fi
-                '''
-            }
-        }
+        
 
     }
 
