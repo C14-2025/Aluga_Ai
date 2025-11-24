@@ -1,7 +1,8 @@
 jenkins:
   systemMessage: |
     Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
-    Reproduzível entre máquinas. Multibranch configurado via Job DSL.
+    Multibranch Pipeline configurado via Job DSL.
+    Integração com Docker e GitHub.
   numExecutors: 2
   mode: NORMAL
   securityRealm:
@@ -34,15 +35,13 @@ credentials:
               description: "Credenciais DockerHub (injetadas por env)"
           - usernamePassword:
               scope: SYSTEM
-              id: "${GIT_CREDENTIALS_ID}"
+              id: "git-credentials"
               username: "${GIT_USER}"
               password: "${GIT_PASSWORD}"
               description: "Credenciais Git (se privado). Deixe vazio se público."
 jobs:
   - script: |
-      // Job Multibranch para o repositório remoto
-      // Usa variáveis de ambiente substituídas pelo JCasC: ${GIT_REPO_URL}
-      // Se GIT_CREDENTIALS_ID estiver vazio e repo for público, Jenkins acessa sem credenciais.
+      // Multibranch Pipeline para o repositório remoto
       multibranchPipelineJob('Aluga_Ai_Multibranch') {
         displayName('Aluga_Ai Multibranch')
         description('Pipeline Multibranch do projeto Aluga_Ai usando Jenkinsfile do repositório Git.')
@@ -52,9 +51,10 @@ jobs:
               git {
                 id('aluga-ai-git')
                 remote('${GIT_REPO_URL}')
-                credentialsId('${GIT_CREDENTIALS_ID}')
-                includes('*')
-                excludes('')
+                credentialsId('${GIT_CREDENTIALS_ID:-git-credentials}')
+                traits {
+                  gitBranchDiscovery() // Descobre todos os branches
+                }
               }
             }
             strategy {
@@ -69,9 +69,4 @@ jobs:
             scriptPath('Jenkinsfile')
           }
         }
-        triggers {
-          periodic(1) // scan a cada ~1 minuto (ajuste conforme necessidade)
-        }
       }
-      
-      // (Opcional) Pipeline simples local usando /workspace pode ser adicionada novamente se necessário.

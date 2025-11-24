@@ -24,6 +24,7 @@ services:
       - GIT_CREDENTIALS_ID=${GIT_CREDENTIALS_ID:-}
       - GIT_USER=${GIT_USER:-}
       - GIT_PASSWORD=${GIT_PASSWORD:-}
+      - CASC_JENKINS_CONFIG=/workspace/jenkins-casc.yaml
     networks:
       - aluga-ai-network
     restart: unless-stopped
@@ -35,7 +36,7 @@ services:
       dockerfile: Dockerfile
     container_name: aluga-ai-app
     ports:
-      - "8000:8000"
+      - "8001:8000" # Porta do app Django agora em 8001
     volumes:
       - .:/app
       - media_volume:/app/media
