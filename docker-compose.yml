@@ -38,6 +38,7 @@ services:
     volumes:
       - .:/app
       - media_volume:/app/media
+      - static_volume:/app/staticfiles
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings

@@ -667,15 +667,41 @@
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
+                        # Static dir to mount on container (target: STATIC_ROOT in settings)
+                        # If HOST_STATIC_DIR is not provided leave empty — we'll conditionally mount
+                        # it only when it exists and contains files. That prevents empty host
+                        # directories from overriding image-collected static files.
+                        if [ -z "${HOST_STATIC_DIR}" ]; then
+                            HOST_STATIC_DIR=""
+                        fi
+
                         # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
+                        # If HOST_STATIC_DIR is defined and not empty, create it; otherwise skip
+                        if [ -n "${HOST_STATIC_DIR}" ]; then
+                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}" "${HOST_STATIC_DIR}"
+                        else
+                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
+                        fi
 
                         # Remove o container antigo (tenta nomes antigos e novo para segurança)
                         docker rm -f aluga-ai aluga-ai-app || true 
 
                         # Roda o novo container (use host dir variables which are now guaranteed non-empty)
 
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        # Only mount HOST_STATIC_DIR if it exists and is non-empty to avoid
+                        # hiding static files that were baked into the image during build.
+                        if [ -n "${HOST_STATIC_DIR}" ] && [ "$(ls -A ${HOST_STATIC_DIR} 2>/dev/null | wc -l)" -gt 0 ]; then
+                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
+                                -v "${HOST_DATA_DIR}:/app/data" \
+                                -v "${HOST_MEDIA_DIR}:/app/media" \
+                                -v "${HOST_STATIC_DIR}:/app/staticfiles" \
+                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        else
+                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
+                                -v "${HOST_DATA_DIR}:/app/data" \
+                                -v "${HOST_MEDIA_DIR}:/app/media" \
+                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        fi
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
