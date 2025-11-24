@@ -392,7 +392,7 @@
                     
                     # Executa testes com cobertura usando pytest-cov
                     # --cov especifica quais apps cobrir (apenas código-fonte)
-                    # --omit exclui arquivos desnecessários
+                    # Nota: --omit não é suportado diretamente pelo pytest, será aplicado no coverage report
                     pytest $EXISTING_APPS \
                         --cov=propriedades \
                         --cov=reservas \
@@ -406,7 +406,6 @@
                         --cov-report=xml:reports/coverage.xml \
                         --junitxml=reports/junit_coverage.xml \
                         --cov-branch \
-                        --omit='*/venv/*,*/virtualenv/*,*/__pycache__/*,*/migrations/*,*/tests/*,*/test_*.py,*/manage.py,*/settings.py,*/wsgi.py,*/asgi.py,*/urls.py,*/admin.py,*/*/migrations/*' \
                         -v || {
                         echo "AVISO: Alguns testes falharam, mas continuando com relatório de cobertura"
                         true
