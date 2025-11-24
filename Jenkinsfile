@@ -404,20 +404,27 @@
                         --cov-report=html:reports/coverage_html \
                         --cov-report=term \
                         --cov-report=xml:reports/coverage.xml \
-                        --cov-report=text:reports/coverage_report.txt \
                         --junitxml=reports/junit_coverage.xml \
                         --cov-branch \
                         --omit='*/venv/*,*/virtualenv/*,*/__pycache__/*,*/migrations/*,*/tests/*,*/test_*.py,*/manage.py,*/settings.py,*/wsgi.py,*/asgi.py,*/urls.py,*/admin.py,*/*/migrations/*' \
                         -v || {
                         echo "AVISO: Alguns testes falharam, mas continuando com relatório de cobertura"
-                        # Verifica se pelo menos o relatório foi gerado
-                        if [ ! -f reports/coverage.xml ] && [ ! -f reports/coverage_report.txt ]; then
-                            echo "AVISO: Relatórios de cobertura não foram gerados devido a falhas nos testes"
-                            touch reports/coverage_report.txt
-                            echo "Nenhum relatório gerado devido a falhas nos testes" > reports/coverage_report.txt
-                        fi
                         true
                     }
+                    
+                    # Gera relatório de texto usando coverage diretamente (pytest-cov não suporta text:arquivo)
+                    if [ -f .coverage ]; then
+                        echo "Gerando relatório de cobertura em texto..."
+                        coverage report --omit='*/venv/*,*/virtualenv/*,*/__pycache__/*,*/migrations/*,*/tests/*,*/test_*.py,*/manage.py,*/settings.py,*/wsgi.py,*/asgi.py,*/urls.py,*/admin.py,*/*/migrations/*' > reports/coverage_report.txt 2>&1 || {
+                            echo "AVISO: Erro ao gerar relatório de texto de cobertura"
+                            touch reports/coverage_report.txt
+                            echo "Erro ao gerar relatório de cobertura" > reports/coverage_report.txt
+                        }
+                    else
+                        echo "AVISO: Arquivo .coverage não encontrado"
+                        touch reports/coverage_report.txt
+                        echo "Nenhum relatório gerado - arquivo .coverage não encontrado" > reports/coverage_report.txt
+                    fi
                     
                     # Verifica se os relatórios foram gerados
                     if [ -f reports/coverage.xml ]; then
