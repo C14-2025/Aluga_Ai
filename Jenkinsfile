@@ -663,15 +663,7 @@
                         docker rm -f aluga-ai-app || true 
                         
                         # Roda o novo container
-                        docker run -d --name aluga-ai \
-                            --restart unless-stopped \
-                            -p 8000:8000 \ 
-                            -v ${HOST_DATA_DIR}:/app/data \
-                            -v ${HOST_STATIC_DIR}:/app/static \
-                            -v ${HOST_MEDIA_DIR}:/app/media \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                            -e PYTHONPATH=/app \
-                            ${IMAGE_LATEST} # Usa a tag latest que foi publicada
+                        docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v ${HOST_DATA_DIR}:/app/data -v ${HOST_STATIC_DIR}:/app/static -v ${HOST_MEDIA_DIR}:/app/media -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} # Usa a tag latest que foi publicada
                         
                         sleep 5
                         docker ps | grep aluga-ai-app || true
