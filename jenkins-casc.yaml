@@ -11,15 +11,15 @@ jenkins:
       users:
         - id: ${JENKINS_ADMIN_ID:-admin}
         - password: ${JENKINS_ADMIN_PASSWORD:-admin123}
-    mailer:
-      smtpHost: "smtp.gmail.com"
-      smtpPort: 465
-      useSsl: true
-      useTls: false
-      smtpAuthUsername: "alvaroscareli@gmail.com"
-      smtpAuthPassword: "${SMTP_PASSWORD}"
-      charset: "UTF-8"
-    shell: "/bin/bash"
+  mailer:
+    smtpHost: "smtp.gmail.com"
+    smtpPort: 465
+    useSsl: true
+    useTls: false
+    smtpAuthUsername: "alvaroscareli@gmail.com"
+    smtpAuthPassword: "${SMTP_PASSWORD}"
+    charset: "UTF-8"
+  shell: "/bin/bash"
 credentials:
   system:
     domainCredentials:
@@ -40,12 +40,12 @@ credentials:
               username: "${GIT_USER}"
               password: "${GIT_PASSWORD}"
               description: "Credenciais Git (se privado). Deixe vazio se público."
-                - usernamePassword:
-                  scope: SYSTEM
-                  id: "smpt-gmail"
-                  username: "alvaroscareli@gmail.com"
-                  password: "${SMTP_PASSWORD}"
-                  description: "Credencial SMTP Gmail para notificações."
+          - usernamePassword: # <-- CORRIGIDO: Nível de indentação da terceira credencial
+              scope: SYSTEM
+              id: "smpt-gmail"
+              username: "alvaroscareli@gmail.com"
+              password: "${SMTP_PASSWORD}"
+              description: "Credencial SMTP Gmail para notificações."
 jobs:
   - script: |
       // Multibranch Pipeline para o repositório remoto
