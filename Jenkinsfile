@@ -1,14 +1,14 @@
- pipeline {
+pipeline {
     agent any
-    
+
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
         string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
-    
+
     // CI/CD automático: nenhum parâmetro de execução manual
-    
+
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
@@ -16,7 +16,7 @@
         WORKDIR = "${env.WORKSPACE}"
         // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
         DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
-        CREDENTIALS_ID = 'dockerhub-credentials'
+        CREDENTIALS_ID = 'dockerhub-credentials' // ID da credencial Username/Password para Docker Hub
         // Valor proveniente do parâmetro
         NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
         // E-mail padrão caso nenhum seja passado como parâmetro
@@ -25,7 +25,7 @@
         SMTP_HOST = 'smtp.example.com'
         SMTP_PORT = '587'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -33,7 +33,7 @@
                 checkout scm
             }
         }
-        
+
         stage('Prepare') {
             steps {
                 script {
@@ -47,6 +47,32 @@
             }
         }
         
+        // --- NOVO ESTÁGIO: BUILD E PUSH DOCKER ---
+        stage('Build and Push Docker Image') {
+            steps {
+                echo "Building and pushing ${env.IMAGE} to Docker Hub..."
+                // Usa as credenciais do Docker Hub (ID: dockerhub-credentials)
+                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        set -e
+                        # 1. Build da imagem com a tag do commit
+                        docker build -t ${IMAGE} .
+
+                        # 2. Login e Push
+                        echo "${DOCKER_PASS}" | docker login -u ${DOCKER_USER} --password-stdin
+                        docker push ${IMAGE}
+
+                        # 3. Tag 'latest' e Push (para ser o fallback)
+                        docker tag ${IMAGE} ${IMAGE_LATEST}
+                        docker push ${IMAGE_LATEST}
+                        
+                        echo "Image pushed successfully: ${IMAGE} and ${IMAGE_LATEST}"
+                    '''
+                }
+            }
+        }
+        // ------------------------------------------
+
         stage('Setup Python Environment') {
             steps {
                 echo 'Configurando ambiente Python...'
@@ -58,7 +84,7 @@
                 '''
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 echo 'Instalando dependências...'
@@ -68,7 +94,7 @@
                 '''
             }
         }
-        
+
         stage('Run Migrations') {
             steps {
                 echo 'Executando migrações do Django...'
@@ -79,6 +105,7 @@
             }
         }
         
+        // Estágios de Teste (mantidos como estavam, mas lembre-se de corrigir os caminhos)
         stage('Testes Unitários - Banco de Dados') {
             steps {
                 echo 'Executando testes de Banco de Dados...'
@@ -107,7 +134,7 @@
                 }
             }
         }
-        
+
         stage('Testes Unitários - API') {
             steps {
                 echo 'Executando testes de API...'
@@ -170,12 +197,6 @@
                 sh '''
                     . venv/bin/activate
                     mkdir -p reports
-                    
-                    # O comando abaixo executa os testes na sua app 'usuarios'.
-                    # Se você tem um único arquivo 'tests.py' na raiz da app 'usuarios', 
-                    # use o caminho: 'usuarios/tests.py'.
-                    # Se você tem vários arquivos de teste dentro de 'usuarios/tests/', use: 'usuarios/tests/'
-                    
                     pytest usuarios/tests.py \
                         --junitxml=reports/junit_usuarios.xml || true
                 '''
@@ -186,7 +207,7 @@
                 }
             }
         }
-        
+
         stage('Testes Unitários - Favoritos') {
             steps {
                 echo 'Executando testes de Favoritos...'
@@ -215,7 +236,7 @@
                 }
             }
         }
-        
+
 
         stage('Testes Unitários - Mensagens') {
             steps {
@@ -271,7 +292,7 @@
                 }
             }
         }
-        
+
         stage('Executar ETL') {
             steps {
                 echo 'Executando processo de ETL...'
@@ -287,7 +308,7 @@
                 }
             }
         }
-        
+
         stage('Validação do Sistema de Recomendação') {
             steps {
                 echo 'Validando sistema de recomendação...'
@@ -325,7 +346,7 @@
                 }
             }
         }
-        
+
         stage('Django Tests') {
             steps {
                 echo 'Executando testes do Django...'
@@ -335,7 +356,7 @@
                 '''
             }
         }
-        
+
         stage('Code Quality Check') {
             steps {
                 echo 'Verificando qualidade do código...'
@@ -352,31 +373,31 @@
             }
         }
 
-            stage('Notification (Shell)') {
-                steps {
-                    echo 'Sending shell notification...'
-                    sh '''
-                        # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
-                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+        stage('Notification (Shell)') {
+            steps {
+                echo 'Sending shell notification...'
+                sh '''
+                    # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
+                    TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
 
-                        # Run provided scripts if present
-                        if [ -d scripts ]; then
-                            cd scripts || true
-                            chmod 775 * || true
-                            ./shell.sh || true
-                            cd - >/dev/null 2>&1 || true
-                        fi
+                    # Run provided scripts if present
+                    if [ -d scripts ]; then
+                        cd scripts || true
+                        chmod 775 * || true
+                        ./shell.sh || true
+                        cd - >/dev/null 2>&1 || true
+                    fi
 
-                        # Try to send mail using the system `mail` command
-                        if command -v mail >/dev/null 2>&1; then
-                            echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
-                            echo "Shell mail attempted to $TO"
-                        else
-                            echo "mail command not found on agent; install mailutils/postfix to enable shell email"
-                        fi
-                    '''
-                }
+                    # Try to send mail using the system `mail` command
+                    if command -v mail >/dev/null 2>&1; then
+                        echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
+                        echo "Shell mail attempted to $TO"
+                    else
+                        echo "mail command not found on agent; install mailutils/postfix to enable shell email"
+                    fi
+                '''
             }
+        }
 
         stage('Send Email via Python (SMTP)') {
             steps {
@@ -387,47 +408,47 @@
                         withCredentials([usernamePassword(credentialsId: 'smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
                             sh '''
                                 python - <<'PY'
-    import os, smtplib, ssl
-    to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
-    smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
-    smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-    user = os.environ.get('SMTP_USER')
-    password = os.environ.get('SMTP_PASS')
-    subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
-    body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
-    msg = f"Subject: {subject}\n\n{body}"
-    try:
-        # If port 465 (implicit SSL) use SMTP_SSL
-        if smtp_port == 465:
-            context = ssl.create_default_context()
-            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
-                server.login(user, password)
-                server.sendmail(user, [to], msg)
-        else:
-            # Try STARTTLS first (typical for port 587)
-            server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
-            server.ehlo()
-            try:
-                server.starttls()
-                server.ehlo()
-                server.login(user, password)
-                server.sendmail(user, [to], msg)
-                server.quit()
-            except Exception as starttls_err:
-                # STARTTLS failed — try implicit SSL as a fallback
-                try:
-                    server.quit()
-                except Exception:
-                    pass
-                context = ssl.create_default_context()
-                with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
-                    ssl_server.login(user, password)
-                    ssl_server.sendmail(user, [to], msg)
-        print('Email sent to', to)
-    except Exception as e:
-        print('Failed to send email:', e)
-        raise
-    PY
+                                import os, smtplib, ssl
+                                to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
+                                smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
+                                smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+                                user = os.environ.get('SMTP_USER')
+                                password = os.environ.get('SMTP_PASS')
+                                subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
+                                body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
+                                msg = f"Subject: {subject}\n\n{body}"
+                                try:
+                                    # If port 465 (implicit SSL) use SMTP_SSL
+                                    if smtp_port == 465:
+                                        context = ssl.create_default_context()
+                                        with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
+                                            server.login(user, password)
+                                            server.sendmail(user, [to], msg)
+                                    else:
+                                        # Try STARTTLS first (typical for port 587)
+                                        server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
+                                        server.ehlo()
+                                        try:
+                                            server.starttls()
+                                            server.ehlo()
+                                            server.login(user, password)
+                                            server.sendmail(user, [to], msg)
+                                            server.quit()
+                                        except Exception as starttls_err:
+                                            # STARTTLS failed — try implicit SSL as a fallback
+                                            try:
+                                                server.quit()
+                                            except Exception:
+                                                pass
+                                            context = ssl.create_default_context()
+                                            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
+                                                ssl_server.login(user, password)
+                                                ssl_server.sendmail(user, [to], msg)
+                                    print('Email sent to', to)
+                                except Exception as e:
+                                    print('Failed to send email:', e)
+                                    raise
+                                PY
                             '''
                         }
                     } catch (err) {
@@ -437,7 +458,7 @@
                 }
             }
         }
-        
+
         stage('Test Django Server') {
             steps {
                 echo 'Testando se o servidor Django inicia corretamente...'
@@ -446,16 +467,16 @@
                     # Inicia o servidor em background
                     nohup python manage.py runserver 0.0.0.0:8000 > server.log 2>&1 &
                     SERVER_PID=$!
-                    
+
                     # Aguarda o servidor iniciar
                     sleep 10
-                    
+
                     # Testa se o servidor está respondendo
                     curl -I http://127.0.0.1:8000 || echo "Servidor não respondeu na porta 8000"
-                    
+
                     # Mata o processo do servidor
                     kill $SERVER_PID || true
-                    
+
                     echo "Servidor Django testado com sucesso"
                 '''
             }
@@ -465,47 +486,30 @@
                 }
             }
         }
+        
+        // --- ESTÁGIO DE DEPLOY ATUALIZADO (usando docker compose) ---
         stage('Deploy Application ') {
-            when { expression { return env.BRANCH_NAME == 'main'|| env.BRANCH_NAME == 'deploy' } }
+            when { expression { return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'deploy' } }
             steps {
-                echo 'Fazendo deploy da aplicação...'
+                echo 'Fazendo deploy da aplicação via docker compose...'
                 sh '''
-                    # Diretório para dados persistentes no host
-                    HOST_DATA_DIR="/opt/aluga-ai/data"
-                    HOST_STATIC_DIR="/opt/aluga-ai/static"
-                    HOST_MEDIA_DIR="/opt/aluga-ai/media"
+                    set -e
 
-                    mkdir -p ${HOST_DATA_DIR}
-                    mkdir -p ${HOST_STATIC_DIR}
-                    mkdir -p ${HOST_MEDIA_DIR}
+                    # Tenta fazer pull da imagem mais recente (opcional, mas bom)
+                    docker compose pull aluga-ai-app || true
 
-                    # Tenta baixar a imagem com tag gerada; se falhar, tenta 'latest' como fallback
-                    PULLED_IMAGE=""
-                    if docker pull ${IMAGE} >/dev/null 2>&1; then
-                        PULLED_IMAGE=${IMAGE}
-                        echo "Pulled image ${IMAGE}"
-                    elif docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then
-                        PULLED_IMAGE=${IMAGE_LATEST}
-                        echo "Pulled fallback image ${IMAGE_LATEST}"
-                    else
-                        echo "Docker image ${IMAGE} and ${IMAGE_LATEST} not available; skipping deploy"
-                    fi
+                    # Recria o serviço 'aluga-ai-app', que usará a imagem mais recente enviada
+                    # 'aluga-ai-app' é o nome do serviço no seu docker-compose.yml
+                    docker compose up -d --force-recreate aluga-ai-app
 
-                    if [ -n "${PULLED_IMAGE}" ]; then
-                        # Remove o container antigo (nome: aluga-ai-app)
-                        docker rm -f aluga-ai-app || true
-
-                        # Roda o novo container (comando em uma linha para evitar problemas de parsing do Jenkinsfile)
-                        docker run -d --name aluga-ai-app --restart unless-stopped -p 8000:8000 -v ${HOST_DATA_DIR}:/app/data -v ${HOST_STATIC_DIR}:/app/static -v ${HOST_MEDIA_DIR}:/app/media -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${PULLED_IMAGE}
-
-                        sleep 5
-                        docker ps | grep aluga-ai-app || true
-                    fi
+                    # Lista containers para verificação
+                    docker compose ps || true
                 '''
             }
         }
+        // -------------------------------------------------------------
     }
-    
+
     post {
         always {
             script {
@@ -514,7 +518,7 @@
                 emailext(
                     subject: "Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                     body: """
-                        <p>This is a Jenkins  CICD pipeline status.</p>
+                        <p>This is a Jenkins CICD pipeline status.</p>
                         <p>Project: ${env.JOB_NAME}</p>
                         <p>Build Number: ${env.BUILD_NUMBER}</p>
                         <p>Build Status: ${buildStatus}</p>
