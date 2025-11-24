@@ -563,12 +563,4 @@ pipeline {
             }
         }
     }
-}# check Docker and compose availability
-docker --version
-docker compose version || true
-docker-compose --version || true
-
-# confirm docker CLI can run a simple command
-docker ps -a
-
-# if docker-compose is not installed, install it or enable the compose plugin on the node
+}
