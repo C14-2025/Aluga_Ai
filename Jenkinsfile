@@ -1,3 +1,6 @@
+def dockerimagename
+def dockerImage
+
 pipeline {
     agent any
 
@@ -390,6 +393,9 @@ pipeline {
                     dockerimagename = "${env.IMAGE}"
                     echo "Building Docker image: ${dockerimagename}"
                     dockerImage = docker.build(dockerimagename)
+                    // Also tag the built image locally as :latest so a local latest exists
+                    sh "docker tag ${env.IMAGE} ${env.DOCKERHUB_REPO}:latest || true"
+                    echo "Tagged local image as: ${env.DOCKERHUB_REPO}:latest"
                     echo "Imagem Docker construída com sucesso: ${dockerimagename}"
                 }
             }
@@ -557,4 +563,12 @@ pipeline {
             }
         }
     }
-}
+}# check Docker and compose availability
+docker --version
+docker compose version || true
+docker-compose --version || true
+
+# confirm docker CLI can run a simple command
+docker ps -a
+
+# if docker-compose is not installed, install it or enable the compose plugin on the node
