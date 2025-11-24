@@ -470,27 +470,36 @@
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # ... (Diretórios e mkdir -p) ...
-                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
-                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
+                    # Diretório para dados persistentes no host
+                    HOST_DATA_DIR="/opt/aluga-ai/data"
+                    HOST_STATIC_DIR="/opt/aluga-ai/static"
+                    HOST_MEDIA_DIR="/opt/aluga-ai/media"
+
+                    mkdir -p ${HOST_DATA_DIR}
+                    mkdir -p ${HOST_STATIC_DIR}
+                    mkdir -p ${HOST_MEDIA_DIR}
+
+                    # Tenta baixar a imagem com tag gerada; se falhar, tenta 'latest' como fallback
+                    PULLED_IMAGE=""
+                    if docker pull ${IMAGE} >/dev/null 2>&1; then
+                        PULLED_IMAGE=${IMAGE}
+                        echo "Pulled image ${IMAGE}"
+                    elif docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then
+                        PULLED_IMAGE=${IMAGE_LATEST}
+                        echo "Pulled fallback image ${IMAGE_LATEST}"
+                    else
+                        echo "Docker image ${IMAGE} and ${IMAGE_LATEST} not available; skipping deploy"
+                    fi
+
+                    if [ -n "${PULLED_IMAGE}" ]; then
                         # Remove o container antigo (nome: aluga-ai-app)
-                        docker rm -f aluga-ai-app || true 
-                        
-                        # Roda o novo container
-                        docker run -d --name aluga-ai \
-                            --restart unless-stopped \
-                            -p 8000:8000 \ 
-                            -v ${HOST_DATA_DIR}:/app/data \
-                            -v ${HOST_STATIC_DIR}:/app/static \
-                            -v ${HOST_MEDIA_DIR}:/app/media \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                            -e PYTHONPATH=/app \
-                            ${IMAGE_LATEST} # Usa a tag latest que foi publicada
-                        
+                        docker rm -f aluga-ai-app || true
+
+                        # Roda o novo container (comando em uma linha para evitar problemas de parsing do Jenkinsfile)
+                        docker run -d --name aluga-ai-app --restart unless-stopped -p 8000:8000 -v ${HOST_DATA_DIR}:/app/data -v ${HOST_STATIC_DIR}:/app/static -v ${HOST_MEDIA_DIR}:/app/media -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${PULLED_IMAGE}
+
                         sleep 5
                         docker ps | grep aluga-ai-app || true
-                    else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
                 '''
             }
