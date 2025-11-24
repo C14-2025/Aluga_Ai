@@ -1,4 +1,4 @@
-jenkins:
+jenkins-casc.yamljenkins:
   systemMessage: |
     Jenkins do projeto Aluga_Ai (provisionado via Configuration as Code).
     Multibranch Pipeline configurado via Job DSL.
@@ -10,34 +10,42 @@ jenkins:
       allowsSignup: false
       users:
         - id: ${JENKINS_ADMIN_ID:-admin}
-          password: ${JENKINS_ADMIN_PASSWORD:-admin123}
-
-  credentials:
-    system:
-      domainCredentials:
-        - domain:
-            name: ""
-            description: "Global domain"
-            specifications: []
-          credentials:
-            - usernamePassword:
-                scope: SYSTEM
-                id: "dockerhub-credentials"
-                username: "${DOCKERHUB_USER}"
-                password: "${DOCKERHUB_PASSWORD}"
-                description: "Credenciais DockerHub (injetadas por env)"
-            - usernamePassword:
-                scope: SYSTEM
-                id: "git-credentials"
-                username: "${GIT_USER}"
-                password: "${GIT_PASSWORD}"
-                description: "Credenciais Git (se privado). Deixe vazio se público."
-            - usernamePassword:
-                scope: SYSTEM
-                id: "smpt-gmail"
-                username: "alvaroscareli@gmail.com"
-                password: "${SMTP_PASSWORD}"
-                description: "Credencial SMTP Gmail para notificações."
+        - password: ${JENKINS_ADMIN_PASSWORD:-admin123}
+    mailer:
+      smtpHost: "smtp.gmail.com"
+      smtpPort: 465
+      useSsl: true
+      useTls: false
+      smtpAuthUsername: "alvaroscareli@gmail.com"
+      smtpAuthPassword: "${SMTP_PASSWORD}"
+      charset: "UTF-8"
+    shell: "/bin/bash"
+credentials:
+  system:
+    domainCredentials:
+      - domain:
+          name: ""
+          description: "Global domain"
+          specifications: []
+        credentials:
+          - usernamePassword:
+              scope: SYSTEM
+              id: "dockerhub-credentials"
+              username: "${DOCKERHUB_USER}"
+              password: "${DOCKERHUB_PASSWORD}"
+              description: "Credenciais DockerHub (injetadas por env)"
+          - usernamePassword:
+              scope: SYSTEM
+              id: "git-credentials"
+              username: "${GIT_USER}"
+              password: "${GIT_PASSWORD}"
+              description: "Credenciais Git (se privado). Deixe vazio se público."
+                - usernamePassword:
+                  scope: SYSTEM
+                  id: "smpt-gmail"
+                  username: "alvaroscareli@gmail.com"
+                  password: "${SMTP_PASSWORD}"
+                  description: "Credencial SMTP Gmail para notificações."
 jobs:
   - script: |
       // Multibranch Pipeline para o repositório remoto
