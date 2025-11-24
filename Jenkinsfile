@@ -1,4 +1,4 @@
-pipeline {
+ pipeline {
     agent any
     
     // Parâmetros de execução
@@ -16,7 +16,7 @@ pipeline {
         WORKDIR = "${env.WORKSPACE}"
         // Configurações utilizadas no pipeline (defina as credenciais e repo no Jenkins/Job config quando necessário)
         DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
-        CREDENTIALS_ID = 'dockerhub-credentials' // ID da credencial de Login do Docker Hub no Jenkins
+        CREDENTIALS_ID = 'dockerhub-credentials'
         // Valor proveniente do parâmetro
         NOTIFY_EMAIL = "${params.NOTIFY_EMAIL}"
         // E-mail padrão caso nenhum seja passado como parâmetro
@@ -170,6 +170,12 @@ pipeline {
                 sh '''
                     . venv/bin/activate
                     mkdir -p reports
+                    
+                    # O comando abaixo executa os testes na sua app 'usuarios'.
+                    # Se você tem um único arquivo 'tests.py' na raiz da app 'usuarios', 
+                    # use o caminho: 'usuarios/tests.py'.
+                    # Se você tem vários arquivos de teste dentro de 'usuarios/tests/', use: 'usuarios/tests/'
+                    
                     pytest usuarios/tests.py \
                         --junitxml=reports/junit_usuarios.xml || true
                 '''
@@ -345,57 +351,32 @@ pipeline {
                 }
             }
         }
-        
-        ---
-        
-        ## 📦 Novo Estágio: Build e Push Docker Image
-        
-        stage('Build and Push Docker Image') {
-            steps {
-                echo "Construindo imagem Docker: ${env.IMAGE}"
-                // 1. Constrói a imagem (usando o Dockerfile padrão do contexto)
-                sh "docker build -t ${env.IMAGE} -t ${env.IMAGE_LATEST} ."
-                
-                // 2. Autentica e publica a imagem no Docker Hub (usando a credencial 'dockerhub-credentials')
-                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+
+            stage('Notification (Shell)') {
+                steps {
+                    echo 'Sending shell notification...'
                     sh '''
-                        echo "Publicando imagem(ns) no Docker Hub..."
-                        docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
-                        docker push ${IMAGE}
-                        docker push ${IMAGE_LATEST}
-                        docker logout
+                        # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
+                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+
+                        # Run provided scripts if present
+                        if [ -d scripts ]; then
+                            cd scripts || true
+                            chmod 775 * || true
+                            ./shell.sh || true
+                            cd - >/dev/null 2>&1 || true
+                        fi
+
+                        # Try to send mail using the system `mail` command
+                        if command -v mail >/dev/null 2>&1; then
+                            echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
+                            echo "Shell mail attempted to $TO"
+                        else
+                            echo "mail command not found on agent; install mailutils/postfix to enable shell email"
+                        fi
                     '''
                 }
             }
-        }
-        
-        ---
-
-        stage('Notification (Shell)') {
-            steps {
-                echo 'Sending shell notification...'
-                sh '''
-                    # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
-                    TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
-
-                    # Run provided scripts if present
-                    if [ -d scripts ]; then
-                        cd scripts || true
-                        chmod 775 * || true
-                        ./shell.sh || true
-                        cd - >/dev/null 2>&1 || true
-                    fi
-
-                    # Try to send mail using the system `mail` command
-                    if command -v mail >/dev/null 2>&1; then
-                        echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
-                        echo "Shell mail attempted to $TO"
-                    else
-                        echo "mail command not found on agent; install mailutils/postfix to enable shell email"
-                    fi
-                '''
-            }
-        }
 
         stage('Send Email via Python (SMTP)') {
             steps {
@@ -484,47 +465,32 @@ pipeline {
                 }
             }
         }
-        
-        ---
-        
-        ## 🚢 Estágio de Deploy Corrigido
-        
         stage('Deploy Application ') {
-            // Deploy automático somente na branch main
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # Diretório para dados persistentes no host
-                    HOST_DATA_DIR="/opt/aluga-ai/data"
-                    HOST_STATIC_DIR="/opt/aluga-ai/static"
-                    HOST_MEDIA_DIR="/opt/aluga-ai/media"
-                    
-                    # Cria diretórios se não existirem
-                    mkdir -p ${HOST_DATA_DIR}
-                    mkdir -p ${HOST_STATIC_DIR}
-                    mkdir -p ${HOST_MEDIA_DIR}
-                    
-                    # Tenta baixar a imagem 'latest' (agora publicada pelo estágio anterior)
+                    # ... (Diretórios e mkdir -p) ...
+                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
                     if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
-                        # Remove o container antigo (nome correto: aluga-ai-app)
+                        # Remove o container antigo (nome: aluga-ai-app)
                         docker rm -f aluga-ai-app || true 
                         
-                        # Roda o novo container (Comandos limpos para evitar o erro '\' )
-                        docker run -d --name aluga-ai-app \
+                        # Roda o novo container
+                        docker run -d --name aluga-ai \
                             --restart unless-stopped \
-                            -p 8000:8000 \
+                            -p 8000:8000 \ 
                             -v ${HOST_DATA_DIR}:/app/data \
                             -v ${HOST_STATIC_DIR}:/app/static \
                             -v ${HOST_MEDIA_DIR}:/app/media \
                             -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
                             -e PYTHONPATH=/app \
-                            ${IMAGE_LATEST} 
+                            ${IMAGE_LATEST} # Usa a tag latest que foi publicada
                         
                         sleep 5
                         docker ps | grep aluga-ai-app || true
                     else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy (check build stage log)"
+                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
                 '''
             }
