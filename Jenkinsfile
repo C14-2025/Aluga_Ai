@@ -1,14 +1,14 @@
-pipeline {
+ pipeline {
     agent any
-    
+
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
         string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
-    
+
     // CI/CD automático: nenhum parâmetro de execução manual
-    
+
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
@@ -25,7 +25,7 @@ pipeline {
         SMTP_HOST = 'smtp.example.com'
         SMTP_PORT = '587'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -33,7 +33,7 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Prepare') {
             steps {
                 script {
@@ -46,7 +46,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Setup Python Environment') {
             steps {
                 echo 'Configurando ambiente Python...'
@@ -58,7 +58,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 echo 'Instalando dependências...'
@@ -68,7 +68,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Run Migrations') {
             steps {
                 echo 'Executando migrações do Django...'
@@ -78,7 +78,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Testes Unitários - Banco de Dados') {
             steps {
                 echo 'Executando testes de Banco de Dados...'
@@ -107,7 +107,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Testes Unitários - API') {
             steps {
                 echo 'Executando testes de API...'
@@ -186,7 +186,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Testes Unitários - Favoritos') {
             steps {
                 echo 'Executando testes de Favoritos...'
@@ -215,7 +215,7 @@ pipeline {
                 }
             }
         }
-        
+
 
         stage('Testes Unitários - Mensagens') {
             steps {
@@ -271,7 +271,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Executar ETL') {
             steps {
                 echo 'Executando processo de ETL...'
@@ -287,7 +287,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Treinar Modelo ML') {
             steps {
                 echo 'Treinando modelo de Machine Learning...'
@@ -356,7 +356,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test Coverage Report') {
             steps {
                 echo 'Gerando relatório de cobertura de testes...'
@@ -473,7 +473,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Validação do Sistema de Recomendação') {
             steps {
                 echo 'Validando sistema de recomendação...'
@@ -511,7 +511,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Django Tests') {
             steps {
                 echo 'Executando testes do Django...'
@@ -521,7 +521,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Code Quality Check') {
             steps {
                 echo 'Verificando qualidade do código...'
@@ -623,7 +623,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test Django Server') {
             steps {
                 echo 'Testando se o servidor Django inicia corretamente...'
@@ -651,31 +651,6 @@ pipeline {
                 }
             }
         }
-        stage('Build & Push Image (CD)') {
-            when { branch 'main' }
-            steps {
-                echo 'Building and pushing Docker image for CD...'
-                sh '''
-                    # Build docker image using resolved IMAGE
-                    docker build -t ${IMAGE} .
-                '''
-                script {
-                    try {
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                            sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                            sh 'docker push ${IMAGE} || true'
-                            sh 'docker tag ${IMAGE} ${IMAGE_LATEST} || true'
-                            sh 'docker push ${IMAGE_LATEST} || true'
-                        }
-                    } catch (err) {
-                        echo "Docker push failed: ${err}"
-                        // mark as unstable but continue to deploy cautiously
-                        currentBuild.result = 'UNSTABLE'
-                    }
-                }
-            }
-        }
-
         stage('Deploy Application ') {
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
@@ -688,44 +663,22 @@ pipeline {
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
+                        if [ -z "${HOST_STATIC_DIR}" ]; then
+                            HOST_STATIC_DIR="${WORKSPACE}/static"
+                        fi
                         if [ -z "${HOST_MEDIA_DIR}" ]; then
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
                         # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}" "${HOST_MEDIA_DIR}"
+                        mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
 
-                        # Determine which host port to use (default 8000)
-                        PORT="${HOST_PORT:-8000}"
-                        echo "Resolved deploy port: ${PORT}"
-
-                        # If port is in use, try to free it if used by a docker container; otherwise abort
-                        if ss -ltnp 2>/dev/null | grep -q ":${PORT} "; then
-                            echo "Port ${PORT} is in use on the host. Attempting to identify owner..."
-                            # Try to find a docker container that publishes this port
-                            OCCUPIER=$(docker ps --format '{{.ID}} {{.Names}} {{.Ports}}' | grep -E "0.0.0.0:${PORT}->" | awk '{print $1}' | head -n1 || true)
-                            if [ -n "${OCCUPIER}" ]; then
-                                echo "Port ${PORT} is used by docker container ${OCCUPIER}; removing it to free the port"
-                                docker rm -f "${OCCUPIER}" || true
-                            else
-                                echo "Port ${PORT} is used by a non-docker process. Aborting deploy to avoid conflict."
-                                echo "Use a different port via HOST_PORT env var or stop the process using port ${PORT}."
-                                exit 0
-                            fi
-                        else
-                            echo "Port ${PORT} is free. Proceeding with deploy."
-                        fi
-
-                        # Remove any previous containers by name to avoid name conflict
+                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-<<<<<<< HEAD
                         # Roda o novo container (use host dir variables which are now guaranteed non-empty)
-                        CID=$(docker run -d --name aluga_ai --restart unless-stopped -p 8001:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-=======
-                        # Roda o novo container using the resolved port
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p ${PORT}:${PORT} -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
->>>>>>> 7f0748ba6fc79b2f5969c17f374de7872176ebd3
+
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
@@ -745,7 +698,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             script {
