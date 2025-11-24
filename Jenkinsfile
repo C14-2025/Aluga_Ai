@@ -659,12 +659,26 @@
                     # ... (Diretórios e mkdir -p) ...
                     # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
                     if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
+                        # Ensure host directories are defined; fall back to workspace subdirs when empty
+                        if [ -z "${HOST_DATA_DIR}" ]; then
+                            HOST_DATA_DIR="${WORKSPACE}/data"
+                        fi
+                        if [ -z "${HOST_STATIC_DIR}" ]; then
+                            HOST_STATIC_DIR="${WORKSPACE}/static"
+                        fi
+                        if [ -z "${HOST_MEDIA_DIR}" ]; then
+                            HOST_MEDIA_DIR="${WORKSPACE}/media"
+                        fi
+
+                        # Create host directories so docker bind-mounts won't be empty
+                        mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
+
                         # Remove o container antigo (nome: aluga-ai-app)
                         docker rm -f aluga-ai-app || true 
-                        
-                        # Roda o novo container
-                        docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v ${HOST_DATA_DIR}:/app/data -v ${HOST_STATIC_DIR}:/app/static -v ${HOST_MEDIA_DIR}:/app/media -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} # Usa a tag latest que foi publicada
-                        
+
+                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
+                        docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} # Usa a tag latest que foi publicada
+
                         sleep 5
                         docker ps | grep aluga-ai-app || true
                     else
