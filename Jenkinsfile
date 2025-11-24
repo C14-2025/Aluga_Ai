@@ -472,30 +472,19 @@
                     HOST_DATA_DIR="/opt/aluga-ai/data"
                     HOST_STATIC_DIR="/opt/aluga-ai/static"
                     HOST_MEDIA_DIR="/opt/aluga-ai/media"
-                    
+
                     # Cria diretórios se não existirem
                     mkdir -p ${HOST_DATA_DIR}
                     mkdir -p ${HOST_STATIC_DIR}
                     mkdir -p ${HOST_MEDIA_DIR}
-                    # Try to pull the image; if unavailable, skip deploy (avoids failing when image isn't published)
-                    if docker pull ${IMAGE} >/dev/null 2>&1; then
-                        docker rm -f aluga-ai-app || true
-                        docker run -d --name aluga-ai-app \
-                            --restart unless-stopped \
-                            -p 8000:8000 \
-                            -v ${HOST_DATA_DIR}:/app/data \
-                            -v ${HOST_STATIC_DIR}:/app/static \
-                            -v ${HOST_MEDIA_DIR}:/app/media \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                            -e PYTHONPATH=/app \
-                            ${IMAGE}
 
-                        # Verifica se está rodando
-                        sleep 5
-                        docker ps | grep aluga-ai-app || true
-                    else
-                        echo "Docker image ${IMAGE} not available; skipping deploy"
-                    fi
+                    # Atualiza a imagem do serviço via docker-compose
+                    docker compose pull aluga-ai-app
+                    docker compose up -d --force-recreate aluga-ai-app
+
+                    # Verifica se está rodando
+                    sleep 5
+                    docker compose ps | grep aluga-ai-app || true
                 '''
             }
         }

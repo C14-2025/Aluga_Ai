@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   # Serviço da Aplicação Django
-  app:
+  aluga-ai-app:
     build:
       context: .
       dockerfile: Dockerfile
