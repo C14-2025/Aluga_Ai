@@ -407,6 +407,8 @@ pipeline {
                         }
                     } catch (err) {
                         echo "Docker push failed: ${err}"
+                        echo "Ensure a Jenkins credential with ID '${env.CREDENTIALS_ID}' exists (Manage Jenkins → Credentials)."
+                        echo "If you don't want to push from this job, set a different CREDENTIALS_ID or remove the Push stage."
                         currentBuild.result = 'UNSTABLE'
                     }
                 }
@@ -417,10 +419,21 @@ pipeline {
             steps {
                 echo 'Starting deployment of the new image on the target environment...'
                 sh '''
-                    # Tenta usar o novo compose CLI (V2)
-                    docker compose -f docker-compose.yml pull aluga-ai-app
-                    docker compose -f docker-compose.yml up -d --no-deps aluga-ai-app
-                    
+                    # Try 'docker compose' (v2) and fall back to 'docker-compose' (v1) if needed.
+                    set -e
+                    echo "Attempting deploy with 'docker compose' (v2)..."
+                    if docker compose version >/dev/null 2>&1; then
+                        docker compose -f docker-compose.yml pull aluga-ai-app || true
+                        docker compose -f docker-compose.yml up -d --no-deps aluga-ai-app
+                    elif command -v docker-compose >/dev/null 2>&1; then
+                        echo "'docker compose' not available or failed; falling back to 'docker-compose'"
+                        docker-compose -f docker-compose.yml pull aluga-ai-app || true
+                        docker-compose -f docker-compose.yml up -d --no-deps aluga-ai-app
+                    else
+                        echo "Neither 'docker compose' nor 'docker-compose' available on this agent. Install Docker Compose or adjust the deploy step."
+                        exit 125
+                    fi
+
                     echo "Deployment of aluga-ai-app complete."
                 '''
             }
