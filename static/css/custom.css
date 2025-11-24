@@ -1,8 +1,8 @@
 /* Custom visual improvements */
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #f5f7fb;
-  color: #333;
+  background: #222831;
+  color: #eeeeee;
 }
 .container {
   max-width: 980px;
@@ -10,7 +10,7 @@ body {
   padding: 0 20px;
 }
 .site-header {
-  background: linear-gradient(90deg, #de5d26, #590359);
+  background: linear-gradient(90deg, #00adb5, #393e46);
   color: #fff;
   padding: 12px 0;
 }
@@ -22,7 +22,7 @@ body {
 }
 .greeting {
   margin-left: 12px;
-  color: #ffd700;
+  color: #00ff00;
 }
 .cards {
   display: flex;
@@ -30,10 +30,10 @@ body {
   gap: 16px;
 }
 .card {
-  background: #fff;
+  background: #393e46;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 6px 18px rgba(23, 32, 77, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 173, 181, 0.15);
   flex: 1 1 300px;
 }
 .card h3 {
@@ -56,8 +56,8 @@ body {
   background: #dc3545;
 }
 .btn-primary {
-  background: #007bff;
-  color: #fff;
+  background: #00adb5;
+  color: #222831;
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
@@ -68,20 +68,20 @@ body {
   border-radius: 6px;
 }
 .success {
-  background: #e6f4ea;
-  border: 1px solid #bde5c8;
+  background: #393e46;
+  border: 1px solid #00adb5;
 }
 .error {
-  background: #fdecea;
-  border: 1px solid #f5c6cb;
+  background: #222831;
+  border: 1px solid #dc3545;
 }
 .info {
-  background: #eef6ff;
-  border: 1px solid #cfe3ff;
+  background: #00adb5;
+  border: 1px solid #393e46;
 }
 .warning {
-  background: #fff4e5;
-  border: 1px solid #ffe0b2;
+  background: #393e46;
+  border: 1px solid #ffd700;
 }
 
 /* Form styles for cadastro pages */
