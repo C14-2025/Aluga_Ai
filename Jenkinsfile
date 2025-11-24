@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
     agent any
     
     // Parâmetros de execução
@@ -651,6 +651,31 @@
                 }
             }
         }
+        stage('Build & Push Image (CD)') {
+            when { branch 'main' }
+            steps {
+                echo 'Building and pushing Docker image for CD...'
+                sh '''
+                    # Build docker image using resolved IMAGE
+                    docker build -t ${IMAGE} .
+                '''
+                script {
+                    try {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                            sh 'docker push ${IMAGE} || true'
+                            sh 'docker tag ${IMAGE} ${IMAGE_LATEST} || true'
+                            sh 'docker push ${IMAGE_LATEST} || true'
+                        }
+                    } catch (err) {
+                        echo "Docker push failed: ${err}"
+                        // mark as unstable but continue to deploy cautiously
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
+            }
+        }
+
         stage('Deploy Application ') {
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
