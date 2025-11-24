@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
     agent any
     
     // Parâmetros de execução
@@ -351,32 +351,54 @@
                 }
             }
         }
-
-            stage('Notification (Shell)') {
-                steps {
-                    echo 'Sending shell notification...'
+        
+        // --- NOVO ESTÁGIO: BUILD E PUSH DOCKER IMAGE ---
+        stage('Build and Push Docker Image') {
+            steps {
+                echo "Construindo imagem Docker: ${env.IMAGE}"
+                // Constrói a imagem (usando o Dockerfile padrão do contexto)
+                sh "docker build -t ${env.IMAGE} -t ${env.IMAGE_LATEST} ."
+                
+                // Autentica e publica a imagem no Docker Hub (usando a credencial 'dockerhub-credentials')
+                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh '''
-                        # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
-                        TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
-
-                        # Run provided scripts if present
-                        if [ -d scripts ]; then
-                            cd scripts || true
-                            chmod 775 * || true
-                            ./shell.sh || true
-                            cd - >/dev/null 2>&1 || true
-                        fi
-
-                        # Try to send mail using the system `mail` command
-                        if command -v mail >/dev/null 2>&1; then
-                            echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
-                            echo "Shell mail attempted to $TO"
-                        else
-                            echo "mail command not found on agent; install mailutils/postfix to enable shell email"
-                        fi
+                        echo "Publicando imagem(ns) no Docker Hub..."
+                        docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
+                        docker push ${IMAGE}
+                        docker push ${IMAGE_LATEST}
+                        docker logout
                     '''
                 }
             }
+        }
+        // ----------------------------------------------
+        
+
+        stage('Notification (Shell)') {
+            steps {
+                echo 'Sending shell notification...'
+                sh '''
+                    # Determine recipient (use NOTIFY_EMAIL param if provided, otherwise DEFAULT_NOTIFY_EMAIL)
+                    TO="${NOTIFY_EMAIL:-${DEFAULT_NOTIFY_EMAIL}}"
+
+                    # Run provided scripts if present
+                    if [ -d scripts ]; then
+                        cd scripts || true
+                        chmod 775 * || true
+                        ./shell.sh || true
+                        cd - >/dev/null 2>&1 || true
+                    fi
+
+                    # Try to send mail using the system `mail` command
+                    if command -v mail >/dev/null 2>&1; then
+                        echo "Pipeline ${JOB_NAME} #${BUILD_NUMBER} finished. See ${BUILD_URL}" | mail -s "Jenkins: ${JOB_NAME} #${BUILD_NUMBER} - Build Notification" "$TO" || echo "mail command failed"
+                        echo "Shell mail attempted to $TO"
+                    else
+                        echo "mail command not found on agent; install mailutils/postfix to enable shell email"
+                    fi
+                '''
+            }
+        }
 
         stage('Send Email via Python (SMTP)') {
             steps {
@@ -465,6 +487,7 @@
                 }
             }
         }
+        
         stage('Deploy Application ') {
             // Deploy automático somente na branch main
             when { expression { return env.BRANCH_NAME == 'main' } }
@@ -480,24 +503,27 @@
                     mkdir -p ${HOST_DATA_DIR}
                     mkdir -p ${HOST_STATIC_DIR}
                     mkdir -p ${HOST_MEDIA_DIR}
-                    # Try to pull the image; if unavailable, skip deploy (avoids failing when image isn't published)
-                    if docker pull ${IMAGE} >/dev/null 2>&1; then
-                        docker rm -f aluga-ai || true
-                        docker run -d --name aluga-ai \
+                    
+                    # Tenta baixar a imagem 'latest' para o deploy (agora deve funcionar)
+                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
+                        # Remove o container antigo (usando o nome 'aluga-ai-app' do seu docker-compose)
+                        docker rm -f aluga-ai-app || true 
+                        
+                        # Roda o novo container
+                        docker run -d --name aluga-ai-app \
                             --restart unless-stopped \
-                            -p 8000:8000 \
+                            -p 8000:8000 \ 
                             -v ${HOST_DATA_DIR}:/app/data \
                             -v ${HOST_STATIC_DIR}:/app/static \
                             -v ${HOST_MEDIA_DIR}:/app/media \
                             -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
                             -e PYTHONPATH=/app \
-                            ${IMAGE}
-
-                        # Verifica se está rodando
+                            ${IMAGE_LATEST} # Usa a tag latest que foi publicada
+                        
                         sleep 5
                         docker ps | grep aluga-ai-app || true
                     else
-                        echo "Docker image ${IMAGE} not available; skipping deploy"
+                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
                 '''
             }
@@ -512,7 +538,7 @@
                 emailext(
                     subject: "Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                     body: """
-                        <p>This is a Jenkins  CICD pipeline status.</p>
+                        <p>This is a Jenkins  CICD pipeline status.</p>
                         <p>Project: ${env.JOB_NAME}</p>
                         <p>Build Number: ${env.BUILD_NUMBER}</p>
                         <p>Build Status: ${buildStatus}</p>
