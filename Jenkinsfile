@@ -37,6 +37,15 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
+                    // Determina a branch atual de forma confiável (funciona em Multibranch Pipeline)
+                    def gitBranch = sh(script: 'git rev-parse --abbrev-ref HEAD || echo "unknown"', returnStdout: true).trim()
+                    // Remove prefixos comuns (origin/, remotes/origin/, etc.)
+                    gitBranch = gitBranch.replaceAll('^origin/', '').replaceAll('^remotes/origin/', '')
+                    env.GIT_BRANCH = gitBranch
+                    // Usa BRANCH_NAME se disponível, senão usa GIT_BRANCH
+                    env.CURRENT_BRANCH = env.BRANCH_NAME ?: env.GIT_BRANCH ?: 'unknown'
+                    echo "Branch atual detectada: ${env.CURRENT_BRANCH}"
+                    
                     // Determina tag da imagem a partir do commit
                     env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
                     env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
@@ -652,9 +661,18 @@ pipeline {
             }
         }
         stage('Build & Push Image (CD)') {
-            when { branch 'main' }
+            when { 
+                anyOf {
+                    branch 'main'
+                    expression { 
+                        def branch = env.BRANCH_NAME ?: env.GIT_BRANCH ?: ''
+                        echo "DEBUG: Verificando branch para Build & Push. BRANCH_NAME=${env.BRANCH_NAME}, GIT_BRANCH=${env.GIT_BRANCH}, branch=${branch}"
+                        return branch == 'main' || branch.endsWith('/main')
+                    }
+                }
+            }
             steps {
-                echo 'Building and pushing Docker image for CD...'
+                echo "Building and pushing Docker image for CD... (Branch: ${env.CURRENT_BRANCH})"
                 sh '''
                     # Build docker image using resolved IMAGE
                     docker build -t ${IMAGE} .
@@ -677,9 +695,18 @@ pipeline {
         }
 
         stage('Deploy Application ') {
-            when { expression { return env.BRANCH_NAME == 'main' } }
+            when { 
+                anyOf {
+                    branch 'main'
+                    expression { 
+                        def branch = env.BRANCH_NAME ?: env.GIT_BRANCH ?: ''
+                        echo "DEBUG: Verificando branch para Deploy. BRANCH_NAME=${env.BRANCH_NAME}, GIT_BRANCH=${env.GIT_BRANCH}, branch=${branch}"
+                        return branch == 'main' || branch.endsWith('/main')
+                    }
+                }
+            }
             steps {
-                echo 'Fazendo deploy da aplicação...'
+                echo "Fazendo deploy da aplicação... (Branch: ${env.CURRENT_BRANCH})"
                 sh '''
                     # ... (Diretórios e mkdir -p) ...
                     # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
