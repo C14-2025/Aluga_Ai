@@ -27,26 +27,6 @@
     }
     
     stages {
-                stage('Build Docker Image') {
-                    steps {
-                        echo 'Construindo imagem Docker...'
-                        script {
-                            dockerImage = docker.build(env.IMAGE)
-                        }
-                    }
-                }
-
-                stage('Push Docker Image') {
-                    steps {
-                        echo 'Publicando imagem Docker no Docker Hub...'
-                        script {
-                            docker.withRegistry('', env.CREDENTIALS_ID) {
-                                dockerImage.push()
-                                dockerImage.push('latest')
-                            }
-                        }
-                    }
-                }
         stage('Checkout') {
             steps {
                 echo 'Fazendo checkout do código...'
