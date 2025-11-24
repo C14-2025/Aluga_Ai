@@ -673,11 +673,32 @@
                         # Create host directories so docker bind-mounts won't be empty
                         mkdir -p "${HOST_DATA_DIR}" "${HOST_STATIC_DIR}" "${HOST_MEDIA_DIR}"
 
-                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
+                        # Determine which host port to use (default 8000)
+                        PORT="${HOST_PORT:-8000}"
+                        echo "Resolved deploy port: ${PORT}"
+
+                        # If port is in use, try to free it if used by a docker container; otherwise abort
+                        if ss -ltnp 2>/dev/null | grep -q ":${PORT} "; then
+                            echo "Port ${PORT} is in use on the host. Attempting to identify owner..."
+                            # Try to find a docker container that publishes this port
+                            OCCUPIER=$(docker ps --format '{{.ID}} {{.Names}} {{.Ports}}' | grep -E "0.0.0.0:${PORT}->" | awk '{print $1}' | head -n1 || true)
+                            if [ -n "${OCCUPIER}" ]; then
+                                echo "Port ${PORT} is used by docker container ${OCCUPIER}; removing it to free the port"
+                                docker rm -f "${OCCUPIER}" || true
+                            else
+                                echo "Port ${PORT} is used by a non-docker process. Aborting deploy to avoid conflict."
+                                echo "Use a different port via HOST_PORT env var or stop the process using port ${PORT}."
+                                exit 0
+                            fi
+                        else
+                            echo "Port ${PORT} is free. Proceeding with deploy."
+                        fi
+
+                        # Remove any previous containers by name to avoid name conflict
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
+                        # Roda o novo container using the resolved port
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p ${PORT}:${PORT} -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
