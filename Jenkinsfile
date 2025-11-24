@@ -272,15 +272,194 @@
         stage('Executar ETL') {
             steps {
                 echo 'Executando processo de ETL...'
-                dir('Dados') {
+                dir('dados') {
                     sh '''
                         . ../venv/bin/activate
                         if [ -f etl.py ]; then
                             python etl.py || true
                         else
-                            echo "No etl.py found in Dados, skipping ETL execution"
+                            echo "No etl.py found in dados, skipping ETL execution"
                         fi
                     '''
+                }
+            }
+        }
+        
+        stage('Treinar Modelo ML') {
+            steps {
+                echo 'Treinando modelo de Machine Learning...'
+                sh '''
+                    . venv/bin/activate
+                    
+                    # Garante que PYTHONPATH está configurado
+                    export PYTHONPATH="${WORKSPACE}:${PYTHONPATH:-}"
+                    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-aluga_ai_web.settings}"
+                    
+                    # Verifica se há dados processados disponíveis
+                    if [ ! -d dados/processed ]; then
+                        echo "AVISO: Diretório dados/processed não encontrado"
+                        echo "Skipping ML model training"
+                        exit 0
+                    fi
+                    
+                    # Verifica se há arquivos CSV processados
+                    CSV_COUNT=$(find dados/processed -name "imoveis_processed_*.csv" 2>/dev/null | wc -l)
+                    if [ "$CSV_COUNT" -eq 0 ]; then
+                        echo "AVISO: Nenhum arquivo CSV processado encontrado em dados/processed/"
+                        echo "Execute o ETL primeiro para gerar dados para treinamento"
+                        echo "Skipping ML model training"
+                        exit 0
+                    fi
+                    
+                    echo "Encontrados $CSV_COUNT arquivo(s) CSV processado(s)"
+                    
+                    # Verifica se o script de treinamento existe
+                    if [ ! -f recomendacoes/train_model.py ]; then
+                        echo "ERRO: recomendacoes/train_model.py não encontrado"
+                        echo "Skipping ML model training"
+                        exit 0
+                    fi
+                    
+                    echo "Iniciando treinamento do modelo ML..."
+                    echo "Caminho atual: $(pwd)"
+                    echo "PYTHONPATH: $PYTHONPATH"
+                    
+                    # Executa o treinamento (permite falha sem parar pipeline)
+                    python recomendacoes/train_model.py || {
+                        echo "AVISO: Treinamento do modelo falhou, mas continuando pipeline"
+                        exit 0
+                    }
+                    
+                    echo "Treinamento do modelo concluído com sucesso"
+                    
+                    # Verifica e lista arquivos gerados
+                    if [ -d recomendacoes/services/ml/model_store ]; then
+                        echo "=== Artefatos do modelo gerados ==="
+                        ls -lh recomendacoes/services/ml/model_store/ || true
+                        ARTIFACT_COUNT=$(find recomendacoes/services/ml/model_store -type f \( -name "*.joblib" -o -name "*.pkl" -o -name "*.json" \) 2>/dev/null | wc -l)
+                        echo "Total de artefatos gerados: $ARTIFACT_COUNT"
+                        if [ "$ARTIFACT_COUNT" -eq 0 ]; then
+                            echo "AVISO: Nenhum artefato foi gerado no diretório model_store"
+                        fi
+                    else
+                        echo "AVISO: Diretório recomendacoes/services/ml/model_store não encontrado após treinamento"
+                    fi
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'recomendacoes/services/ml/model_store/*.joblib,recomendacoes/services/ml/model_store/*.pkl,recomendacoes/services/ml/model_store/*.json', allowEmptyArchive: true
+                }
+            }
+        }
+        
+        stage('Test Coverage Report') {
+            steps {
+                echo 'Gerando relatório de cobertura de testes...'
+                sh '''
+                    . venv/bin/activate
+                    
+                    # Garante que PYTHONPATH e DJANGO_SETTINGS_MODULE estão configurados
+                    export PYTHONPATH="${WORKSPACE}:${PYTHONPATH:-}"
+                    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-aluga_ai_web.settings}"
+                    
+                    mkdir -p reports
+                    
+                    # Lista de apps Django para cobertura (apenas código-fonte, não testes)
+                    APPS="propriedades reservas usuarios favoritos avaliacoes mensagens recomendacoes"
+                    
+                    # Verifica quais apps existem
+                    EXISTING_APPS=""
+                    for app in $APPS; do
+                        if [ -d "$app" ]; then
+                            EXISTING_APPS="$EXISTING_APPS $app"
+                        else
+                            echo "AVISO: App '$app' não encontrado, será ignorado"
+                        fi
+                    done
+                    
+                    if [ -z "$EXISTING_APPS" ]; then
+                        echo "AVISO: Nenhum app Django encontrado para testar"
+                        echo "Criando relatório de cobertura vazio"
+                        touch reports/coverage_report.txt
+                        echo "Nenhum app encontrado para cobertura" > reports/coverage_report.txt
+                        exit 0
+                    fi
+                    
+                    echo "Apps Django encontrados:$EXISTING_APPS"
+                    echo "Iniciando execução de testes com cobertura..."
+                    
+                    # Executa testes com cobertura usando pytest-cov
+                    # --cov especifica quais apps cobrir (apenas código-fonte)
+                    # --omit exclui arquivos desnecessários
+                    pytest $EXISTING_APPS \
+                        --cov=propriedades \
+                        --cov=reservas \
+                        --cov=usuarios \
+                        --cov=favoritos \
+                        --cov=avaliacoes \
+                        --cov=mensagens \
+                        --cov=recomendacoes \
+                        --cov-report=html:reports/coverage_html \
+                        --cov-report=term \
+                        --cov-report=xml:reports/coverage.xml \
+                        --cov-report=text:reports/coverage_report.txt \
+                        --junitxml=reports/junit_coverage.xml \
+                        --cov-branch \
+                        --omit='*/venv/*,*/virtualenv/*,*/__pycache__/*,*/migrations/*,*/tests/*,*/test_*.py,*/manage.py,*/settings.py,*/wsgi.py,*/asgi.py,*/urls.py,*/admin.py,*/*/migrations/*' \
+                        -v || {
+                        echo "AVISO: Alguns testes falharam, mas continuando com relatório de cobertura"
+                        # Verifica se pelo menos o relatório foi gerado
+                        if [ ! -f reports/coverage.xml ] && [ ! -f reports/coverage_report.txt ]; then
+                            echo "AVISO: Relatórios de cobertura não foram gerados devido a falhas nos testes"
+                            touch reports/coverage_report.txt
+                            echo "Nenhum relatório gerado devido a falhas nos testes" > reports/coverage_report.txt
+                        fi
+                        true
+                    }
+                    
+                    # Verifica se os relatórios foram gerados
+                    if [ -f reports/coverage.xml ]; then
+                        echo "Relatório XML de cobertura gerado: reports/coverage.xml"
+                    else
+                        echo "AVISO: Relatório de cobertura XML não foi gerado"
+                    fi
+                    
+                    if [ -d reports/coverage_html ]; then
+                        echo "Relatório HTML de cobertura gerado: reports/coverage_html/"
+                    else
+                        echo "AVISO: Relatório de cobertura HTML não foi gerado"
+                    fi
+                    
+                    echo "Relatório de cobertura processado"
+                    
+                    # Exibe resumo de cobertura
+                    if [ -f reports/coverage_report.txt ]; then
+                        echo ""
+                        echo "=== RESUMO DE COBERTURA ==="
+                        echo ""
+                        tail -n 30 reports/coverage_report.txt || true
+                        echo ""
+                        
+                        # Extrai porcentagem total de cobertura (última linha geralmente tem o total)
+                        TOTAL_COV=$(tail -n 1 reports/coverage_report.txt | grep -oE '[0-9]+%' | head -n 1 || echo "N/A")
+                        echo "Cobertura Total: $TOTAL_COV"
+                    else
+                        echo "AVISO: Arquivo de relatório de cobertura em texto não encontrado"
+                    fi
+                '''
+            }
+            post {
+                always {
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'reports/coverage_html',
+                        reportFiles: 'index.html',
+                        reportName: 'Coverage Report'
+                    ])
+                    archiveArtifacts artifacts: 'reports/coverage_report.txt,reports/coverage.xml,reports/coverage_html/**', allowEmptyArchive: true
                 }
             }
         }

@@ -1,5 +1,7 @@
 psycopg2-binary
 pytest
+pytest-cov
+coverage
 requests
 python-dotenv
 pytest-django
