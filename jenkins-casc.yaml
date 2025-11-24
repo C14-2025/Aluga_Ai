@@ -27,18 +27,18 @@ credentials:
           description: "Global domain"
           specifications: []
         credentials:
-        - usernamePassword:
-            scope: SYSTEM
-            id: "dockerhub-credentials"
-            username: "${DOCKERHUB_USER}"
-            password: "${DOCKERHUB_PASSWORD}"
-            description: "Credenciais DockerHub (injetadas por env)"
-        - usernamePassword:
-            scope: SYSTEM
-            id: "git-credentials"
-            username: "${GIT_USER}"
-            password: "${GIT_PASSWORD}"
-            description: "Credenciais Git (se privado). Deixe vazio se público."
+          - usernamePassword:
+              scope: SYSTEM
+              id: "dockerhub-credentials"
+              username: "${DOCKERHUB_USER}"
+              password: "${DOCKERHUB_PASSWORD}"
+              description: "Credenciais DockerHub (injetadas por env)"
+          - usernamePassword:
+              scope: SYSTEM
+              id: "git-credentials"
+              username: "${GIT_USER}"
+              password: "${GIT_PASSWORD}"
+              description: "Credenciais Git (se privado). Deixe vazio se público."
 jobs:
   - script: |
       // Multibranch Pipeline para o repositório remoto
