@@ -10,7 +10,7 @@ jenkins:
       allowsSignup: false
       users:
         - id: ${JENKINS_ADMIN_ID:-admin}
-        - password: ${JENKINS_ADMIN_PASSWORD:-admin123}
+          password: ${JENKINS_ADMIN_PASSWORD:-admin123}
   mailer:
     smtpHost: "smtp.gmail.com"
     smtpPort: 465

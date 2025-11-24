@@ -34,6 +34,9 @@ RUN groupadd -f docker && usermod -aG docker jenkins
 RUN chown -R jenkins:jenkins /var/jenkins_home
 
 # Volta para o usuário jenkins
+COPY jenkins-casc.yaml /usr/share/jenkins/ref/casc.yaml
+ENV CASC_JENKINS_CONFIG=/usr/share/jenkins/ref/casc.yaml
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 USER jenkins
 
 # Expõe as portas do Jenkins
