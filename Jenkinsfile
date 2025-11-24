@@ -722,20 +722,58 @@ pipeline {
                         # Remove any previous containers by name to avoid name conflict
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-                        # Roda o novo container using the resolved port
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p ${PORT}:${PORT} -v "${HOST_DATA_DIR}:/app/data" -v "${HOST_STATIC_DIR}:/app/static" -v "${HOST_MEDIA_DIR}:/app/media" -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        echo "Started container ID: $CID"
-
-                        if [ -n "${CID}" ]; then
-                            sleep 5
-                            # Mostrar se o container está ativo (filtra por ID)
-                            docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
-                            # Mostrar estado detalhado e últimos logs para diagnóstico
-                            docker inspect --format '{{json .State}}' "${CID}" || true
-                            docker logs --tail 50 "${CID}" || true
-                        else
-                            echo "docker run did not return a container id; container may have failed to start"
+                        # Roda o novo container - mapeia porta do host para porta 8000 do container (que é a porta interna)
+                        echo "Iniciando container com imagem ${IMAGE_LATEST} na porta ${PORT}..."
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped \
+                            -p ${PORT}:8000 \
+                            -v "${HOST_DATA_DIR}:/app/data" \
+                            -v "${HOST_STATIC_DIR}:/app/static" \
+                            -v "${HOST_MEDIA_DIR}:/app/media" \
+                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
+                            -e PYTHONPATH=/app \
+                            ${IMAGE_LATEST})
+                        
+                        if [ $? -ne 0 ] || [ -z "${CID}" ]; then
+                            echo "ERRO: Falha ao iniciar o container. Verificando logs..."
+                            docker logs aluga-ai 2>&1 || true
+                            exit 1
                         fi
+                        
+                        echo "Container iniciado com sucesso. ID: ${CID}"
+                        
+                        # Aguarda o container iniciar completamente
+                        echo "Aguardando container iniciar..."
+                        sleep 10
+                        
+                        # Verifica se o container está rodando
+                        CONTAINER_STATUS=$(docker inspect --format '{{.State.Status}}' "${CID}" 2>/dev/null || echo "unknown")
+                        echo "Status do container: ${CONTAINER_STATUS}"
+                        
+                        if [ "${CONTAINER_STATUS}" != "running" ]; then
+                            echo "ERRO: Container não está em estado 'running'. Estado atual: ${CONTAINER_STATUS}"
+                            echo "=== Logs do container ==="
+                            docker logs --tail 100 "${CID}" || true
+                            echo "=== Estado detalhado do container ==="
+                            docker inspect --format '{{json .State}}' "${CID}" || true
+                            exit 1
+                        fi
+                        
+                        # Mostra informações do container
+                        echo "=== Informações do container ==="
+                        docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}} {{.Ports}}" || true
+                        
+                        # Verifica se a aplicação está respondendo
+                        echo "Verificando se a aplicação está respondendo na porta ${PORT}..."
+                        sleep 5
+                        if curl -f -s -o /dev/null -w "%{http_code}" http://localhost:${PORT} | grep -q "200\|301\|302"; then
+                            echo "SUCESSO: Aplicação está respondendo na porta ${PORT}"
+                        else
+                            echo "AVISO: Aplicação pode não estar respondendo corretamente. Verificando logs..."
+                            docker logs --tail 50 "${CID}" || true
+                        fi
+                        
+                        echo "=== Últimos logs do container ==="
+                        docker logs --tail 30 "${CID}" || true
                     else
                         echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
