@@ -4,6 +4,7 @@ pipeline {
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
+        // DOCKERHUB_REPO ajustado para usar 'aluga_ai' como a imagem base
         string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
 
@@ -81,7 +82,7 @@ pipeline {
             }
         }
         
-        // Estágios de Teste (mantidos como estavam, mas lembre-se de corrigir os caminhos)
+        // Estágios de Teste (mantidos como estavam, sem alterações)
         stage('Testes Unitários - Banco de Dados') {
             steps {
                 echo 'Executando testes de Banco de Dados...'
@@ -380,7 +381,7 @@ pipeline {
         }
         
         // -------------------------------------------------------------
-        // --- ETAPAS DE CD (Build, Push e Deploy) ADICIONADAS AQUI ---
+        // --- ETAPAS DE CD (Build, Push e Deploy) AJUSTADAS AQUI ---
         // -------------------------------------------------------------
         
         stage('Build Docker Image') {
@@ -417,15 +418,14 @@ pipeline {
         stage('Deployment (CD)') {
             steps {
                 echo 'Starting deployment of the new image on the target environment...'
-                // Isso requer que o seu docker-compose.yml tenha sido modificado para usar a 'image' do Docker Hub
                 sh '''
-                    # Puxa a nova imagem
-                    docker-compose -f docker-compose.yml pull aluga-ai-app
+                    # Puxa a nova imagem do serviço 'aluga_ai' (nome corrigido)
+                    docker-compose -f docker-compose.yml pull aluga_ai
                     
                     # Faz o rollout: derruba o container antigo e sobe o novo com a imagem 'latest'
-                    docker-compose -f docker-compose.yml up -d --no-deps aluga-ai-app
+                    docker-compose -f docker-compose.yml up -d --no-deps aluga_ai
                     
-                    echo "Deployment of aluga-ai-app complete."
+                    echo "Deployment of aluga_ai complete."
                 '''
             }
         }
