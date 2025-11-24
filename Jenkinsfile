@@ -517,8 +517,6 @@ pipeline {
                 }
             }
         }
-<<<<<<< Updated upstream
-=======
         
         stage('Test Django Server') {
             steps {
@@ -646,7 +644,7 @@ pipeline {
                 '''
             }
         }
->>>>>>> Stashed changes
+
     }
 
     post {
