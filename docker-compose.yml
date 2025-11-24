@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Serviço Jenkins para CI/CD
   jenkins:
@@ -36,7 +34,7 @@ services:
       dockerfile: Dockerfile
     container_name: aluga-ai-app
     ports:
-      - "8001:8000" # Porta do app Django agora em 8001
+      - "8081:8000"
     volumes:
       - .:/app
       - media_volume:/app/media
