@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile
     container_name: aluga-ai-app
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - .:/app
       - media_volume:/app/media
