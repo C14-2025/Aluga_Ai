@@ -11,6 +11,7 @@ Pillow
 pandas
 numpy
 django
+whitenoise
 flake8
 pylint
 scikit-learn
