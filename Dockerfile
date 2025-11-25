@@ -32,7 +32,13 @@ COPY . .
 RUN mkdir -p /app/media
 
 # Cria diretórios necessários para media e arquivos estáticos coletados
-RUN mkdir -p /app/media 
+RUN mkdir -p /app/media /app/staticfiles
+
+# Define onde collectstatic colocará os arquivos coletados
+ENV STATIC_ROOT=/app/staticfiles
+
+# Coleta arquivos estáticos (falha explícita se houver problema, facilita detectar issues durante build)
+RUN python manage.py collectstatic --noinput
 
 # Expõe a porta da aplicação
 EXPOSE 8000
