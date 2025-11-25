@@ -34,8 +34,7 @@ services:
       dockerfile: Dockerfile
     container_name: aluga-ai-app
     ports:
-      # Standardize to use host port 8000 -> container 8000 so http://localhost:8000 works
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - .:/app
       - media_volume:/app/media
@@ -47,8 +46,7 @@ services:
     networks:
       - aluga-ai-network
     restart: unless-stopped
-    # Run collectstatic on startup so dev containers (bind-mounted) also get a /app/staticfiles
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   jenkins_home:
