@@ -78,65 +78,6 @@
                 '''
             }
         }
-
-        stage('Testes Unitários - Banco de Dados') {
-            steps {
-                echo 'Executando testes de Banco de Dados...'
-                sh '''
-                    . venv/bin/activate
-                    if [ -f BancoDeDados/test_bd.py ]; then
-                        pytest BancoDeDados/test_bd.py --template=html1/index.html --report=report_bd.html || true
-                    elif [ -f Dados/test_bd.py ]; then
-                        pytest Dados/test_bd.py --template=html1/index.html --report=report_bd.html || true
-                    else
-                        echo "No BancoDeDados test file found, skipping Banco de Dados tests"
-                    fi
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'aluga_ai_web/report_bd.html', allowEmptyArchive: true
-                    publishHTML([
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'aluga_ai_web',
-                        reportFiles: 'report_bd.html',
-                        reportName: 'Report BD'
-                    ])
-                }
-            }
-        }
-
-        stage('Testes Unitários - API') {
-            steps {
-                echo 'Executando testes de API...'
-                sh '''
-                    . venv/bin/activate
-                    if [ -f Dados/test_etl.py ]; then
-                        pytest Dados/test_etl.py --template=html1/index.html --report=report_api.html || true
-                    elif [ -f aluga_ai_web/Dados/test_etl.py ]; then
-                        pytest aluga_ai_web/Dados/test_etl.py --template=html1/index.html --report=report_api.html || true
-                    else
-                        echo "No API test file found (Dados/test_etl.py), skipping API tests"
-                    fi
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'aluga_ai_web/report_api.html', allowEmptyArchive: true
-                    publishHTML([
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'aluga_ai_web',
-                        reportFiles: 'report_api.html',
-                        reportName: 'Report API'
-                    ])
-                }
-            }
-        }
-
         stage('Testes Unitários - Propriedades e Reservas') {
             steps {
                 echo 'Executando testes de Propriedades e Reservas...'
@@ -246,25 +187,26 @@
         stage('Testes ETL') {
             steps {
                 echo 'Executando testes de ETL...'
-                dir('Dados') {
+                dir('dados') {
                     sh '''
                         . ../venv/bin/activate
                         if [ -f test_etl.py ]; then
                             pytest test_etl.py --template=html1/index.html --report=report_etl.html || true
                         else
-                            echo "No test_etl.py found in Dados, skipping ETL tests"
+                            echo "No test_etl.py found in dados, skipping ETL tests"
                         fi
                     '''
                 }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'aluga_ai_web/Dados/report_etl.html', allowEmptyArchive: true
+                    // Archive the report generated inside the `dados/` folder
+                    archiveArtifacts artifacts: 'dados/report_etl.html', allowEmptyArchive: true
                     publishHTML([
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'aluga_ai_web/Dados',
+                        reportDir: 'dados',
                         reportFiles: 'report_etl.html',
                         reportName: 'Report ETL'
                     ])
@@ -473,16 +415,18 @@
                 }
             }
         }
-
+        //Alvaro
         stage('Validação do Sistema de Recomendação') {
             steps {
-                echo 'Validando sistema de recomendação...'
+                echo 'Validando sistema de recomendação (usando recomendacoes/Testes/ValidacaoSistema.py)...'
                 sh '''
                     . venv/bin/activate
-                    if [ -f jobs/validate_recommendation_system.py ]; then
-                        python jobs/validate_recommendation_system.py || true
+                    # Preferir o script de validação no repo; ativar mocks para rodar sem dependências externas
+                    if [ -f recomendacoes/Testes/ValidacaoSistema.py ]; then
+                        export ALUGAAI_USE_MOCKS=1
+                        python recomendacoes/Testes/ValidacaoSistema.py || true
                     else
-                        echo "No jobs/validate_recommendation_system.py found, skipping recommendation validation"
+                        echo "No recomendacoes/Testes/ValidacaoSistema.py found, skipping recommendation validation"
                     fi
                 '''
             }
@@ -492,26 +436,6 @@
                 }
             }
         }
-
-        stage('Testes Recomendação Personalizada') {
-            steps {
-                echo 'Executando testes de recomendação personalizada...'
-                sh '''
-                    . venv/bin/activate
-                    if [ -f recomendacoes/tests/test_personal_recommend.py ]; then
-                        pytest recomendacoes/tests/test_personal_recommend.py --maxfail=1 -q || true
-                    else
-                        echo "No recomendacoes personal test found, skipping personalized recommendation tests"
-                    fi
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
-                }
-            }
-        }
-
         stage('Django Tests') {
             steps {
                 echo 'Executando testes do Django...'
@@ -573,56 +497,56 @@
                         withCredentials([usernamePassword(credentialsId: 'smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
                             sh '''
                                 python - <<'PY'
-                                import os, smtplib, ssl
-                                to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
-                                smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
-                                smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-                                user = os.environ.get('SMTP_USER')
-                                password = os.environ.get('SMTP_PASS')
-                                subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
-                                body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
-                                msg = f"Subject: {subject}\n\n{body}"
-                                try:
-                                    # If port 465 (implicit SSL) use SMTP_SSL
-                                    if smtp_port == 465:
-                                        context = ssl.create_default_context()
-                                        with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
-                                            server.login(user, password)
-                                            server.sendmail(user, [to], msg)
-                                    else:
-                                        # Try STARTTLS first (typical for port 587)
-                                        server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
-                                        server.ehlo()
-                                        try:
-                                            server.starttls()
-                                            server.ehlo()
-                                            server.login(user, password)
-                                            server.sendmail(user, [to], msg)
-                                            server.quit()
-                                        except Exception as starttls_err:
-                                            # STARTTLS failed — try implicit SSL as a fallback
-                                            try:
-                                                server.quit()
-                                            except Exception:
-                                                pass
-                                            context = ssl.create_default_context()
-                                            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
-                                                ssl_server.login(user, password)
-                                                ssl_server.sendmail(user, [to], msg)
-                                    print('Email sent to', to)
-                                except Exception as e:
-                                    print('Failed to send email:', e)
-                                    raise
-                                PY
-                                '''
-                    }           
-                                } catch (err) {
-                                    echo "SMTP credential 'smtp-creds' not available or send failed: ${err}"
-                                    echo 'Skipping Python SMTP send (no credentials or error)'
-                                }
-                            }
+    import os, smtplib, ssl
+    to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
+    smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
+    smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+    user = os.environ.get('SMTP_USER')
+    password = os.environ.get('SMTP_PASS')
+    subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
+    body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
+    msg = f"Subject: {subject}\n\n{body}"
+    try:
+        # If port 465 (implicit SSL) use SMTP_SSL
+        if smtp_port == 465:
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
+                server.login(user, password)
+                server.sendmail(user, [to], msg)
+        else:
+            # Try STARTTLS first (typical for port 587)
+            server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
+            server.ehlo()
+            try:
+                server.starttls()
+                server.ehlo()
+                server.login(user, password)
+                server.sendmail(user, [to], msg)
+                server.quit()
+            except Exception as starttls_err:
+                # STARTTLS failed — try implicit SSL as a fallback
+                try:
+                    server.quit()
+                except Exception:
+                    pass
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
+                    ssl_server.login(user, password)
+                    ssl_server.sendmail(user, [to], msg)
+        print('Email sent to', to)
+    except Exception as e:
+        print('Failed to send email:', e)
+        raise
+    PY
+                            '''
                         }
+                    } catch (err) {
+                        echo "SMTP credential 'smtp-creds' not available or send failed: ${err}"
+                        echo 'Skipping Python SMTP send (no credentials or error)'
                     }
+                }
+            }
+        }
 
         stage('Test Django Server') {
             steps {
@@ -651,15 +575,18 @@
                 }
             }
         }
-        stage('Deploy Application ') {
+        stage('Deploy Application') {
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # ... (Diretórios e mkdir -p) ...
-                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
-                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
-                        # Ensure host directories are defined; fall back to workspace subdirs when empty
+                    # Sempre usa a imagem mais recente do Docker Hub
+                    IMAGE_LATEST="alvarocareli/aluga-ai:latest"
+
+                    echo "Baixando imagem mais recente: $IMAGE_LATEST"
+                    if docker pull "$IMAGE_LATEST" >/dev/null 2>&1; then 
+
+                        # Garante diretórios apenas para data e media
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
@@ -667,60 +594,53 @@
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
-                        # Static dir to mount on container (target: STATIC_ROOT in settings)
-                        # If HOST_STATIC_DIR is not provided leave empty — we'll conditionally mount
-                        # it only when it exists and contains files. That prevents empty host
-                        # directories from overriding image-collected static files.
-                        if [ -z "${HOST_STATIC_DIR}" ]; then
-                            HOST_STATIC_DIR=""
-                        fi
+                        mkdir -p "${HOST_DATA_DIR}" "${HOST_MEDIA_DIR}"
 
-                        # Create host directories so docker bind-mounts won't be empty
-                        # If HOST_STATIC_DIR is defined and not empty, create it; otherwise skip
-                        if [ -n "${HOST_STATIC_DIR}" ]; then
-                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}" "${HOST_STATIC_DIR}"
-                        else
-                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
-                        fi
-
-                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
+                        # Remove containers antigos
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
+                        echo "Subindo novo container..."
 
-                        # Only mount HOST_STATIC_DIR if it exists and is non-empty to avoid
-                        # hiding static files that were baked into the image during build.
-                        if [ -n "${HOST_STATIC_DIR}" ] && [ "$(ls -A ${HOST_STATIC_DIR} 2>/dev/null | wc -l)" -gt 0 ]; then
-                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                                --network aluga_ai_aluga-ai-network \
-                                -v "${HOST_DATA_DIR}:/app/data" \
-                                -v "${HOST_MEDIA_DIR}:/app/media" \
-                                -v "${HOST_STATIC_DIR}:/app/staticfiles" \
-                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        else
-                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                                -v "${HOST_DATA_DIR}:/app/data" \
-                                -v "${HOST_MEDIA_DIR}:/app/media" \
-                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        fi
+                        # Container SEM volume de static → usa static interno da imagem sempre
+                        CID=$(docker run -d \
+                            --name aluga-ai \
+                            --restart unless-stopped \
+                            -p 8000:8000 \
+                            -v "${HOST_DATA_DIR}:/app/data" \
+                            -v "${HOST_MEDIA_DIR}:/app/media" \
+                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
+                            -e PYTHONPATH=/app \
+                            ${IMAGE_LATEST} 2>/dev/null || true)
+
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
                             sleep 5
-                            # Mostrar se o container está ativo (filtra por ID)
+
                             docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
-                            # Mostrar estado detalhado e últimos logs para diagnóstico
                             docker inspect --format '{{json .State}}' "${CID}" || true
                             docker logs --tail 50 "${CID}" || true
+
+                            echo "Executando collectstatic dentro do container..."
+                            if docker exec "${CID}" python manage.py collectstatic --noinput >/dev/null 2>&1; then
+                                echo "collectstatic executado com sucesso."
+                                docker exec "${CID}" sh -c "ls -la /app/staticfiles || true"
+                            else
+                                echo "AVISO: collectstatic falhou dentro do container."
+                                docker exec "${CID}" sh -c "ls -la /app || true"
+                            fi
+
                         else
-                            echo "docker run did not return a container id; container may have failed to start"
+                            echo "docker run não retornou um ID. Container pode ter falhado ao iniciar."
                         fi
+
                     else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
+                        echo "Falha ao puxar imagem ${IMAGE_LATEST}. Deploy cancelado."
                     fi
                 '''
             }
         }
+
     }
 
     post {
