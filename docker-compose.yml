@@ -10,9 +10,6 @@ services:
       - "8080:8080" # Interface Web do Jenkins
       - "50000:50000" # Porta para agentes Jenkins
     volumes:
-      - media_volume:/app/media
-      - ./static:/app/static
-      - static_volume:/app/staticfiles
       - jenkins_home:/var/jenkins_home
       - .:/workspace # Monta o código do projeto
       - /var/run/docker.sock:/var/run/docker.sock # Permite usar docker CLI dentro do Jenkins
@@ -26,7 +23,6 @@ services:
       - GIT_USER=${GIT_USER:-}
       - GIT_PASSWORD=${GIT_PASSWORD:-}
       - CASC_JENKINS_CONFIG=/workspace/jenkins-casc.yaml
-      - STATIC_ROOT=/app/staticfiles
     networks:
       - aluga-ai-network
     restart: unless-stopped
@@ -41,12 +37,13 @@ services:
       - "8001:8000"
     volumes:
       - media_volume:/app/media
-      - static_volume:/app/static
+      - ./static:/app/static
+      - static_volume:/app/staticfiles
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings
       - PYTHONPATH=/app
-      - STATIC_ROOT=/app/static
+      - STATIC_ROOT=/app/staticfiles
     networks:
       - aluga-ai-network
     restart: unless-stopped
