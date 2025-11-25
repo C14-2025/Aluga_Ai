@@ -36,7 +36,6 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - .:/app
       - media_volume:/app/media
       - static_volume:/app/static
     environment:
