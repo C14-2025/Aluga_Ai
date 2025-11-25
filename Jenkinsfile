@@ -413,10 +413,16 @@
                 echo 'Validando sistema de recomendação (usando recomendacoes/Testes/ValidacaoSistema.py)...'
                 sh '''
                     . venv/bin/activate
+                    # Garantir diretório de relatórios
+                    mkdir -p dados/reports
                     # Preferir o script de validação no repo; ativar mocks para rodar sem dependências externas
                     if [ -f recomendacoes/Testes/ValidacaoSistema.py ]; then
                         export ALUGAAI_USE_MOCKS=1
                         python recomendacoes/Testes/ValidacaoSistema.py || true
+                        # mover arquivo de resultado para pasta de reports (se existir)
+                        if [ -f validation_results.json ]; then
+                            mv -f validation_results.json dados/reports/validation_results.json || true
+                        fi
                     else
                         echo "No recomendacoes/Testes/ValidacaoSistema.py found, skipping recommendation validation"
                     fi
@@ -424,7 +430,8 @@
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'validation_results.json', allowEmptyArchive: true
+                    // Arquiva os resultados de validação a partir de dados/reports
+                    archiveArtifacts artifacts: 'dados/reports/validation_results.json', allowEmptyArchive: true
                 }
             }
         }
