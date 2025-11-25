@@ -88,7 +88,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Use a separate directory so the source `static/` (dev) and collected files
 # don't conflict. Docker images and deploy steps mount this path when needed.
 # Collect into 'staticfiles' (separate from the app's `static/` source directory)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
