@@ -8,7 +8,7 @@
     }
 
     // CI/CD automático: nenhum parâmetro de execução manual
-
+   //
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
