@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Propriedade
 from .forms import PropriedadeForm
+from django.urls import reverse
 
 
 class PropriedadeModelTests(TestCase):
@@ -38,3 +39,30 @@ class PropriedadesFormTests(TestCase):
         data = {"titulo": "Sem Preço"}
         form = PropriedadeForm(data=data)
         self.assertFalse(form.is_valid())
+
+    # View/template tests
+    def test_lista_propriedades_renders_lista_template(self):
+        resp = self.client.get(reverse("propriedades:lista"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, "propriedades/lista.html")
+
+    def test_detalhe_propriedade_renders_detalhe_template(self):
+        owner = User.objects.create_user(username="detuser", password="pass")
+        p = Propriedade.objects.create(owner=owner, titulo="Casa Detalhe", preco_por_noite="50.00")
+        resp = self.client.get(reverse("propriedades:detalhe", args=[p.pk]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, "propriedades/detalhe.html")
+
+    def test_criar_propriedade_get_renders_criar_template(self):
+        self.client.login(username=self.user.username, password="pass")
+        resp = self.client.get(reverse("propriedades:nova"))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, "propriedades/criar.html")
+
+    def test_excluir_propriedade_get_renders_confirm_delete_template(self):
+        owner = User.objects.create_user(username="owner_del", password="pass")
+        p = Propriedade.objects.create(owner=owner, titulo="Para Excluir", preco_por_noite="60.00")
+        self.client.login(username=owner.username, password="pass")
+        resp = self.client.get(reverse("propriedades:excluir", args=[p.pk]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, "propriedades/confirm_delete.html")
