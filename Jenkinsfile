@@ -590,12 +590,12 @@
                 emailext(
                     subject: "Pipeline ${buildStatus}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                     body: """
-                        <p>This is a Jenkins  CICD pipeline status.</p>
-                        <p>Project: ${env.JOB_NAME}</p>
-                        <p>Build Number: ${env.BUILD_NUMBER}</p>
-                        <p>Build Status: ${buildStatus}</p>
-                        <p>Started by: ${buildUser}</p>
-                        <p>Build URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        <p>Este é o status do pipeline CICD do Jenkins.</p>
+                        <p>Projeto: ${env.JOB_NAME}</p>
+                        <p>Número da Build: ${env.BUILD_NUMBER}</p>
+                        <p>Status da Build: ${buildStatus}</p>
+                        <p>Iniciado por: ${buildUser}</p>
+                        <p>URL da Build: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                     """,
                     to: "${params.NOTIFY_EMAIL ?: env.DEFAULT_NOTIFY_EMAIL}",
                     from: "${env.DEFAULT_NOTIFY_EMAIL}",
