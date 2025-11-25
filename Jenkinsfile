@@ -651,15 +651,18 @@
                 }
             }
         }
-        stage('Deploy Application ') {
+        stage('Deploy Application') {
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # ... (Diretórios e mkdir -p) ...
-                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
-                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
-                        # Ensure host directories are defined; fall back to workspace subdirs when empty
+                    # Sempre usa a imagem mais recente do Docker Hub
+                    IMAGE_LATEST="alvarocareli/aluga-ai:latest"
+
+                    echo "Baixando imagem mais recente: $IMAGE_LATEST"
+                    if docker pull "$IMAGE_LATEST" >/dev/null 2>&1; then 
+
+                        # Garante diretórios apenas para data e media
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
@@ -667,69 +670,53 @@
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
-                        # Static dir to mount on container (target: STATIC_ROOT in settings)
-                        # If HOST_STATIC_DIR is not provided leave empty — we'll conditionally mount
-                        # it only when it exists and contains files. That prevents empty host
-                        # directories from overriding image-collected static files.
-                        if [ -z "${HOST_STATIC_DIR}" ]; then
-                            HOST_STATIC_DIR=""
-                        fi
+                        mkdir -p "${HOST_DATA_DIR}" "${HOST_MEDIA_DIR}"
 
-                        # Create host directories so docker bind-mounts won't be empty
-                        # If HOST_STATIC_DIR is defined and not empty, create it; otherwise skip
-                        if [ -n "${HOST_STATIC_DIR}" ]; then
-                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}" "${HOST_STATIC_DIR}"
-                        else
-                            mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
-                        fi
-
-                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
+                        # Remove containers antigos
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
+                        echo "Subindo novo container..."
 
-                        # Only mount HOST_STATIC_DIR if it exists and is non-empty to avoid
-                        # hiding static files that were baked into the image during build.
-                        if [ -n "${HOST_STATIC_DIR}" ] && [ "$(ls -A ${HOST_STATIC_DIR} 2>/dev/null | wc -l)" -gt 0 ]; then
-                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                                --network aluga_ai_aluga-ai-network \
-                                -v "${HOST_DATA_DIR}:/app/data" \
-                                -v "${HOST_MEDIA_DIR}:/app/media" \
-                                -v "${HOST_STATIC_DIR}:/app/staticfiles" \
-                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        else
-                            CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                                -v "${HOST_DATA_DIR}:/app/data" \
-                                -v "${HOST_MEDIA_DIR}:/app/media" \
-                                -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        fi
+                        # Container SEM volume de static → usa static interno da imagem sempre
+                        CID=$(docker run -d \
+                            --name aluga-ai \
+                            --restart unless-stopped \
+                            -p 8000:8000 \
+                            -v "${HOST_DATA_DIR}:/app/data" \
+                            -v "${HOST_MEDIA_DIR}:/app/media" \
+                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
+                            -e PYTHONPATH=/app \
+                            ${IMAGE_LATEST} 2>/dev/null || true)
+
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
                             sleep 5
-                            # Mostrar se o container está ativo (filtra por ID)
+
                             docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
-                            # Mostrar estado detalhado e últimos logs para diagnóstico
                             docker inspect --format '{{json .State}}' "${CID}" || true
                             docker logs --tail 50 "${CID}" || true
-                            # Garantir que arquivos estáticos existam dentro do container
-                            echo "Executando collectstatic dentro do container ${CID} (id curto mostrado acima)..."
+
+                            echo "Executando collectstatic dentro do container..."
                             if docker exec "${CID}" python manage.py collectstatic --noinput >/dev/null 2>&1; then
-                                echo "collectstatic executado com sucesso dentro do container"
+                                echo "collectstatic executado com sucesso."
                                 docker exec "${CID}" sh -c "ls -la /app/staticfiles || true"
                             else
-                                echo "AVISO: collectstatic falhou dentro do container (ver logs acima). Continuando deploy"
+                                echo "AVISO: collectstatic falhou dentro do container."
                                 docker exec "${CID}" sh -c "ls -la /app || true"
                             fi
+
                         else
-                            echo "docker run did not return a container id; container may have failed to start"
+                            echo "docker run não retornou um ID. Container pode ter falhado ao iniciar."
                         fi
+
                     else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
+                        echo "Falha ao puxar imagem ${IMAGE_LATEST}. Deploy cancelado."
                     fi
                 '''
             }
         }
+
     }
 
     post {
