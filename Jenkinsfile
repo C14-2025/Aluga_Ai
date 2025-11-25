@@ -1,14 +1,14 @@
  pipeline {
     agent any
-
+    
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
         string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
-
+    
     // CI/CD automático: nenhum parâmetro de execução manual
-
+    
     environment {
         PYTHON_VERSION = '3.13'
         DJANGO_SETTINGS_MODULE = 'aluga_ai_web.settings'
@@ -25,7 +25,7 @@
         SMTP_HOST = 'smtp.example.com'
         SMTP_PORT = '587'
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
@@ -33,20 +33,17 @@
                 checkout scm
             }
         }
-
+        
         stage('Prepare') {
             steps {
                 script {
-                    // Determina tag da imagem a partir do commit
-                    env.SHORT_COMMIT = sh(script: 'git rev-parse --short HEAD || echo ${BUILD_NUMBER}', returnStdout: true).trim()
-                    env.IMAGE_TAG = env.SHORT_COMMIT ?: (env.BUILD_NUMBER ?: 'latest')
-                    env.IMAGE = "${env.DOCKERHUB_REPO}:${env.IMAGE_TAG}"
-                    env.IMAGE_LATEST = "${env.DOCKERHUB_REPO}:latest"
+                    // Sempre usar a tag 'latest' para a imagem Docker
+                    env.IMAGE = "${env.DOCKERHUB_REPO}:latest"
                     echo "Image será: ${env.IMAGE}"
                 }
             }
         }
-
+        
         stage('Setup Python Environment') {
             steps {
                 echo 'Configurando ambiente Python...'
@@ -58,7 +55,7 @@
                 '''
             }
         }
-
+        
         stage('Install Dependencies') {
             steps {
                 echo 'Instalando dependências...'
@@ -68,7 +65,7 @@
                 '''
             }
         }
-
+        
         stage('Run Migrations') {
             steps {
                 echo 'Executando migrações do Django...'
@@ -78,7 +75,7 @@
                 '''
             }
         }
-
+        
         stage('Testes Unitários - Banco de Dados') {
             steps {
                 echo 'Executando testes de Banco de Dados...'
@@ -107,7 +104,7 @@
                 }
             }
         }
-
+        
         stage('Testes Unitários - API') {
             steps {
                 echo 'Executando testes de API...'
@@ -186,14 +183,14 @@
                 }
             }
         }
-
+        
         stage('Testes Unitários - Favoritos') {
             steps {
                 echo 'Executando testes de Favoritos...'
                 sh '''
                     . venv/bin/activate
-                    if [ -f favoritos/tests.py ]; then
-                        pytest favoritos/tests.py --template=html1/index.html --report=report_favoritos.html || true
+                    if [ -f Favoritos/tests.py ]; then
+                        pytest Favoritos/tests.py --template=html1/index.html --report=report_favoritos.html || true
                         mkdir -p aluga_ai_web
                         mv -f report_favoritos.html aluga_ai_web/report_favoritos.html || true
                     else
@@ -215,15 +212,15 @@
                 }
             }
         }
-
+        
 
         stage('Testes Unitários - Mensagens') {
             steps {
                 echo 'Executando testes de Mensagens...'
                 sh '''
                     . venv/bin/activate
-                    if [ -f mensagens/tests.py ]; then
-                        pytest mensagens/tests.py --template=html1/index.html --report=report_mensagens.html || true
+                    if [ -f Mensagens/tests.py ]; then
+                        pytest Mensagens/tests.py --template=html1/index.html --report=report_mensagens.html || true
                     fi
                         mv -f report_mensagens.html aluga_ai_web/report_mensagens.html || true
                 '''
@@ -271,7 +268,7 @@
                 }
             }
         }
-
+        
         stage('Executar ETL') {
             steps {
                 echo 'Executando processo de ETL...'
@@ -287,7 +284,7 @@
                 }
             }
         }
-
+        
         stage('Treinar Modelo ML') {
             steps {
                 echo 'Treinando modelo de Machine Learning...'
@@ -356,7 +353,7 @@
                 }
             }
         }
-
+        
         stage('Test Coverage Report') {
             steps {
                 echo 'Gerando relatório de cobertura de testes...'
@@ -473,7 +470,7 @@
                 }
             }
         }
-
+        
         stage('Validação do Sistema de Recomendação') {
             steps {
                 echo 'Validando sistema de recomendação...'
@@ -511,7 +508,7 @@
                 }
             }
         }
-
+        
         stage('Django Tests') {
             steps {
                 echo 'Executando testes do Django...'
@@ -521,7 +518,7 @@
                 '''
             }
         }
-
+        
         stage('Code Quality Check') {
             steps {
                 echo 'Verificando qualidade do código...'
@@ -623,7 +620,7 @@
                 }
             }
         }
-
+        
         stage('Test Django Server') {
             steps {
                 echo 'Testando se o servidor Django inicia corretamente...'
@@ -652,56 +649,33 @@
             }
         }
         stage('Deploy Application ') {
+            // Deploy automático somente na branch main
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # ... (Diretórios e mkdir -p) ...
-                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
-                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
-                        # Ensure host directories are defined; fall back to workspace subdirs when empty
-                        if [ -z "${HOST_DATA_DIR}" ]; then
-                            HOST_DATA_DIR="${WORKSPACE}/data"
-                        fi
-                        if [ -z "${HOST_MEDIA_DIR}" ]; then
-                            HOST_MEDIA_DIR="${WORKSPACE}/media"
-                        fi
+                    # Diretório para dados persistentes no host
+                    HOST_DATA_DIR="/opt/aluga-ai/data"
+                    HOST_STATIC_DIR="/opt/aluga-ai/static"
+                    HOST_MEDIA_DIR="/opt/aluga-ai/media"
 
-                        # Create host directories so docker bind-mounts won't be empty
-                        mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
+                    # Cria diretórios se não existirem
+                    mkdir -p ${HOST_DATA_DIR}
+                    mkdir -p ${HOST_STATIC_DIR}
+                    mkdir -p ${HOST_MEDIA_DIR}
 
-                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
-                        docker rm -f aluga-ai aluga-ai-app || true 
+                    # Atualiza a imagem do serviço via docker-compose (V1)
+                    docker-compose pull aluga-ai-app
+                    docker-compose up -d --force-recreate aluga-ai-app
 
-                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
-
-                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                            --network aluga_ai_aluga-ai-network \
-                            -v "${HOST_DATA_DIR}:/app/data" \
-                            -v "${HOST_MEDIA_DIR}:/app/media" \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
-                        echo "Started container ID: $CID"
-
-                        if [ -n "${CID}" ]; then
-                            sleep 5
-                            # Mostrar se o container está ativo (filtra por ID)
-                            docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
-                            # Mostrar estado detalhado e últimos logs para diagnóstico
-                            docker inspect --format '{{json .State}}' "${CID}" || true
-                            docker logs --tail 50 "${CID}" || true
-                            # No static handling in Jenkins; skip collectstatic here
-                            echo "Static files are not managed by Jenkins/Docker (skipping collectstatic)"
-                        else
-                            echo "docker run did not return a container id; container may have failed to start"
-                        fi
-                    else
-                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
-                    fi
+                    # Verifica se está rodando
+                    sleep 5
+                    docker-compose ps | grep aluga-ai-app || true
                 '''
             }
         }
     }
-
+    
     post {
         always {
             script {
