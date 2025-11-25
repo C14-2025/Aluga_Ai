@@ -82,7 +82,10 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# During development we keep the source static files in `assets/`.
+# This was migrated from the top-level `static/` folder. keep STATIC_URL = '/static/'
+# so the app still serves them at /static/; Django will read them from `assets/`.
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "assets")]
 
 # Where collectstatic will place collected files for production / deployments
 # Use a separate directory so the source `static/` (dev) and collected files

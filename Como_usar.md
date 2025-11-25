@@ -41,7 +41,7 @@ No Jenkins (<http://localhost:8080>):
 1. New Item → Multibranch Pipeline (nome: AlugaAi)
 2. Branch Sources → Git
 
-	- Project Repository: <https://github.com/C14-2025/Aluga_Ai.git>
+   - Project Repository: <https://github.com/C14-2025/Aluga_Ai.git>
 
 3. Build Configuration: by Jenkinsfile (padrão)
 4. Save → clique em “Scan Repository Now”
@@ -76,7 +76,6 @@ Parâmetros úteis:
 - DOCKERHUB_REPO: seu_usuario/aluga-ai
 - CREDENTIALS_ID: dockerhub-credentials
 
-
 ## 6. Habilitar builds automáticos (webhook)
 
 Se quiser que cada push no GitHub dispare build imediato:
@@ -92,30 +91,32 @@ ngrok http 8080
 
 - Copie a URL HTTPS do ngrok (ex.: <https://xxxx.ngrok-free.dev>)
 - No GitHub do repositório → Settings → Webhooks → Add webhook
-	- Payload URL: <https://xxxx.ngrok-free.dev/github-webhook/>
-	- Content type: application/json
-	- Just the push event
-	- Add webhook
+  - Payload URL: <https://xxxx.ngrok-free.dev/github-webhook/>
+  - Content type: application/json
+  - Just the push event
+  - Add webhook
 
 Se não quiser usar ngrok, use “Scan Repository Now” no Jenkins quando precisar.
 
 ## 7. Publicar imagem no Docker Hub
 
 - Crie credencial no Jenkins:
-	- Manage Jenkins → Credentials → System → Global → Add Credentials
-	- Kind: Username with password
-		- Username: seu usuário do Docker Hub (ex.: `seuusuario`)
-		- Password: sua senha OU um Access Token (se usa login via GitHub/2FA)
-		- ID: dockerhub-credentials
+
+  - Manage Jenkins → Credentials → System → Global → Add Credentials
+  - Kind: Username with password
+    - Username: seu usuário do Docker Hub (ex.: `seuusuario`)
+    - Password: sua senha OU um Access Token (se usa login via GitHub/2FA)
+    - ID: dockerhub-credentials
 
 - Rode o build com push:
 
 - Build with Parameters:
-	- RUN_TESTS: false (opcional para acelerar)
-	- BUILD_DOCKER_IMAGE: true
-	- PUSH_TO_REGISTRY: true
-	- DOCKERHUB_REPO: `seuusuario/aluga-ai`
-	- CREDENTIALS_ID: `dockerhub-credentials`
+
+  - RUN_TESTS: false (opcional para acelerar)
+  - BUILD_DOCKER_IMAGE: true
+  - PUSH_TO_REGISTRY: true
+  - DOCKERHUB_REPO: `seuusuario/aluga-ai`
+  - CREDENTIALS_ID: `dockerhub-credentials`
 
 - Verifique no Hub: <https://hub.docker.com/r/seuusuario/aluga-ai> (tags `latest` e a do commit)
 
@@ -154,5 +155,5 @@ docker-compose up -d --build jenkins
 - STATIC_ROOT não definido durante build da imagem: já tratamos com `|| true`. Se quiser ajustar definitivamente, adicione `STATIC_ROOT = BASE_DIR / "staticfiles"` no `settings.py`.
 
 ---
-Pronto! Com isso, qualquer pessoa consegue subir o Jenkins, rodar a app, habilitar webhook e publicar a imagem no Docker Hub.
 
+Pronto! Com isso, qualquer pessoa consegue subir o Jenkins, rodar a app, habilitar webhook e publicar a imagem no Docker Hub.
