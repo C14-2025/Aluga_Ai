@@ -183,15 +183,20 @@
                 }
             }
         }
-
+        //Alvaro
         stage('Testes ETL') {
             steps {
                 echo 'Executando testes de ETL...'
                 dir('dados') {
                     sh '''
                         . ../venv/bin/activate
+                        # Garantir diretório de relatórios
+                        mkdir -p reports
                         if [ -f test_etl.py ]; then
-                            pytest test_etl.py --template=html1/index.html --report=report_etl.html || true
+                            # Executa ETL (não falha a pipeline)
+                            python etl.py || true
+                            # Executa os testes e gera relatório HTML + junit XML
+                            pytest test_etl.py --junitxml=reports/junit_etl.xml --template=html1/index.html --report=reports/report_etl.html || true
                         else
                             echo "No test_etl.py found in dados, skipping ETL tests"
                         fi
@@ -200,36 +205,21 @@
             }
             post {
                 always {
-                    // Archive the report generated inside the `dados/` folder
-                    archiveArtifacts artifacts: 'dados/report_etl.html', allowEmptyArchive: true
+                    // Arquiva os relatórios gerados dentro de `dados/reports`
+                    archiveArtifacts artifacts: 'dados/reports/report_etl.html,dados/reports/junit_etl.xml', allowEmptyArchive: true
                     publishHTML([
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'dados',
+                        reportDir: 'dados/reports',
                         reportFiles: 'report_etl.html',
                         reportName: 'Report ETL'
                     ])
+                    // Publica o junit para painel de testes do Jenkins
+                    junit 'dados/reports/junit_etl.xml'
                 }
             }
         }
-
-        stage('Executar ETL') {
-            steps {
-                echo 'Executando processo de ETL...'
-                dir('dados') {
-                    sh '''
-                        . ../venv/bin/activate
-                        if [ -f etl.py ]; then
-                            python etl.py || true
-                        else
-                            echo "No etl.py found in dados, skipping ETL execution"
-                        fi
-                    '''
-                }
-            }
-        }
-
         stage('Treinar Modelo ML') {
             steps {
                 echo 'Treinando modelo de Machine Learning...'
@@ -667,4 +657,4 @@
             }
         }
     }
-}
+}  
