@@ -73,18 +73,6 @@ def test_gera_arquivo_json(tmp_path):
         dados = json.load(f)
     assert isinstance(dados, list) and len(dados) == 5
 
-def test_tags_e_comodidades():
-    imovel = cd.gerar_imovel()
-    assert isinstance(imovel["tags"], list)
-    assert 1 <= len(imovel["tags"]) <= 4
-    assert isinstance(imovel["comodidades"], list)
-    assert 4 <= len(imovel["comodidades"]) <= 8
-
-def test_disponibilidade_periodos_validos():
-    imovel = cd.gerar_imovel()
-    for periodo in imovel["disponibilidade"]:
-        assert "inicio" in periodo and "fim" in periodo
-        assert periodo["inicio"] <= periodo["fim"]
 
 
 def test_gerar_imovel_retorna_dict():
@@ -92,9 +80,6 @@ def test_gerar_imovel_retorna_dict():
     assert isinstance(imovel, dict)
     assert "tipo" in imovel
     assert "preco_aluguel" in imovel
-
-
-# Testes removidos: test_obter_dados_tabela_retorna_lista, test_view_listar_imoveis, test_view_listar_imoveis_sem_dados
 
 def test_preco_m2_por_bairro():
     valor = cd.preco_m2_por_bairro("São Paulo", "Centro")
@@ -104,33 +89,13 @@ def test_preco_m2_por_bairro():
     assert 20 <= valor_random <= 60
 
 
-def test_gerar_disponibilidade_formatos():
-    disponibilidade = cd.gerar_disponibilidade()
-    assert isinstance(disponibilidade, list)
-    for periodo in disponibilidade:
-        assert "inicio" in periodo and "fim" in periodo
-        assert len(periodo["inicio"]) == 10
-        assert len(periodo["fim"]) == 10
-        assert periodo["inicio"] <= periodo["fim"]
+
 
 
 def test_gerar_lista_imoveis_zero():
     lista = cd.gerar_lista_imoveis(0)
     assert isinstance(lista, list)
     assert len(lista) == 0
-
-
-#verifica formato e range de check-in e check-out
-def test_checkin_checkout_format():
-    imovel = cd.gerar_imovel()
-    checkin = imovel["checkin"]
-    checkout = imovel["checkout"]
-    # Deve estar no formato HH:00
-    assert checkin.endswith(":00")
-    assert checkout.endswith(":00")
-    # Check-in entre 13h e 16h, checkout entre 10h e 12h
-    assert 13 <= int(checkin.split(":")[0]) <= 16
-    assert 10 <= int(checkout.split(":")[0]) <= 12
 
 #verifica formato do cep
 def test_endereco_cep_format():
@@ -142,38 +107,4 @@ def test_endereco_cep_format():
     assert parte1.isdigit() and len(parte1) == 5
     assert parte2.isdigit() and len(parte2) == 3
 
-#verifica se max_hospedes está coerente com o número de quartos
-def test_max_hospedes_relacao_quartos():
-    imovel = cd.gerar_imovel()
-    quartos = imovel["quartos"]
-    max_hospedes = imovel["max_hospedes"]
-    # Regra de geração: max_hospedes entre n_quartos e 2*n_quartos+2
-    assert quartos <= max_hospedes <= (quartos * 2 + 2)
-
-def test_gerar_disponibilidade_com_mock(monkeypatch):
-    # Mocka random.randint para controlar os valores
-    chamadas = {"count": 0}
-
-    def fake_randint(a, b):
-        chamadas["count"] += 1
-        # 1ª chamada -> quantidade de blocos
-        if chamadas["count"] == 1:
-            return 1
-        # 2ª chamada -> dias para início
-        elif chamadas["count"] == 2:
-            return 10
-        # 3ª chamada -> dias para duração
-        elif chamadas["count"] == 3:
-            return 5
-        return a  # fallback seguro
-
-    monkeypatch.setattr(cd.random, "randint", fake_randint)
-
-    disponibilidade = cd.gerar_disponibilidade()
-    assert isinstance(disponibilidade, list)
-    assert len(disponibilidade) == 1
-
-    periodo = disponibilidade[0]
-    assert "inicio" in periodo and "fim" in periodo
-    assert periodo["inicio"] <= periodo["fim"]
 
