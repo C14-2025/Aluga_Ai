@@ -712,6 +712,15 @@
                             # Mostrar estado detalhado e últimos logs para diagnóstico
                             docker inspect --format '{{json .State}}' "${CID}" || true
                             docker logs --tail 50 "${CID}" || true
+                            # Garantir que arquivos estáticos existam dentro do container
+                            echo "Executando collectstatic dentro do container ${CID} (id curto mostrado acima)..."
+                            if docker exec "${CID}" python manage.py collectstatic --noinput >/dev/null 2>&1; then
+                                echo "collectstatic executado com sucesso dentro do container"
+                                docker exec "${CID}" sh -c "ls -la /app/staticfiles || true"
+                            else
+                                echo "AVISO: collectstatic falhou dentro do container (ver logs acima). Continuando deploy"
+                                docker exec "${CID}" sh -c "ls -la /app || true"
+                            fi
                         else
                             echo "docker run did not return a container id; container may have failed to start"
                         fi
