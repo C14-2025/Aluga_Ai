@@ -144,165 +144,136 @@ Geração de dados simulados: `ConstrucaoDeDados.py`
 venv\Scripts\activate
 python jobs/validate_recommendation_system.py
 ```
+"""
+Aluga_Ai
+============
 
-Saída: `validation_results.json` (arquivos, carregamento de modelo, predição, recomendação).
+Projeto acadêmico que simula um marketplace de aluguel de imóveis (curta e longa duração).
 
-### Teste automatizado de recomendação pessoal
+Este README serve como guia prático para configurar, rodar e contribuir com o projeto.
+
+Estrutura resumida
+------------------
+- `manage.py` — entrypoint do Django
+- `aluga_ai_web/` — configurações Django
+- `recomendacoes/` — sistema de recomendação + scripts de validação
+- `dados/` — ETL e diretório de relatórios (`dados/reports` usado em CI)
+- `Jenkinsfile` — pipeline Declarative Jenkins
+- `Dockerfile`, `docker-compose.yml` — containerização
+- `requirements.txt` — dependências Python
+
+Pré-requisitos
+--------------
+- Python 3.11+ (Python 3.13 recomendado para desenvolvimento)
+- Git
+- (Opcional) Docker Desktop + Docker Compose
+
+Execução local (PowerShell)
+---------------------------
+1) Criar e ativar virtualenv:
 
 ```powershell
-pytest recomendacoes/tests/test_personal_recommend.py -q
+python -m venv .venv
+. .venv\Scripts\Activate.ps1
 ```
 
-Cobertura: criação de usuário, favoritos iniciais, endpoint `/api/ml/personal_recommend/`, exclusão dos favoritos nas recomendações e persistência em `UserRecommendation`.
-
-## 7. Containerização
-
-Dockerfile simplificado:
-
-```dockerfile
-FROM python:3.13-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-```
-
-Build & run:
+2) Instalar dependências:
 
 ```powershell
-docker build -t aluga-ai:dev .
-docker run -it --rm -p 8000:8000 aluga-ai:dev
+pip install -r requirements.txt
 ```
+
+3) Aplicar migrações e criar superusuário (opcional):
+
+```powershell
+python manage.py migrate --noinput
+python manage.py createsuperuser
+```
+
+4) Rodar servidor de desenvolvimento:
+
+```powershell
+python manage.py runserver 0.0.0.0:8000
+```
+
+Abra `http://localhost:8000`.
+
+Execução com Docker Compose (Jenkins + app)
+-----------------------------------------
+```powershell
+Copy-Item .env.example .env
+docker compose up -d --build jenkins app
+```
+
+- App: http://localhost:8000
+- Jenkins: http://localhost:8080 (credenciais via JCasC, ver `.env.example`)
 
 Parar:
 
 ```powershell
-docker stop $(docker ps -q --filter ancestor=aluga-ai:dev)
-```
-
-Ou via Docker Compose:
-
-```powershell
-docker-compose up -d app
-docker-compose down
-```
-
-## 8. CI/CD (Jenkins)
-
-Pipeline declarativa em `Jenkinsfile` com parâmetros atuais:
-
-| Param | Default | Descrição |
-|-------|---------|-----------|
-| NOTIFY_EMAIL | (vazio) | Email para notificação de sucesso/falha. |
-| DOCKERHUB_REPO | `alvarocareli/aluga-ai` | Repositório Docker Hub destino. |
-
-### Stages principais
-
-- Checkout / Prepare (define tag da imagem)
-- Setup Python / Install Dependencies / Migrations
-- Testes Banco de Dados (`BancoDeDados/test_bd.py`)
-- Testes API / ETL (`Dados/test_etl.py` + execução `etl.py`)
-- Testes Propriedades & Reservas
-- Validação Recomendação (script `jobs/validate_recommendation_system.py`)
-- Testes Django gerais (`manage.py test`)
-- Code Quality (`pylint`, `flake8`)
-- Teste de subida de servidor (`runserver` + curl)
-- Testes Recomendação Personalizada (`recomendacoes/tests/test_personal_recommend.py`)
-- Deploy (somente branch `main`)
-
-Relatórios/artefatos: HTML pytest, `validation_results.json`, logs server, lint reports.
-
-Adicionar novos testes: criar arquivos `test_*.py` em `recomendacoes/tests/`.
-
-### 8.1. Jenkins via Docker Compose (detalhes)
-
-Serviço `jenkins` em `docker-compose.yml` com volume `jenkins_home` (persiste usuários, jobs, histórico, credenciais).
-`Dockerfile.jenkins` instala plugins via `jenkins-plugin-cli` e aplica `jenkins-casc.yaml` (JCasC).
-Credenciais admin vêm do `.env` (não commitar `.env`, use `.env.example`).
-Reset completo (apaga tudo):
-
-```powershell
 docker compose down
-docker volume rm aluga_ai_jenkins_home
-docker compose up -d --build jenkins
 ```
 
-ATENÇÃO: apaga jobs/usuários/histórico; faça backup antes.
-
-### 8.2. Atualizando a imagem / mudanças recentes
-
-Após editar `Dockerfile.jenkins`, `jenkins-plugins.txt` ou `jenkins-casc.yaml`:
+Testes e validação
+------------------
+- Todos os testes com `pytest`:
 
 ```powershell
-docker compose build jenkins
-docker compose up -d jenkins
+pytest -v
 ```
 
-Em Jenkins já inicializado (volume existente), reinstalar plugins e reiniciar:
+- Testes Django nativos:
 
 ```powershell
-docker exec jenkins-aluga-ai jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt --verbose
-docker restart jenkins-aluga-ai
+python manage.py test
 ```
 
-### 8.3. Disparo automático por Git (opcional)
+- Teste de recomendação pessoal (exemplo):
 
-Job padrão usa script inline e não dispara em commits.
-Para builds automáticos: criar Pipeline "from SCM" ou Multibranch e configurar:
+```powershell
+pytest recomendacoes/Testes/Teste_recomendacao.py -q
+```
 
-- Webhook (recomendado) OU
-- Poll SCM (`H/5 * * * *`).
+- Script de validação do sistema de recomendação:
 
-### Multibranch (opcional)
+```powershell
+python recomendacoes/Testes/ValidacaoSistema.py
+```
 
-Criar um job Multibranch apontando para o repositório para builds automáticos por branch/PR (webhook ou polling).
+O script gera `validation_results.json` no diretório do projeto. Em CI a pipeline costuma mover esse arquivo para `dados/reports/` e arquivá-lo.
 
-## 9. Branches
+CI / Jenkins
+------------
+O repositório inclui um `Jenkinsfile` com stages para:
+- instalar dependências
+- rodar ETL e testes
+- gerar relatórios (pytest HTML/JUnit)
+- executar a validação do sistema de recomendação e arquivar `validation_results.json`
 
-`main` (produção), `Ajustes-IntegraçaoIA` (recomendações / integração recente) e futuras feature branches (multibranch opcional).
+Se usar o `docker-compose`, o serviço `jenkins` provisiona plugins listados em `jenkins-plugins.txt` e aplica configuração via `jenkins-casc.yaml`.
 
-## 10. Qualidade de Código
+Dicas rápidas / Troubleshooting
+------------------------------
+- Arquivos estáticos não aparecendo? Verifique `aluga_ai_web/settings.py` e execute `python manage.py collectstatic`.
+- Erro Docker `COPY stack/`? Confirme se a pasta `stack/` existe ou remova a linha no `Dockerfile`.
+- Erro Docker/WSL (rpc error / EOF)? Reinicie Docker Desktop e rode `wsl --shutdown`.
 
-Ferramentas: `pylint`, `flake8` (não bloqueiam build: `--exit-zero`). Expansão planejada: cobertura (`coverage.py`), métricas de complexidade, duplicação.
+Contribuição
+------------
+1. Crie uma branch: `git checkout -b feature/minha-feature`
+2. Implemente e adicione testes
+3. Commit & push
+4. Abra PR para `main`
 
-## 11. Troubleshooting Rápido
+Arquivos importantes modificados recentemente
+--------------------------------------------
+- `Jenkinsfile` — atualizações para ETL, geração de relatórios e arquivamento de `validation_results.json`.
+- `recomendacoes/Testes/ValidacaoSistema.py` — versão com modo mock usada em CI para validação determinística.
+- `aluga_ai_web/settings.py` — ajuste `STATIC_ROOT` para coleta de arquivos estáticos.
 
-| Sintoma | Causa | Solução |
-|--------|-------|---------|
-| Erro venv no Jenkins | Ambiente limpo | Jenkinsfile cria venv; checar Python base. |
-| HTML report não publica | Plugin ausente | Instalar "HTML Publisher". |
-| Push Docker falha | Credencial incorreta | Recriar `dockerhub-credentials`. |
-| Deploy ignorado | Branch ≠ main | Fazer merge para `main`. |
-| Teste ETL falha | Schema mudou | Ajustar script e teste. |
-| Login Jenkins pede senha inicial | Volume novo | Usar admin/senha do `.env` (JCasC). |
+Próximos passos disponíveis
+--------------------------
+- Posso commitar essas mudanças e abrir um PR. Deseja que eu faça isso?
+
+"""
 | Job pipeline não aparece | Plugins ausentes | Reinstalar plugins, reiniciar Jenkins. |
-| Portas ocupadas | Conflito local | Alterar portas ou parar serviço. |
-
-## 12. Próximas Extensões
-
-- Cobertura de testes e badge
-- Multi-stage Docker para reduzir imagem
-- Webhooks Git para disparo automático
-- Testes de integração e carga
-- Observabilidade (logs estruturados / métricas / tracing)
-
-## 13. Contribuição
-
-1. Criar branch feature
-2. Implementar + testes
-3. Commit + push
-4. Abrir PR para `main`
-5. Aguardar pipeline e revisão
-
-## 14. Licença / Uso
-
-Uso acadêmico e estudo. Ajuste conforme necessidade institucional.
-
-## 15. Contato / Suporte
-
-Em caso de dúvidas: abrir Issue ou contatar responsáveis da turma.
-
----
-_README atualizado: fluxo de recomendação pessoal, nova organização de testes e ajustes no Jenkinsfile._
-Os testes automatizados garantem funcionamento de CRUD, ETL e recomendações pessoais.
