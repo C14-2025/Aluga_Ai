@@ -47,7 +47,7 @@ services:
     networks:
       - aluga-ai-network
     restart: unless-stopped
-    command: sh -c "chmod -R 777 /app/static && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   jenkins_home:
