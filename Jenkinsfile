@@ -4,7 +4,7 @@
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
-        string(name: 'DOCKERHUB_REPO', defaultValue: 'd1d104/aluga_ai-aluga-ai-app', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
+        string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
 
     // CI/CD automático: nenhum parâmetro de execução manual
@@ -615,7 +615,7 @@
                                     raise
                                 PY
                                 '''
-                        }           
+                    }           
                                 } catch (err) {
                                     echo "SMTP credential 'smtp-creds' not available or send failed: ${err}"
                                     echo 'Skipping Python SMTP send (no credentials or error)'
