@@ -38,19 +38,23 @@ services:
     volumes:
       - .:/app
       - media_volume:/app/media
+      - static_volume:/app/static
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings
       - PYTHONPATH=/app
+      - STATIC_ROOT=/app/static
     networks:
       - aluga-ai-network
     restart: unless-stopped
-    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   jenkins_home:
     driver: local
   media_volume:
+    driver: local
+  static_volume:
     driver: local
 
 networks:
