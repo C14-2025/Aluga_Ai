@@ -38,7 +38,6 @@ services:
     volumes:
       - .:/app
       - media_volume:/app/media
-      - static_volume:/static
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=aluga_ai_web.settings
@@ -50,8 +49,6 @@ services:
 
 volumes:
   jenkins_home:
-    driver: local
-  static_volume:
     driver: local
   media_volume:
     driver: local
