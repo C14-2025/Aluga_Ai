@@ -1,8 +1,8 @@
 /* Custom visual improvements */
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #222831;
-  color: #eeeeee;
+  background: #0b1220; /* deep navy */
+  color: #e6eef3; /* soft off-white */
 }
 .container {
   max-width: 980px;
@@ -10,19 +10,19 @@ body {
   padding: 0 20px;
 }
 .site-header {
-  background: linear-gradient(90deg, #a311a5, #cd2020);
+  background: linear-gradient(90deg, #4f46e5, #06b6d4); /* indigo -> teal */
   color: #fff;
   padding: 12px 0;
 }
 .nav a {
-  color: #fff;
+  color: #ffffff;
   margin-right: 12px;
   text-decoration: none;
   font-weight: 600;
 }
 .greeting {
   margin-left: 12px;
-  color: #00ff00;
+  color: #34d399; /* mint green accent */
 }
 .cards {
   display: flex;
@@ -30,10 +30,10 @@ body {
   gap: 16px;
 }
 .card {
-  background: #393e46;
+  background: #0f1724; /* card deep slate */
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 6px 18px rgba(0, 173, 181, 0.15);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.6);
   flex: 1 1 300px;
 }
 .card h3 {
@@ -50,14 +50,14 @@ body {
   color: #fff;
 }
 .btn-confirm {
-  background: #28a745;
+  background: #10b981; /* green */
 }
 .btn-cancel {
-  background: #dc3545;
+  background: #ef4444; /* red */
 }
 .btn-primary {
-  background: #00adb5;
-  color: #222831;
+  background: #06b6d4; /* teal */
+  color: #072426; /* dark text for contrast on lightish teal */
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
@@ -68,28 +68,28 @@ body {
   border-radius: 6px;
 }
 .success {
-  background: #393e46;
-  border: 1px solid #00adb5;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.22);
 }
 .error {
-  background: #222831;
-  border: 1px solid #dc3545;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.22);
 }
 .info {
-  background: #00adb5;
-  border: 1px solid #393e46;
+  background: rgba(6, 182, 212, 0.06);
+  border: 1px solid rgba(6, 182, 212, 0.18);
 }
 .warning {
-  background: #393e46;
-  border: 1px solid #ffd700;
+  background: rgba(250, 204, 21, 0.06);
+  border: 1px solid rgba(250, 204, 21, 0.18);
 }
 
 /* Form styles for cadastro pages */
 .form-card {
-  background: #fff;
+  background: #0f1724; /* dark form card */
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(23, 32, 77, 0.08);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
 }
 .form-row {
   margin-bottom: 12px;
@@ -98,6 +98,7 @@ body {
   display: block;
   font-weight: 600;
   margin-bottom: 6px;
+  color: #cbd5e1;
 }
 .form-row input[type="text"],
 .form-row input[type="email"],
@@ -106,7 +107,9 @@ body {
 .form-row select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #e0e6ef;
+  background: #071229;
+  color: #e6eef3;
+  border: 1px solid #1f2937;
   border-radius: 6px;
   box-sizing: border-box;
 }
@@ -129,9 +132,9 @@ body {
 
 /* Airbnb-style property detail */
 .airbnb-style {
-  background: #fff;
+  background: linear-gradient(180deg, #0f1724, #081223);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(23, 32, 77, 0.1);
+  box-shadow: 0 10px 36px rgba(2, 6, 23, 0.6);
   padding: 32px;
   margin-top: 24px;
 }
@@ -139,7 +142,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-bottom: 1px solid #e0e6ef;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-bottom: 18px;
 }
 .host-price {
@@ -150,15 +153,15 @@ body {
 }
 .host {
   font-weight: 600;
-  color: #4b6cb7;
+  color: #60a5fa; /* soft blue */
 }
 .price {
   font-weight: 700;
-  color: #28a745;
+  color: #f59e0b; /* warm amber */
 }
 .per-night {
   font-size: 14px;
-  color: #888;
+  color: #9ca3af;
 }
 .property-gallery {
   margin-bottom: 18px;
@@ -182,6 +185,7 @@ body {
   flex: 2;
   font-size: 16px;
   margin-bottom: 18px;
+  color: #dbeafe;
 }
 .property-amenities {
   flex: 1;
@@ -200,7 +204,7 @@ body {
   margin-bottom: 6px;
 }
 .amenity-icon {
-  color: #28a745;
+  color: #10b981;
   font-size: 18px;
 }
 .property-actions {
@@ -209,18 +213,18 @@ body {
 
 /* Chat styles */
 .chat-container {
-  background: #fff;
+  background: #071229;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
 }
 .messages {
   max-height: 420px;
   overflow: auto;
   padding: 8px;
-  border: 1px solid #f0f3f8;
+  border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 6px;
-  background: #fbfdff;
+  background: #041226;
 }
 .message {
   margin-bottom: 10px;
@@ -228,7 +232,7 @@ body {
   border-radius: 6px;
 }
 .message.mine {
-  background: #e6f4ea;
+  background: rgba(16, 185, 129, 0.06);
   text-align: right;
 }
 .message .meta {
@@ -249,12 +253,12 @@ body {
   margin-top: 8px;
   padding: 8px 12px;
   border-radius: 6px;
-  background: #007bff;
-  color: #fff;
+  background: #06b6d4;
+  color: #072426;
   border: none;
 }
 .badge {
-  background: #dc3545;
+  background: #ef4444;
   color: #fff;
   padding: 2px 8px;
   border-radius: 12px;
