@@ -5,12 +5,20 @@ from .forms import PropriedadeForm
 
 
 class PropriedadeModelTests(TestCase):
-	def test_create_property_sets_owner_and_defaults(self):
-		owner = User.objects.create_user(username="owner", password="pass")
-		p = Propriedade.objects.create(owner=owner, titulo="Casa Teste", preco_por_noite="100.00")
-		self.assertEqual(p.owner, owner)
-		self.assertTrue(p.ativo)
-		self.assertEqual(str(p), f"{p.titulo} - {owner.username}")
+    def test_create_property_sets_owner(self):
+        owner = User.objects.create_user(username="owner", password="pass")
+        p = Propriedade.objects.create(owner=owner, titulo="Casa Teste", preco_por_noite="100.00")
+        self.assertEqual(p.owner, owner)
+
+    def test_create_property_default_ativo_true(self):
+        owner = User.objects.create_user(username="owner2", password="pass")
+        p = Propriedade.objects.create(owner=owner, titulo="Casa Teste 2", preco_por_noite="200.00")
+        self.assertTrue(p.ativo)
+
+    def test_str_representation_includes_title_and_owner(self):
+        owner = User.objects.create_user(username="owner3", password="pass")
+        p = Propriedade.objects.create(owner=owner, titulo="Casa Teste 3", preco_por_noite="300.00")
+        self.assertEqual(str(p), f"{p.titulo} - {owner.username}")
 
 class PropriedadesFormTests(TestCase):
     def setUp(self):
