@@ -692,7 +692,7 @@
                         # hiding static files that were baked into the image during build.
                         if [ -n "${HOST_STATIC_DIR}" ] && [ "$(ls -A ${HOST_STATIC_DIR} 2>/dev/null | wc -l)" -gt 0 ]; then
                             CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
-                                --network aluga_ai \
+                                --network aluga_ai_aluga-ai-network \
                                 -v "${HOST_DATA_DIR}:/app/data" \
                                 -v "${HOST_MEDIA_DIR}:/app/media" \
                                 -v "${HOST_STATIC_DIR}:/app/staticfiles" \
