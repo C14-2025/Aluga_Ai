@@ -4,7 +4,7 @@
     // Parâmetros de execução
     parameters {
         string(name: 'NOTIFY_EMAIL', defaultValue: '', description: 'Email para receber notificações da pipeline (sucesso/falha)')
-        string(name: 'DOCKERHUB_REPO', defaultValue: 'alvarocareli/aluga-ai', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
+        string(name: 'DOCKERHUB_REPO', defaultValue: 'd1d104/aluga_ai-aluga-ai-app', description: 'Repositório no Docker Hub (ex.: usuario/aluga-ai)')
     }
 
     // CI/CD automático: nenhum parâmetro de execução manual
@@ -573,56 +573,56 @@
                         withCredentials([usernamePassword(credentialsId: 'smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
                             sh '''
                                 python - <<'PY'
-    import os, smtplib, ssl
-    to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
-    smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
-    smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-    user = os.environ.get('SMTP_USER')
-    password = os.environ.get('SMTP_PASS')
-    subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
-    body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
-    msg = f"Subject: {subject}\n\n{body}"
-    try:
-        # If port 465 (implicit SSL) use SMTP_SSL
-        if smtp_port == 465:
-            context = ssl.create_default_context()
-            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
-                server.login(user, password)
-                server.sendmail(user, [to], msg)
-        else:
-            # Try STARTTLS first (typical for port 587)
-            server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
-            server.ehlo()
-            try:
-                server.starttls()
-                server.ehlo()
-                server.login(user, password)
-                server.sendmail(user, [to], msg)
-                server.quit()
-            except Exception as starttls_err:
-                # STARTTLS failed — try implicit SSL as a fallback
-                try:
-                    server.quit()
-                except Exception:
-                    pass
-                context = ssl.create_default_context()
-                with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
-                    ssl_server.login(user, password)
-                    ssl_server.sendmail(user, [to], msg)
-        print('Email sent to', to)
-    except Exception as e:
-        print('Failed to send email:', e)
-        raise
-    PY
-                            '''
+                                import os, smtplib, ssl
+                                to = os.environ.get('NOTIFY_EMAIL') or os.environ.get('DEFAULT_NOTIFY_EMAIL')
+                                smtp_host = os.environ.get('SMTP_HOST', 'smtp.example.com')
+                                smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+                                user = os.environ.get('SMTP_USER')
+                                password = os.environ.get('SMTP_PASS')
+                                subject = f"Jenkins: {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')}"
+                                body = f"Pipeline {os.environ.get('JOB_NAME')} #{os.environ.get('BUILD_NUMBER')} finalizada. Ver: {os.environ.get('BUILD_URL')}"
+                                msg = f"Subject: {subject}\n\n{body}"
+                                try:
+                                    # If port 465 (implicit SSL) use SMTP_SSL
+                                    if smtp_port == 465:
+                                        context = ssl.create_default_context()
+                                        with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
+                                            server.login(user, password)
+                                            server.sendmail(user, [to], msg)
+                                    else:
+                                        # Try STARTTLS first (typical for port 587)
+                                        server = smtplib.SMTP(smtp_host, smtp_port, timeout=30)
+                                        server.ehlo()
+                                        try:
+                                            server.starttls()
+                                            server.ehlo()
+                                            server.login(user, password)
+                                            server.sendmail(user, [to], msg)
+                                            server.quit()
+                                        except Exception as starttls_err:
+                                            # STARTTLS failed — try implicit SSL as a fallback
+                                            try:
+                                                server.quit()
+                                            except Exception:
+                                                pass
+                                            context = ssl.create_default_context()
+                                            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as ssl_server:
+                                                ssl_server.login(user, password)
+                                                ssl_server.sendmail(user, [to], msg)
+                                    print('Email sent to', to)
+                                except Exception as e:
+                                    print('Failed to send email:', e)
+                                    raise
+                                PY
+                                '''
+                        }           
+                                } catch (err) {
+                                    echo "SMTP credential 'smtp-creds' not available or send failed: ${err}"
+                                    echo 'Skipping Python SMTP send (no credentials or error)'
+                                }
+                            }
                         }
-                    } catch (err) {
-                        echo "SMTP credential 'smtp-creds' not available or send failed: ${err}"
-                        echo 'Skipping Python SMTP send (no credentials or error)'
                     }
-                }
-            }
-        }
 
         stage('Test Django Server') {
             steps {
