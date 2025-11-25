@@ -190,6 +190,8 @@
                 dir('dados') {
                     sh '''
                         . ../venv/bin/activate
+                        # Ativar mocks para testes ETL em CI (evita dependências externas)
+                        export ALUGAAI_USE_MOCKS=1
                         # Garantir diretório de relatórios
                         mkdir -p reports
                         if [ -f test_etl.py ]; then
