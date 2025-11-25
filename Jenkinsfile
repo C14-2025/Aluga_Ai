@@ -651,18 +651,15 @@
                 }
             }
         }
-        stage('Deploy Application') {
+        stage('Deploy Application ') {
             when { expression { return env.BRANCH_NAME == 'main' } }
             steps {
                 echo 'Fazendo deploy da aplicação...'
                 sh '''
-                    # Sempre usa a imagem mais recente do Docker Hub
-                    IMAGE_LATEST="alvarocareli/aluga-ai:latest"
-
-                    echo "Baixando imagem mais recente: $IMAGE_LATEST"
-                    if docker pull "$IMAGE_LATEST" >/dev/null 2>&1; then 
-
-                        # Garante diretórios apenas para data e media
+                    # ... (Diretórios e mkdir -p) ...
+                    # Tenta baixar a imagem 'latest' para o deploy (garantindo que a imagem publicada seja usada)
+                    if docker pull ${IMAGE_LATEST} >/dev/null 2>&1; then 
+                        # Ensure host directories are defined; fall back to workspace subdirs when empty
                         if [ -z "${HOST_DATA_DIR}" ]; then
                             HOST_DATA_DIR="${WORKSPACE}/data"
                         fi
@@ -670,53 +667,39 @@
                             HOST_MEDIA_DIR="${WORKSPACE}/media"
                         fi
 
-                        mkdir -p "${HOST_DATA_DIR}" "${HOST_MEDIA_DIR}"
+                        # Create host directories so docker bind-mounts won't be empty
+                        mkdir -p "${HOST_DATA_DIR}"  "${HOST_MEDIA_DIR}"
 
-                        # Remove containers antigos
+                        # Remove o container antigo (tenta nomes antigos e novo para segurança)
                         docker rm -f aluga-ai aluga-ai-app || true 
 
-                        echo "Subindo novo container..."
+                        # Roda o novo container (use host dir variables which are now guaranteed non-empty)
 
-                        # Container SEM volume de static → usa static interno da imagem sempre
-                        CID=$(docker run -d \
-                            --name aluga-ai \
-                            --restart unless-stopped \
-                            -p 8000:8000 \
+                        CID=$(docker run -d --name aluga-ai --restart unless-stopped -p 8000:8000 \
+                            --network aluga_ai_aluga-ai-network \
                             -v "${HOST_DATA_DIR}:/app/data" \
                             -v "${HOST_MEDIA_DIR}:/app/media" \
-                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings \
-                            -e PYTHONPATH=/app \
-                            ${IMAGE_LATEST} 2>/dev/null || true)
-
+                            -e DJANGO_SETTINGS_MODULE=aluga_ai_web.settings -e PYTHONPATH=/app ${IMAGE_LATEST} 2>/dev/null || true)
                         echo "Started container ID: $CID"
 
                         if [ -n "${CID}" ]; then
                             sleep 5
-
+                            # Mostrar se o container está ativo (filtra por ID)
                             docker ps --filter "id=${CID}" --format "{{.ID}} {{.Names}} {{.Status}}" || true
+                            # Mostrar estado detalhado e últimos logs para diagnóstico
                             docker inspect --format '{{json .State}}' "${CID}" || true
                             docker logs --tail 50 "${CID}" || true
-
-                            echo "Executando collectstatic dentro do container..."
-                            if docker exec "${CID}" python manage.py collectstatic --noinput >/dev/null 2>&1; then
-                                echo "collectstatic executado com sucesso."
-                                docker exec "${CID}" sh -c "ls -la /app/staticfiles || true"
-                            else
-                                echo "AVISO: collectstatic falhou dentro do container."
-                                docker exec "${CID}" sh -c "ls -la /app || true"
-                            fi
-
+                            # No static handling in Jenkins; skip collectstatic here
+                            echo "Static files are not managed by Jenkins/Docker (skipping collectstatic)"
                         else
-                            echo "docker run não retornou um ID. Container pode ter falhado ao iniciar."
+                            echo "docker run did not return a container id; container may have failed to start"
                         fi
-
                     else
-                        echo "Falha ao puxar imagem ${IMAGE_LATEST}. Deploy cancelado."
+                        echo "Docker image ${IMAGE_LATEST} not available; skipping deploy"
                     fi
                 '''
             }
         }
-
     }
 
     post {
