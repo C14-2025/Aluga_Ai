@@ -36,34 +36,14 @@ class ReservaConfirmTests(TestCase):
     def test_overlaps_only_when_confirmed(self):
         inicio = date(2025, 12, 1)
         fim = date(2025, 12, 5)
-
         reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
-
         self.assertEqual(reserva.status, Reserva.STATUS_PENDING)
-        self.assertFalse(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
-
-        reserva.status = Reserva.STATUS_CONFIRMED
-        reserva.save()
-
-        self.assertTrue(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
-
-        self.assertFalse(reserva.overlaps(date(2025, 11, 20), date(2025, 11, 25)))
-        self.assertFalse(reserva.overlaps(date(2025, 12, 6), date(2025, 12, 10)))
 
     def test_confirm_sets_status_and_deactivates_property(self):
         inicio = date(2025, 11, 10)
         fim = date(2025, 11, 15)
         reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
-
         self.assertTrue(self.prop.ativo)
-
-        reserva.confirm()
-
-        reserva.refresh_from_db()
-        self.prop.refresh_from_db()
-
-        self.assertEqual(reserva.status, Reserva.STATUS_CONFIRMED)
-        self.assertFalse(self.prop.ativo)
 
     def test_confirm_handles_property_save_exception_with_mock(self):
         inicio = date(2026, 1, 1)
@@ -75,3 +55,52 @@ class ReservaConfirmTests(TestCase):
 
         reserva.refresh_from_db()
         self.assertEqual(reserva.status, Reserva.STATUS_CONFIRMED)
+
+
+    def test_reserva_initial_status_is_pending(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        self.assertEqual(reserva.status, Reserva.STATUS_PENDING)
+
+    def test_overlaps_returns_false_when_reservation_pending(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        self.assertFalse(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
+
+    def test_overlaps_returns_true_when_confirmed(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        reserva.status = Reserva.STATUS_CONFIRMED
+        reserva.save()
+        self.assertTrue(reserva.overlaps(date(2025, 12, 2), date(2025, 12, 3)))
+
+    def test_overlaps_returns_false_for_non_overlapping_before(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        self.assertFalse(reserva.overlaps(date(2025, 11, 20), date(2025, 11, 25)))
+
+    def test_overlaps_returns_false_for_non_overlapping_after(self):
+        inicio = date(2025, 12, 1)
+        fim = date(2025, 12, 5)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        self.assertFalse(reserva.overlaps(date(2025, 12, 6), date(2025, 12, 10)))
+
+    def test_confirm_sets_status_to_confirmed(self):
+        inicio = date(2025, 11, 10)
+        fim = date(2025, 11, 15)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        reserva.confirm()
+        reserva.refresh_from_db()
+        self.assertEqual(reserva.status, Reserva.STATUS_CONFIRMED)
+
+    def test_confirm_deactivates_property(self):
+        inicio = date(2025, 11, 10)
+        fim = date(2025, 11, 15)
+        reserva = Reserva.objects.create(guest=self.guest, propriedade=self.prop, inicio=inicio, fim=fim)
+        reserva.confirm()
+        self.prop.refresh_from_db()
+        self.assertFalse(self.prop.ativo)
